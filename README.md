@@ -1,4 +1,4 @@
-# Local Products Marketplace 
+# Le Comptoir Local
 
 ## Overview
 Welcome to the local products and short supply chains marketplace project! This platform aims to connect local producers with consumers by providing a simple and efficient solution to discover and purchase quality products, while supporting the local economy and reducing your environmental footprint.
