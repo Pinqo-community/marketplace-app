@@ -70,16 +70,17 @@ Feel free to contribute to this project by:
 
 
 ## Rules for branches
-- Branch naming convention
-Please use kebab-case convention (words must be in lower case and linked by hyphens “-”);
-    
-**feature**: New feature added;
-**bugfix**: Bugfix;
-**hotfix**: Critical bug fix;
-**chore**: Code cleanup;
-**experiment**: Functionality experimentation.
+**Branch naming convention**
 
-e.g feature-user-account
+Please use kebab-case convention (words must be in lower case and linked by hyphens “-”) preceded by ID[issue]
+    
+- **feature**: New feature added;
+- **bugfix**: Bugfix;
+- **hotfix**: Critical bug fix;
+- **chore**: Code cleanup;
+- **experiment**: Functionality experimentation.
+
+(e.g.: #1-feature-user-account)
 
 ## Licence
 
