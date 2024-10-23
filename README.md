@@ -21,7 +21,7 @@ Analytical tools: Allow consumers to assess the environmental impact of their pu
 **Frontend**
 * React
 * [CSS framework or styling solution]
-* [State management library]
+* Vite
 
 **Backend**
 * Java
