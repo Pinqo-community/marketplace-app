@@ -2,3 +2,13 @@ spring:
     application:
         name: marketplace_backend
 
+    datasource:
+        url: jdbc:postgresql://localhost:5433/marketplace
+        username: postgres
+        password: 1870abc
+        driver-class-name: org.postgresql.Driver
+
+    jpa:
+        hibernate:
+            ddl-auto: update
+        show-sql: true
