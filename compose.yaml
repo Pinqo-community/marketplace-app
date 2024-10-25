@@ -1,16 +1,16 @@
-version: '3.8'
-
 services:
   backend:
+    env_file:
+      - ./api/.env.dev
     build:
       context: ./api
       dockerfile: Dockerfile
     ports:
       - "8080:8080"
     environment:
-       SPRING_DATASOURCE_URL: jdbc:postgresql://db:5433/marketplace
-       SPRING_DATASOURCE_USERNAME: postgres
-       SPRING_DATASOURCE_PASSWORD: 1870abc
+       SPRING_DATASOURCE_URL: jdbc:postgresql://db:${DB_PORT}/${DB_NAME}
+       SPRING_DATASOURCE_USERNAME: ${DB_USER}
+       SPRING_DATASOURCE_PASSWORD: ${DB_PASSWORD}
     depends_on:
       - db
     container_name: marketplace-backend
@@ -18,8 +18,10 @@ services:
       - app-network
 
   frontend:
+    env_file:
+      - ./client/app-react/.env.dev
     build:
-      context: ./client
+      context: ./client/app-react
       dockerfile: Dockerfile
     ports:
       - "5173:5173"
@@ -28,17 +30,15 @@ services:
     container_name: marketplace-frontend
     networks:
       - app-network
-
-
   db:
     image: postgres:15
     container_name: marketplace-database
     ports:
-      - "5433:5433"
+      - "5433:5432"
     environment:
-       POSTGRES_DB: marketplace
-       POSTGRES_USER: postgres
-       POSTGRES_PASSWORD: 1870abc
+       POSTGRES_DB: ${DB_NAME}
+       POSTGRES_USER: ${DB_USER}
+       POSTGRES_PASSWORD: ${DB_PASSWORD}
     volumes:
       - postgres_data:/var/lib/postgresql/data
 
