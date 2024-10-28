@@ -1,46 +1,50 @@
 services:
   backend:
-    env_file:
-      - ./api/.env.dev
+    environment:
+      DB_NAME: ${DB_NAME}
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_HOST: db
+      DB_PORT: 5432
     build:
       context: ./api
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.dev
     ports:
       - "8080:8080"
-    environment:
-       SPRING_DATASOURCE_URL: jdbc:postgresql://db:${DB_PORT}/${DB_NAME}
-       SPRING_DATASOURCE_USERNAME: ${DB_USER}
-       SPRING_DATASOURCE_PASSWORD: ${DB_PASSWORD}
+    container_name: marketplace-backend
     depends_on:
       - db
-    container_name: marketplace-backend
     networks:
       - app-network
 
   frontend:
-    env_file:
-      - ./client/app-react/.env.dev
+    environment:
+      VITE_BACKEND_URL: http://localhost:8080
     build:
-      context: ./client/app-react
-      dockerfile: Dockerfile
+      context: ./client
+      dockerfile: Dockerfile.dev
     ports:
       - "5173:5173"
-    stdin_open: true
-    tty: true
+    depends_on:
+      - backend
     container_name: marketplace-frontend
     networks:
       - app-network
+
   db:
     image: postgres:15
     container_name: marketplace-database
     ports:
       - "5433:5432"
     environment:
-       POSTGRES_DB: ${DB_NAME}
-       POSTGRES_USER: ${DB_USER}
-       POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    restart: always
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    networks:
+      - app-network
 
 volumes:
   postgres_data:

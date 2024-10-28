@@ -1,0 +1,21 @@
+# Ignorer node_modules et fichiers de build
+node_modules
+dist
+.vite
+coverage
+
+# Ignorer les configurations locales d'IDE
+.idea
+.vscode
+
+# Ignorer le contrôle de version
+.git
+.gitignore
+
+# Ignorer les fichiers de configuration locaux
+.env
+.env.local
+
+# Ignorer les fichiers temporaires et systèmes
+*.log
+.DS_Store
