@@ -28,9 +28,15 @@ services:
     depends_on:
       - backend
     container_name: marketplace-frontend
+    restart: unless-stopped
     networks:
       - app-network
-
+    volumes:
+      - type: bind
+        source: ./client
+        target: /app
+      - type: volume
+        target: /app/node_modules
   db:
     image: postgres:15
     container_name: marketplace-database
