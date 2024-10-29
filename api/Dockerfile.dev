@@ -1,7 +1,8 @@
 FROM gradle:8.5-jdk21
+COPY build.gradle settings.gradle .
+RUN gradle build --no-daemon || return 0
+
 WORKDIR /app
 EXPOSE 8080
-
 COPY . .
-
 CMD ["gradle", "bootRun", "-Dspring-boot.run.profiles=dev", "-Dspring.devtools.restart.enabled=true", "-Dspring.devtools.livereload.enabled=true", "-Dspring.devtools.remote.secret=mysecret"]
