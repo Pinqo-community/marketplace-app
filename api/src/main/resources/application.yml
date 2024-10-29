@@ -12,3 +12,11 @@ spring:
     hibernate:
       ddl-auto: update
     show-sql: true
+
+  devtools:
+    restart:
+      enabled: true
+    remote:
+      secret: mysecret
+    livereload:
+      enabled: true

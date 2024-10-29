@@ -12,6 +12,9 @@ services:
     ports:
       - "8080:8080"
     container_name: marketplace-backend
+    volumes:
+      - ./api:/app
+      - gradle-cache:/home/gradle/.gradle
     depends_on:
       - db
     networks:
@@ -53,6 +56,7 @@ services:
       - app-network
 
 volumes:
+  gradle-cache:
   postgres_data:
 
 networks:

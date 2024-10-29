@@ -1,10 +1,7 @@
-FROM gradle:8.10.2-jdk-lts-and-current AS build
+FROM gradle:8.5-jdk21
 WORKDIR /app
-COPY . .
-RUN gradle build --no-daemon
-
-FROM openjdk:21-jdk-slim
-WORKDIR /app
-COPY --from=build /app/build/libs/*.jar app.jar
 EXPOSE 8080
-CMD ["java", "-jar", "app.jar"]
+
+COPY . .
+
+CMD ["gradle", "bootRun", "-Dspring-boot.run.profiles=dev", "-Dspring.devtools.restart.enabled=true", "-Dspring.devtools.livereload.enabled=true", "-Dspring.devtools.remote.secret=mysecret"]
