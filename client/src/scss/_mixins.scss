@@ -1,0 +1,29 @@
+@use "variables" as *;
+
+// Font style mixin
+@mixin font-style(
+  $family: $font-family,
+  $size: $font-size-md,
+  $weight: normal,
+  $color: $text-color,
+  $line-height: 1.5
+) {
+  font-family: $family;
+  font-size: $size;
+  font-weight: $weight;
+  color: $color;
+  line-height: $line-height;
+}
+
+// Media Query
+@mixin media-query($breakpoint) {
+  @media (max-width: $breakpoint) {
+    @content;
+  }
+}
+// Hide Elements Responsively
+@mixin hide-on-mobile($breakpoint: $breakpoint-xs) {
+  @include media-query($breakpoint) {
+    display: none;
+  }
+}

@@ -1,3 +1,39 @@
-$primary-color: #2ecc71;
-$secondary-color: #2ecc71;
-$font-family: Arial, sans-serif;
+// Colors
+$primary-color: #02af5e;
+$secondary-color: #d4fadd;
+$background-color: #fdfdfd;
+$text-color: #212529;
+$border-color: #e5e7eb;
+
+// Font Styles
+$font-family: "Inter", sans-serif;
+
+// Font Sizes
+$font-size-xs: 12px;
+$font-size-sm: 14px;
+$font-size-md: 16px;
+$font-size-lg: 20px;
+$font-size-xl: 24px;
+$font-size-xxl: 32px;
+
+// Font Weights
+$font-weight-normal: 400;
+$font-weight-medium: 500;
+$font-weight-bold: 700;
+
+// Border Radius
+$border-radius-sm: 4px;
+$border-radius-md: 8px;
+$border-radius-lg: 16px;
+
+// Shadows
+$box-shadow-light: 0 2px 4px rgba(0, 0, 0, 0.1);
+$box-shadow-dark: 0 2px 4px rgba(0, 0, 0, 0.3);
+
+// Breakpoints
+$breakpoint-xs: 480px;
+$breakpoint-sm: 768px;
+// $breakpoint-md: 992px;
+$breakpoint-md: 1010px;
+$breakpoint-lg: 1200px;
+$breakpoint-xl: 1440px;

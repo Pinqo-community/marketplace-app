@@ -1,0 +1,100 @@
+@use "../../scss/global" as *;
+@use "../../scss/variables" as *;
+@use "../../scss/mixins" as *;
+
+.header {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  align-items: center;
+  padding: 10px 0 10px 0;
+
+  .topBanner {
+    display: flex;
+    justify-content: flex-end;
+    gap: 20px;
+    max-width: 1440px;
+    width: 100%;
+    padding: 0 7px 0 7px;
+
+    .helpButton,
+    .locationButton {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-size: $font-size-sm;
+      background: none;
+      border: none;
+      cursor: pointer;
+    }
+  }
+
+  .container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px;
+    max-width: 1440px;
+    width: 100%;
+    margin: 0 auto;
+
+    @include media-query($breakpoint-sm) {
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .leftContainer {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+
+      &::after {
+        content: "";
+        flex: 1;
+      }
+    }
+
+    .menuButton {
+      background: none;
+      border: none;
+      cursor: pointer;
+    }
+
+    .logo {
+      padding-right: 10px;
+      &:hover {
+        cursor: pointer;
+      }
+    }
+
+    nav {
+      display: flex;
+      align-items: center;
+      gap: 40px;
+
+      @include media-query($breakpoint-sm) {
+        gap: 7px;
+
+        img {
+          width: 25px;
+        }
+      }
+
+      .userButton,
+      .cartButton {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        font-size: $font-size-sm;
+        background: none;
+        border: none;
+        cursor: pointer;
+        gap: 3px;
+
+        p {
+          @include hide-on-mobile($breakpoint-md);
+        }
+      }
+    }
+  }
+}
