@@ -21,6 +21,9 @@ spring:
     livereload:
       enabled: true
 
+  profiles:
+    default: dev
+
 server:
   servlet:
     context-path: /api/v1/
