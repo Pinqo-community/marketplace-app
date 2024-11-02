@@ -5,6 +5,7 @@ const SearchBar: React.FC = () => {
   return (
     <div className={styles.searchBar}>
       <input
+        className={styles.searchInput}
         type="text"
         placeholder="Rechercher un produit..."
         aria-label="Champ de recherche de produits"

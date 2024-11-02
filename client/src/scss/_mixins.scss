@@ -27,3 +27,19 @@
     display: none;
   }
 }
+
+// Icon filters
+@mixin icon-dark-filter() {
+  filter: brightness(0) saturate(100%) invert(38%) sepia(100%) saturate(699%) hue-rotate(113deg) brightness(105%)
+    contrast(98%);
+}
+
+@mixin icon-light-filter() {
+  filter: brightness(0) saturate(100%) invert(99%) sepia(4%) saturate(7%) hue-rotate(205deg) brightness(115%)
+    contrast(92%);
+}
+
+@mixin icon-hover-filter() {
+  filter: brightness(0) saturate(100%) invert(38%) sepia(100%) saturate(699%) hue-rotate(113deg) brightness(105%)
+    contrast(98%);
+}

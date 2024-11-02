@@ -4,29 +4,25 @@
 
 .searchBar {
   display: flex;
-  flex: 1;
-  @include media-query(674px) {
-    order: 2;
-    flex: 0;
-  }
-
-  input {
+  margin-right: auto;
+  .searchInput {
     border: none;
     border-radius: $border-radius-md 0 0 $border-radius-md;
     padding: 10px 20px;
-    @include font-style($size: $font-size-sm, $weight: $font-weight-medium);
+    @include font-style($size: $font-size-md, $weight: $font-weight-medium);
     background-color: rgb(242, 242, 242);
     outline: none;
-    width: 100%;
     max-width: 400px;
+    width: 400px;
     transition: all 0.3s ease;
 
-    @include media-query(883px) {
-      width: 100%;
-    }
-
-    @include media-query(674px) {
-      width: 350px;
+    @include media-query($breakpoint-md) {
+      background-color: #ffffff;
+      border-radius: $border-radius-md;
+      outline: 1px solid $border-color;
+      width: 94vw;
+      max-width: none;
+      padding: 10px 20px;
     }
   }
 
@@ -46,5 +42,7 @@
         transform: scale(1.1);
       }
     }
+
+    @include hide-on-mobile($breakpoint-md);
   }
 }
