@@ -44,6 +44,7 @@ public class GlobalExceptionHandler {
         );
     }
 
+    // TODO: add InvalidTokenException
     @ExceptionHandler(WrongCredentialException.class)
     public ResponseEntity<ExceptionResponse> handleWrongCredentialException(WrongCredentialException ex, WebRequest request) {
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(
