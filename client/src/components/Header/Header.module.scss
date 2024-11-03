@@ -1,0 +1,156 @@
+@use "../../scss/global";
+@use "../../scss/variables" as *;
+@use "../../scss/mixins" as *;
+
+.header {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  align-items: center;
+  padding: 0 0 10px;
+  background-color: $color-white;
+
+  .topBanner {
+    display: flex;
+    justify-content: flex-end;
+    gap: 40px;
+    max-width: $screen-xl;
+    width: 100%;
+    padding: 5px 20px 5px 0;
+
+    @include media-query($breakpoint-md) {
+      background-color: $color-dark;
+      color: $color-light;
+      padding: 5px 20px;
+      flex-direction: row-reverse;
+
+      img {
+        @include icon-hover-filter;
+      }
+    }
+
+    .helpButton,
+    .locationButton {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: $font-size-md;
+      background: none;
+      border: none;
+      cursor: pointer;
+      transition:
+        color 0.2s ease-in-out,
+        filter 0.2s ease-in-out;
+
+      img {
+        transition: filter 0.2s ease-in-out;
+      }
+
+      &:hover {
+        color: $primary-color;
+
+        img {
+          @include icon-dark-filter;
+        }
+      }
+
+      @include media-query($breakpoint-md) {
+        font-size: $font-size-xs;
+
+        img {
+          @include icon-light-filter;
+          width: 15px;
+          height: 15px;
+        }
+      }
+    }
+  }
+
+  .container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 20px;
+    max-width: $screen-xl;
+    width: 100%;
+    margin: 0 auto;
+    gap: 20px;
+
+    @include media-query($breakpoint-md) {
+      flex-wrap: wrap;
+      padding: 10px 15px 0;
+      gap: 11px;
+    }
+
+    .leftContainer {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+
+      .hamburger {
+        opacity: 0.9;
+
+        @include media-query($breakpoint-md) {
+          padding: 10px;
+
+          .hamburgerBox {
+            width: 30px;
+          }
+
+          .hamburgerInner,
+          .hamburgerInner::before,
+          .hamburgerInner::after {
+            width: 30px;
+            height: 3px;
+          }
+        }
+      }
+
+      @include media-query($breakpoint-md) {
+        gap: 10px;
+        justify-content: space-between;
+        width: 100%;
+      }
+
+      .mobileNav {
+        display: none;
+
+        @include media-query($breakpoint-md) {
+          display: flex;
+        }
+      }
+
+      .leftContainerInner {
+        display: flex;
+        gap: 10px;
+      }
+    }
+
+    .logo {
+      padding-right: 10px;
+      cursor: pointer;
+
+      @include media-query($breakpoint-md) {
+        width: 200px;
+      }
+    }
+
+    nav {
+      display: flex;
+      align-items: center;
+      gap: 40px;
+      margin-left: 20px;
+      @include hide-on-mobile($breakpoint-md);
+
+      @include media-query($breakpoint-md) {
+        gap: 7px;
+        margin-left: 0;
+
+        img {
+          width: 25px;
+        }
+      }
+    }
+  }
+}
+//

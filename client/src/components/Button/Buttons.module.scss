@@ -1,0 +1,33 @@
+@use "../../scss/global" as *;
+@use "../../scss/variables" as *;
+@use "../../scss/mixins" as *;
+
+.userButton,
+.cartButton {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-size: $font-size-md;
+  background: none;
+  border: none;
+  cursor: pointer;
+  gap: 3px;
+  transition: all 0.2s ease-in-out;
+
+  p {
+    @include hide-on-mobile($breakpoint-md);
+  }
+
+  img {
+    transition: all 0.2s ease-in-out;
+  }
+
+  &:hover {
+    color: $primary-color;
+
+    img {
+      filter: brightness(0) saturate(100%) invert(38%) sepia(100%) saturate(699%) hue-rotate(113deg) brightness(105%)
+        contrast(98%);
+    }
+  }
+}
