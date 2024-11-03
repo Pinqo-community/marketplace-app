@@ -1,10 +1,12 @@
 package com.marketplace.service.impl;
 
+import com.marketplace.dto.LoginRequest;
 import com.marketplace.dto.RegisterRequest;
 import com.marketplace.entity.Buyer;
 import com.marketplace.entity.Role;
 import com.marketplace.entity.User;
 import com.marketplace.exception.UserAlreadyExistsException;
+import com.marketplace.exception.WrongCredentialException;
 import com.marketplace.model.RoleType;
 import com.marketplace.repository.BuyerRepository;
 import com.marketplace.repository.RoleRepository;
@@ -12,6 +14,8 @@ import com.marketplace.repository.UserRepository;
 import com.marketplace.service.AuthService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -26,6 +30,7 @@ public class AuthServiceImpl implements AuthService {
     private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
     private final BuyerRepository buyerRepository;
+    private final AuthenticationManager authenticationManager;
 
     @Override
     public User register(RegisterRequest request) {
@@ -57,5 +62,22 @@ public class AuthServiceImpl implements AuthService {
                         .lastName(lastName)
                         .build()
         );
+    }
+
+    @Override
+    public User authenticate(LoginRequest request) {
+        User user = userRepository.findByEmail(request.email()).orElseThrow(() -> new WrongCredentialException("Les identifiants sont invalides"));
+
+        if (!user.isLocalProviderAuthentication()) {
+            throw new WrongCredentialException("Les identifiants sont invalides");
+        }
+
+        try {
+            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.email(), request.password()));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return user;
     }
 }

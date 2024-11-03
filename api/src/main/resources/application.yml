@@ -27,3 +27,8 @@ spring:
 server:
   servlet:
     context-path: /api/v1/
+
+app:
+  security:
+    access-token:
+      secret-key: ${JWT_SECRET}

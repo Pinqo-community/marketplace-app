@@ -1,7 +1,10 @@
 package com.marketplace.controller;
 
+import com.marketplace.dto.JwtResponse;
+import com.marketplace.dto.LoginRequest;
 import com.marketplace.dto.RegisterRequest;
 import com.marketplace.entity.User;
+import com.marketplace.security.jwt.JwtService;
 import com.marketplace.service.AuthService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class AuthController {
     private final AuthService authService;
+    private final JwtService jwtService;
 
     @PostMapping("/register")
     public ResponseEntity<User> register(@Valid @RequestBody RegisterRequest request) {
@@ -29,6 +33,18 @@ public class AuthController {
             );
         } finally {
             log.info("POST /auth/register - DONE");
+        }
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<JwtResponse> register(@Valid @RequestBody LoginRequest request) {
+        try {
+            log.info(" POST api/auth/login - START");
+            User userAuthenticated = authService.authenticate(request);
+            JwtResponse response = jwtService.generateJwtToken(userAuthenticated);
+            return ResponseEntity.status(HttpStatus.OK).body(response);
+        } finally {
+            log.info(" POST api/auth/login - DONE");
         }
     }
 }

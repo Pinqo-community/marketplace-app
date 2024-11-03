@@ -70,4 +70,8 @@ public class User implements UserDetails {
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of();
     }
+
+    public boolean isLocalProviderAuthentication() {
+        return this.provider.equalsIgnoreCase("local");
+    }
 }

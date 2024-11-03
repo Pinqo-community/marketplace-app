@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.ServletWebRequest;
 import org.springframework.web.context.request.WebRequest;
 
-import java.time.LocalDateTime;
 import java.util.stream.Collectors;
 
 @ControllerAdvice
@@ -39,6 +38,17 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(
                 new ExceptionResponse(
                         HttpStatus.CONFLICT.value(),
+                        ex.getMessage(),
+                        ((ServletWebRequest) request).getRequest().getRequestURI()
+                )
+        );
+    }
+
+    @ExceptionHandler(WrongCredentialException.class)
+    public ResponseEntity<ExceptionResponse> handleWrongCredentialException(WrongCredentialException ex, WebRequest request) {
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(
+                new ExceptionResponse(
+                        HttpStatus.FORBIDDEN.value(),
                         ex.getMessage(),
                         ((ServletWebRequest) request).getRequest().getRequestURI()
                 )
