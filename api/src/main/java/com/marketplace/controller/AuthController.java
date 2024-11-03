@@ -2,6 +2,7 @@ package com.marketplace.controller;
 
 import com.marketplace.dto.JwtResponse;
 import com.marketplace.dto.LoginRequest;
+import com.marketplace.dto.RefreshTokenRequest;
 import com.marketplace.dto.RegisterRequest;
 import com.marketplace.entity.User;
 import com.marketplace.security.jwt.JwtService;
@@ -39,12 +40,24 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<JwtResponse> register(@Valid @RequestBody LoginRequest request) {
         try {
-            log.info(" POST api/auth/login - START");
+            log.info(" POST /auth/login - START");
             User userAuthenticated = authService.authenticate(request);
             JwtResponse response = jwtService.generateJwtToken(userAuthenticated);
             return ResponseEntity.status(HttpStatus.OK).body(response);
         } finally {
-            log.info(" POST api/auth/login - DONE");
+            log.info(" POST /auth/login - DONE");
+        }
+    }
+
+    @PostMapping("/refresh-token")
+    public ResponseEntity<JwtResponse> refreshToken(@Valid @RequestBody RefreshTokenRequest request) {
+        try {
+            log.info("POST /auth/refresh-token - START");
+            User userFromToken = authService.refreshToken(request.refreshToken());
+            JwtResponse response = jwtService.generateJwtToken(userFromToken);
+            return ResponseEntity.status(HttpStatus.OK).body(response);
+        } finally {
+            log.info("POST /auth/refresh-token - DONE");
         }
     }
 }

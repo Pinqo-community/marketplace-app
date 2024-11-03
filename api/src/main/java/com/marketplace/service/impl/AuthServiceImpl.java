@@ -5,12 +5,14 @@ import com.marketplace.dto.RegisterRequest;
 import com.marketplace.entity.Buyer;
 import com.marketplace.entity.Role;
 import com.marketplace.entity.User;
+import com.marketplace.exception.InvalidTokenException;
 import com.marketplace.exception.UserAlreadyExistsException;
 import com.marketplace.exception.WrongCredentialException;
 import com.marketplace.model.RoleType;
 import com.marketplace.repository.BuyerRepository;
 import com.marketplace.repository.RoleRepository;
 import com.marketplace.repository.UserRepository;
+import com.marketplace.security.jwt.JwtService;
 import com.marketplace.service.AuthService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -31,6 +33,7 @@ public class AuthServiceImpl implements AuthService {
     private final PasswordEncoder passwordEncoder;
     private final BuyerRepository buyerRepository;
     private final AuthenticationManager authenticationManager;
+    private final JwtService jwtService;
 
     @Override
     public User register(RegisterRequest request) {
@@ -79,5 +82,16 @@ public class AuthServiceImpl implements AuthService {
         }
 
         return user;
+    }
+
+    @Override
+    public User refreshToken(String refreshToken) {
+        if (jwtService.isExpired(refreshToken) || !jwtService.extractClaimValue(refreshToken, "typ").equals("Refresh")) {
+            throw new InvalidTokenException("Token invalide");
+        }
+
+        Long userId = Long.parseLong(jwtService.extractSubject(refreshToken));
+        return userRepository.findById(userId).orElseThrow(() -> new InvalidTokenException("Token invalide"));
+
     }
 }
