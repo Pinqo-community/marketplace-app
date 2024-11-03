@@ -1,8 +1,11 @@
 package com.marketplace.configuration;
 
-import com.marketplace.repository.UserRepository;
 import com.marketplace.security.jwt.JwtAuthenticationEntryPoint;
 import com.marketplace.security.jwt.JwtRequestFilter;
+import com.marketplace.security.oauth.CustomOidcUserService;
+import com.marketplace.security.oauth.HttpCookieOAuth2AuthorizationRequestRepository;
+import com.marketplace.security.oauth.OAuth2AuthenticationFailureHandler;
+import com.marketplace.security.oauth.OAuth2AuthenticationSuccessHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -17,9 +20,11 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
-    private final UserRepository userRepository;
     private final JwtRequestFilter jwtRequestFilter;
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
+    private final CustomOidcUserService customOidcUserService;
+    private final OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler;
+    private final OAuth2AuthenticationFailureHandler oAuth2AuthenticationFailureHandler;
 
     private static final String[] SWAGGER_WHITELIST = {
             "/swagger-ui/**",
@@ -46,6 +51,12 @@ public class SecurityConfig {
                                 .requestMatchers(API_URLS_WHITELIST).permitAll()
                                 .anyRequest().authenticated()
                 )
+                .oauth2Login(oauth -> oauth.authorizationEndpoint(endpoint -> endpoint
+                                .authorizationRequestRepository(cookieAuthorizationRequestRepository()))
+                        .userInfoEndpoint(userInfo -> userInfo.oidcUserService(customOidcUserService))
+                        .successHandler(oAuth2AuthenticationSuccessHandler)
+                        .failureHandler(oAuth2AuthenticationFailureHandler)
+                )
                 .exceptionHandling(exceptionHandling ->
                         exceptionHandling.authenticationEntryPoint(jwtAuthenticationEntryPoint)
                 );
@@ -53,5 +64,10 @@ public class SecurityConfig {
         http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
+    }
+
+    @Bean
+    public HttpCookieOAuth2AuthorizationRequestRepository cookieAuthorizationRequestRepository() {
+        return new HttpCookieOAuth2AuthorizationRequestRepository();
     }
 }

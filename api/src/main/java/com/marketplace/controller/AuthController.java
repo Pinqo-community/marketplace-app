@@ -12,15 +12,13 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/auth")
@@ -160,5 +158,21 @@ public class AuthController {
         } finally {
             log.info("POST /auth/refresh-token - DONE");
         }
+    }
+
+    // TODO: remove this operation. It is just for testing google authentication
+    @GetMapping("/oauth")
+    public void testOauth(HttpServletRequest request) {
+        StringBuilder requestDetails = new StringBuilder("\n=== Détails de la Requête ===\n");
+
+        requestDetails.append("URL: ").append(request.getRequestURL()).append("\n");
+
+        requestDetails.append("\n=== Query Parameters ===\n");
+        request.getParameterMap().forEach((key, values) -> {
+            requestDetails.append(key).append(": ");
+            requestDetails.append(String.join(", ", values)).append("\n");
+        });
+
+        System.out.println(requestDetails.toString());
     }
 }
