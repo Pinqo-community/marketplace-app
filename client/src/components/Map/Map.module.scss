@@ -1,3 +1,121 @@
 @use "../../scss/global";
 @use "../../scss/variables" as *;
 @use "../../scss/mixins" as *;
+
+MapContainer {
+  position: relative;
+}
+
+.producer {
+  display: flex;
+  flex-direction: column;
+  gap: $gap-xs;
+
+  .producerInfo {
+    display: flex;
+    align-items: center;
+    gap: $gap-sm;
+
+    .name {
+      @include font-style($size: $font-size-xl, $weight: $font-weight-bold, $line-height: 32px);
+    }
+
+    .profilePhoto {
+      width: 30px;
+      height: 30px;
+      border-radius: $border-radius-circle;
+    }
+  }
+
+  .producerStatus {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    max-width: 140px;
+
+    .dot {
+      height: 8px;
+      width: 8px;
+      border-radius: $border-radius-circle;
+      display: inline-block;
+
+      &.open {
+        background-color: $success-color;
+      }
+
+      &.closed {
+        background-color: $error-color;
+      }
+    }
+
+    .statusText {
+      @include font-style($size: $font-size-md, $weight: $font-weight-normal, $line-height: 16px);
+
+      &.open {
+        color: $success-color;
+      }
+
+      &.closed {
+        color: $error-color;
+      }
+    }
+  }
+
+  .moreInfo {
+    display: flex;
+    justify-content: end;
+    align-items: center;
+    gap: 15px;
+
+    cursor: pointer;
+    transition: all 0.1s ease-in-out;
+
+    .moreInfoText {
+      font-family: Inter;
+      font-size: 14px;
+      font-weight: 400;
+      color: $primary-color;
+    }
+
+    &:hover {
+      transform: translateX(5px);
+    }
+  }
+}
+
+/* ------------------------------------ Leaflet ----------------------------------- */
+
+:global(.leaflet-popup-content-wrapper) {
+  width: 100%;
+}
+
+:global(.leaflet-popup-content) {
+  min-width: 270px;
+  padding: 12px;
+  margin: 0;
+}
+
+:global(.leaflet-touch) :global(.leaflet-control-layers),
+:global(.leaflet-touch) :global(.leaflet-bar) {
+  border: none;
+  border-radius: 8px;
+  box-shadow: 0 0px 15px rgba(0, 0, 0, 0.27);
+  margin: 20px 0 0 20px;
+}
+:global(.leaflet-touch) :global(.leaflet-bar) a {
+  background: #ffffffad;
+  backdrop-filter: blur(10px);
+  width: 35px;
+  height: 35px;
+  line-height: 30px;
+  display: flex;
+  justify-content: center;
+  align-content: center;
+  align-items: center;
+  transition: all 0.2s ease-in-out;
+
+  &:hover {
+    background: $color-white;
+  }
+}
