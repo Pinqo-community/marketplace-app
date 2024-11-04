@@ -13,8 +13,8 @@ services:
       - "8080:8080"
     container_name: marketplace-backend
     volumes:
-      - ./api:/app
-      - gradle-cache:/home/gradle/.gradle
+      - ./api:/app:cached # Monte le code de l'application avec une priorité de lecture
+      - gradle-cache:/home/gradle/.gradle  # Cache Gradle dédié
     depends_on:
       - db
     networks:
@@ -40,6 +40,7 @@ services:
         target: /app
       - type: volume
         target: /app/node_modules
+
   db:
     image: postgres:15
     container_name: marketplace-database

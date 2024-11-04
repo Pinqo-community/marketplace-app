@@ -1,8 +1,17 @@
-FROM gradle:8.5-jdk21
-COPY build.gradle settings.gradle .
+FROM gradle:8.5-jdk21 AS builder
+
+# Définir le répertoire de travail au début
+WORKDIR /app
+
+# Copier les fichiers de configuration de Gradle et installer les dépendances
+COPY build.gradle settings.gradle ./
 RUN gradle build --no-daemon || return 0
 
-WORKDIR /app
-EXPOSE 8080
+# Copier tout le code de l'application dans le conteneur
 COPY . .
-CMD ["gradle", "bootRun", "-Dspring-boot.run.profiles=dev", "-Dspring.devtools.restart.enabled=true", "-Dspring.devtools.livereload.enabled=true", "-Dspring.devtools.remote.secret=mysecret"]
+
+# Exposer le port 8080
+EXPOSE 8080
+
+# Lancer l'application en mode développement
+CMD ["gradle", "bootRun", "--continuous", "-Dspring-boot.run.profiles=dev", "-Dspring.devtools.restart.enabled=true", "-Dspring.devtools.livereload.enabled=true", "-Dspring.devtools.remote.secret=mysecret"]
