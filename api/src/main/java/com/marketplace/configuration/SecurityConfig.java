@@ -2,10 +2,7 @@ package com.marketplace.configuration;
 
 import com.marketplace.security.jwt.JwtAuthenticationEntryPoint;
 import com.marketplace.security.jwt.JwtRequestFilter;
-import com.marketplace.security.oauth.CustomOidcUserService;
-import com.marketplace.security.oauth.HttpCookieOAuth2AuthorizationRequestRepository;
-import com.marketplace.security.oauth.OAuth2AuthenticationFailureHandler;
-import com.marketplace.security.oauth.OAuth2AuthenticationSuccessHandler;
+import com.marketplace.security.oauth.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -23,6 +20,7 @@ public class SecurityConfig {
     private final JwtRequestFilter jwtRequestFilter;
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
     private final CustomOidcUserService customOidcUserService;
+    private final CustomOAuth2UserService customOAuth2UserService;
     private final OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler;
     private final OAuth2AuthenticationFailureHandler oAuth2AuthenticationFailureHandler;
 
@@ -53,7 +51,9 @@ public class SecurityConfig {
                 )
                 .oauth2Login(oauth -> oauth.authorizationEndpoint(endpoint -> endpoint
                                 .authorizationRequestRepository(cookieAuthorizationRequestRepository()))
-                        .userInfoEndpoint(userInfo -> userInfo.oidcUserService(customOidcUserService))
+                        .userInfoEndpoint(userInfo -> userInfo
+                                .oidcUserService(customOidcUserService)
+                                .userService(customOAuth2UserService))
                         .successHandler(oAuth2AuthenticationSuccessHandler)
                         .failureHandler(oAuth2AuthenticationFailureHandler)
                 )

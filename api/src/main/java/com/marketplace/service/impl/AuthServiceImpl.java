@@ -25,7 +25,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Service
-@Transactional
 @RequiredArgsConstructor
 public class AuthServiceImpl implements AuthService {
     private final UserRepository userRepository;

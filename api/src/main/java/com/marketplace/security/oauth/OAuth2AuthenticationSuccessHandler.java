@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -61,6 +62,9 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
         if (principal instanceof OidcUser) {
             OidcUser oidcUser = (OidcUser) principal;
             user = userRepository.findByEmail(oidcUser.getEmail()).orElseThrow(() -> new UserNotFoundException("User not found"));
+        } else if (principal instanceof OAuth2User) {
+            OAuth2User oAuth2User = (OAuth2User) principal;
+            user = userRepository.findByEmail(oAuth2User.getAttributes().get("email").toString()).orElseThrow(() -> new UserNotFoundException("User not found"));
         }
 
         String accessToken = "";
