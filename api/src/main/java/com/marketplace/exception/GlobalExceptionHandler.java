@@ -33,7 +33,18 @@ public class GlobalExceptionHandler {
         );
     }
 
-    @ExceptionHandler(UserAlreadyExistsException.class)
+    @ExceptionHandler(NotFoundException.class)
+    public ResponseEntity<ExceptionResponse> handleNotFound(Exception ex, WebRequest request) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                new ExceptionResponse(
+                        HttpStatus.NOT_FOUND.value(),
+                        ex.getMessage(),
+                        ((ServletWebRequest) request).getRequest().getRequestURI()
+                )
+        );
+    }
+
+    @ExceptionHandler({UserAlreadyExistsException.class, AlreadyExistsException.class})
     public ResponseEntity<ExceptionResponse> handleUserAlreadyExists(UserAlreadyExistsException ex, WebRequest request) {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(
                 new ExceptionResponse(
