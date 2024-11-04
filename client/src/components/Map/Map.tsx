@@ -1,17 +1,15 @@
 // External libraries
 import "leaflet/dist/leaflet.css";
-import { MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
-import MarkerClusterGroup from "react-leaflet-markercluster";
+import { MapContainer, TileLayer } from "react-leaflet";
 import "react-leaflet-markercluster/dist/styles.min.css";
-
 // Assets and styles
-import arrowIcon from "../../assets/icons/arrow.svg";
+import "leaflet.markercluster/dist/leaflet.markercluster";
 import styles from "./Map.module.scss";
 
 // Types and Components
 import { Producer } from "../../types/Producer";
+import ClusterMarkers from "./ClusterMarkers";
 import LocateUser from "./LocateUser";
-import { mapIcon } from "./MapIcon";
 
 const Map: React.FC = () => {
   /* -------------------------------------------------------------------------- */
@@ -592,46 +590,7 @@ const Map: React.FC = () => {
           attribution='<a href="https://jawg.io" title="Tiles Courtesy of Jawg Maps" target="_blank">&copy; <b>Jawg</b>Maps</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url={`https://tile.jawg.io/jawg-lagoon/{z}/{x}/{y}{r}.png?access-token=${jawgApiKey}`}
         />
-        <MarkerClusterGroup>
-          {producers.map((producer) => (
-            <Marker
-              key={producer.id}
-              position={[producer.location.lat, producer.location.lng]}
-              icon={mapIcon}
-            >
-              <Popup>
-                <div className={styles.producer}>
-                  <div className={styles.producerInfo}>
-                    <img
-                      className={styles.profilePhoto}
-                      src={producer.profilePhoto}
-                      alt={producer.name}
-                    />
-                    <h3 className={styles.name}>{producer.name}</h3>
-                  </div>
-                  <div className={styles.producerStatus}>
-                    <div
-                      className={`${styles.dot} ${
-                        producer.isOpen ? styles.open : styles.closed
-                      }`}
-                    ></div>
-                    <div
-                      className={`${styles.statusText} ${
-                        producer.isOpen ? styles.open : styles.closed
-                      }`}
-                    >
-                      {producer.isOpen ? "Disponible" : "Indisponible"}
-                    </div>
-                  </div>
-                  <div className={styles.moreInfo}>
-                    <div className={styles.moreInfoText}>Voir plus</div>
-                    <img src={arrowIcon} alt="arrow" />
-                  </div>
-                </div>
-              </Popup>
-            </Marker>
-          ))}
-        </MarkerClusterGroup>
+        <ClusterMarkers producers={producers} />
         <LocateUser />
       </MapContainer>
     </div>
