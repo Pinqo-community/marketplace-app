@@ -47,33 +47,55 @@ const Footer: React.FC = () => {
             <div className={styles.linksColumn}>
               <h4 className={styles.columnTitle}>Aide</h4>
               <ul className={styles.linksList}>
-                <li className={styles.linkItem}>Une question ?</li>
                 <li className={styles.linkItem}>
-                  Conditions générales d'utilisation
+                  <a href="#">Une question ?</a>
                 </li>
-                <li className={styles.linkItem}>Devenir vendeur</li>
+                <li className={styles.linkItem}>
+                  <a href="#">Conditions générales d'utilisation</a>
+                </li>
+                <li className={styles.linkItem}>
+                  <a href="#">Devenir vendeur</a>
+                </li>
               </ul>
             </div>
             <div className={styles.linksColumn}>
               <h4 className={styles.columnTitle}>A propos</h4>
               <ul className={styles.linksList}>
-                <li className={styles.linkItem}>Qui sommes nous ?</li>
                 <li className={styles.linkItem}>
-                  Conditions générales de ventes
+                  <a href="#">Qui sommes nous ?</a>
                 </li>
-                <li className={styles.linkItem}>Données personnelles</li>
-                <li className={styles.linkItem}>Mentions légales</li>
-                <li className={styles.linkItem}>Cookies</li>
+                <li className={styles.linkItem}>
+                  <a href="#">Conditions générales de ventes</a>
+                </li>
+                <li className={styles.linkItem}>
+                  <a href="#">Données personnelles</a>
+                </li>
+                <li className={styles.linkItem}>
+                  <a href="#">Mentions légales</a>
+                </li>
+                <li className={styles.linkItem}>
+                  <a href="#">Cookies</a>
+                </li>
               </ul>
             </div>
             <div className={styles.linksColumn}>
               <h4 className={styles.columnTitle}>Catégories</h4>
               <ul className={styles.linksList}>
-                <li className={styles.linkItem}>Fruits et légumes</li>
-                <li className={styles.linkItem}>Fromages et lait</li>
-                <li className={styles.linkItem}>Pains et pâtisseries</li>
-                <li className={styles.linkItem}>Bio et équitables</li>
-                <li className={styles.linkItem}>Produits artisanaux</li>
+                <li className={styles.linkItem}>
+                  <a href="#">Fruits et légumes</a>
+                </li>
+                <li className={styles.linkItem}>
+                  <a href="#">Fromages et lait</a>
+                </li>
+                <li className={styles.linkItem}>
+                  <a href="#">Pains et pâtisseries</a>
+                </li>
+                <li className={styles.linkItem}>
+                  <a href="#">Bio et équitables</a>
+                </li>
+                <li className={styles.linkItem}>
+                  <a href="#">Produits artisanaux</a>
+                </li>
               </ul>
             </div>
           </div>
