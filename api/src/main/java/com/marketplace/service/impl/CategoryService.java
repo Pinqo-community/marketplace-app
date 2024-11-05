@@ -20,19 +20,19 @@ public class CategoryService implements CategoryServiceInterface {
 
     public Category findById(Long id) {
         return categoryRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("Category not found with ID: " + id));
+                .orElseThrow(() -> new NotFoundException("Il n'existe pas de catégorie avec cet ID : " + id));
     }
 
     public Category save(Category category) {
         if (categoryRepository.existsByName(category.getName())) {
-            throw new AlreadyExistsException("Category already exists with name: " + category.getName());
+            throw new AlreadyExistsException("Il existe déja une catégorie avec ce nom : " + category.getName());
         }
         return categoryRepository.save(category);
     }
 
     public void deleteById(Long id) {
         categoryRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("Category not found with ID: " + id));
+                .orElseThrow(() -> new NotFoundException("Il n'existe pas de catégorie avec cet ID : " + id));
         categoryRepository.deleteById(id);
     }
 }
