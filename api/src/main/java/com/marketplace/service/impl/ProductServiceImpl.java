@@ -16,6 +16,11 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Product createProduct(Product product) {
+        if (product.getListeIngredients() != null) {
+            String ingredientsAsString = String.join(", ", product.getListeIngredients().split(", "));
+            product.setListeIngredients(ingredientsAsString);
+        }
+
         return productRepository.save(product);
     }
 
@@ -38,7 +43,7 @@ public class ProductServiceImpl implements ProductService {
                     existingProduct.setPhoto(productDetails.getPhoto());
                     existingProduct.setPrixUnitaire(productDetails.getPrixUnitaire());
                     existingProduct.setValeurNutri(productDetails.getValeurNutri());
-                    existingProduct.setListeIngrédients(productDetails.getListeIngrédients());
+                    existingProduct.setListeIngredients(productDetails.getListeIngredients());
                     existingProduct.setQteStock(productDetails.getQteStock());
                     existingProduct.setSeuilCritique(productDetails.getSeuilCritique());
                     return productRepository.save(existingProduct);
