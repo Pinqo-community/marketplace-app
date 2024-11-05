@@ -1,17 +1,23 @@
 package com.marketplace.entity;
 
-import lombok.Data;
+import lombok.AllArgsConstructor;
+import lombok.*;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.*;
-import javax.validation.constraints.*;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.*;
 import java.math.BigDecimal;
+
+
+
+@Builder
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 
 @Entity
 @Table(name = "produits")
-@Data // Lombok pour générer les getters et setters
-@NoArgsConstructor // Lombok pour le constructeur par défaut
-public class Product {
+public class Product{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -42,5 +48,4 @@ public class Product {
     @Min(value = 0, message = "Le seuil critique doit être supérieur ou égal à 0")
     private Integer seuilCritique;
 
-    // Optionnel : Vous pouvez ajouter des méthodes spécifiques si nécessaire
 }
