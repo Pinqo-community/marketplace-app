@@ -7,28 +7,54 @@
   color: $color-light;
   padding: 40px 80px;
   display: flex;
-  gap: 30px;
+  gap: $gap-lg;
   flex-direction: column;
   align-items: center;
+
+  @include media-query($breakpoint-md) {
+    padding: 40px 40px;
+  }
+
+  @include media-query($breakpoint-sm) {
+    padding: 40px 20px;
+  }
+
   .footerMain {
     max-width: $screen-xl;
 
     .footerContent {
       display: flex;
       justify-content: space-between;
+      gap: $gap-lg;
       width: 100%;
       margin: 0 auto;
+
+      @include media-query($breakpoint-sm) {
+        flex-direction: column;
+        align-items: center;
+      }
 
       .footerBrand {
         display: flex;
         flex-direction: column;
-        gap: 20px;
+        gap: $gap-md;
         width: 24%;
+
+        @include media-query($breakpoint-sm) {
+          width: 100%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
 
         .brandInfo {
           display: flex;
           flex-direction: column;
-          gap: 10px;
+          gap: $gap-sm;
+
+          @include media-query($breakpoint-sm) {
+            align-items: center;
+          }
 
           .logo {
             width: fit-content;
@@ -36,12 +62,16 @@
 
           .description {
             @include font-style($size: $font-size-sm, $weight: $font-weight-normal, $color: $color-light);
+
+            @include media-query($breakpoint-sm) {
+              text-align: center;
+            }
           }
         }
 
         .socialLinks {
           display: flex;
-          gap: 20px;
+          gap: $gap-md;
 
           .socialIcon {
             transition: all 0.2s ease-in-out;
@@ -55,13 +85,21 @@
 
       .footerLinks {
         display: flex;
-
         gap: 80px;
+
+        @include media-query($breakpoint-sm) {
+          flex-direction: column;
+          gap: $gap-lg;
+        }
 
         .linksColumn {
           display: flex;
           flex-direction: column;
-          gap: 20px;
+          gap: $gap-md;
+
+          @include media-query($breakpoint-sm) {
+            align-items: center;
+          }
 
           .columnTitle {
             @include font-style($size: $font-size-md, $weight: $font-weight-semibold, $color: $color-white);
@@ -70,7 +108,11 @@
           .linksList {
             display: flex;
             flex-direction: column;
-            gap: 10px;
+            gap: $gap-sm;
+
+            @include media-query($breakpoint-sm) {
+              text-align: center;
+            }
 
             .linkItem {
               @include font-style($size: $font-size-sm, $weight: $font-weight-normal, $color: $color-light);
@@ -95,13 +137,23 @@
     width: 100%;
     padding-top: 15px;
 
+    @include media-query($breakpoint-sm) {
+      flex-direction: column-reverse;
+      gap: $gap-md;
+    }
+
     .copyright {
       @include font-style($size: $font-size-sm, $weight: $font-weight-normal, $color: $color-light);
     }
 
     .paymentMethods {
       display: flex;
-      gap: 20px;
+      gap: $gap-md;
+
+      @include media-query($breakpoint-sm) {
+        justify-content: space-around;
+        width: 100%;
+      }
 
       .paymentIcon {
         display: flex;
