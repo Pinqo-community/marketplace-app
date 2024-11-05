@@ -11,6 +11,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,6 +21,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @RequestMapping("/categories")
 @Tag(name = "Categories", description = "API for categories")
+@Slf4j
 public class CategoryController {
     private final CategoryService categoryService;
 
@@ -34,7 +36,12 @@ public class CategoryController {
                               schema = @Schema(implementation = ExceptionResponse.class)))
     })
     public ResponseEntity<List<Category>> getAllCategories() {
-        return ResponseEntity.ok(categoryService.findAll());
+        try {
+            log.info("GET /categories - START");
+            return ResponseEntity.ok(categoryService.findAll());
+        } finally {
+            log.info("GET /categories - DONE");
+        }
     }
 
     @GetMapping("/{id}")
@@ -51,7 +58,12 @@ public class CategoryController {
                             schema = @Schema(implementation = ExceptionResponse.class)))
     })
     public ResponseEntity<Category> getCategoryById(@PathVariable("id") Long id) {
-        return ResponseEntity.ok(categoryService.findById(id));
+        try {
+            log.info("GET /categories/{id} - START");
+            return ResponseEntity.ok(categoryService.findById(id));
+        } finally {
+            log.info("GET /categories/{id} - DONE");
+        }
     }
 
     @PostMapping
@@ -68,7 +80,12 @@ public class CategoryController {
                             schema = @Schema(implementation = ExceptionResponse.class)))
     })
     public ResponseEntity<Category> createCategory(@RequestBody Category category) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(categoryService.save(category));
+        try {
+            log.info("POST /categories - START");
+            return ResponseEntity.status(HttpStatus.CREATED).body(categoryService.save(category));
+        } finally {
+            log.info("POST /categories - DONE");
+        }
     }
 
     @PutMapping("/{id}")
@@ -85,9 +102,14 @@ public class CategoryController {
                             schema = @Schema(implementation = ExceptionResponse.class)))
     })
     public ResponseEntity<Category> updateCategory(@PathVariable("id") Long id, @RequestBody Category category) {
-        Category existingCategory = categoryService.findById(id);
-        existingCategory.setName(category.getName());
-        return ResponseEntity.ok(categoryService.save(existingCategory));
+        try {
+            log.info("PUT /categories/{id} - START");
+            Category existingCategory = categoryService.findById(id);
+            existingCategory.setName(category.getName());
+            return ResponseEntity.ok(categoryService.save(existingCategory));
+        } finally {
+            log.info("PUT /categories/{id} - DONE");
+        }
     }
 
     @DeleteMapping("/{id}")
@@ -103,8 +125,12 @@ public class CategoryController {
                             schema = @Schema(implementation = ExceptionResponse.class)))
     })
     public ResponseEntity<Void> deleteCategory(@PathVariable("id") Long id) {
-        categoryService.deleteById(id);
-        return ResponseEntity.noContent().build();
+        try {
+            log.info("DELETE /categories/{id} - START");
+            categoryService.deleteById(id);
+            return ResponseEntity.noContent().build();
+        } finally {
+            log.info("DELETE /categories/{id} - DONE");
+        }
     }
-
 }

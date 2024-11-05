@@ -34,7 +34,8 @@ public class SecurityConfig {
     };
 
     private static final String[] API_URLS_WHITELIST = {
-            "/auth/**"
+            "/auth/**",
+            "/categories/**"
     };
 
     @Bean
