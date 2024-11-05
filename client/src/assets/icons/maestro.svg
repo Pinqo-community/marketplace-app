@@ -1,0 +1,17 @@
+<svg width="32.142883" height="19.174805" viewBox="0 0 32.1429 19.1748" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+	<desc>
+			Created with Pixso.
+	</desc>
+	<defs/>
+	<mask id="mask_32_1587" fill="white">
+		<path id="Left" d="M0 13.8062C0 6.18115 6.11023 0 13.6475 0C21.1849 0 27.2951 6.18115 27.2951 13.8062C27.2951 21.4307 21.1849 27.6118 13.6475 27.6118C6.11023 27.6118 0 21.4307 0 13.8062Z" clip-rule="evenodd" fill="" fill-opacity="1.000000" fill-rule="evenodd"/>
+	</mask>
+	<path id="Left" d="M0 13.8062C0 6.18115 6.11023 0 13.6475 0C21.1849 0 27.2951 6.18115 27.2951 13.8062C27.2951 21.4307 21.1849 27.6118 13.6475 27.6118C6.11023 27.6118 0 21.4307 0 13.8062Z" clip-rule="evenodd" fill="#ED0006" fill-opacity="1.000000" fill-rule="evenodd" mask="url(#mask_32_1587)"/>
+	<path id="Left" d="" fill="#979797" fill-opacity="0.000000" fill-rule="nonzero"/>
+	<mask id="mask_32_1589" fill="white">
+		<path id="Right" d="M12.6464 13.8062C12.6464 6.18115 18.7566 0 26.2939 0C33.8312 0 39.9415 6.18115 39.9415 13.8062C39.9415 21.4307 33.8312 27.6118 26.2939 27.6118C18.7566 27.6118 12.6464 21.4307 12.6464 13.8062Z" clip-rule="evenodd" fill="" fill-opacity="1.000000" fill-rule="evenodd"/>
+	</mask>
+	<path id="Right" d="M12.6464 13.8062C12.6464 6.18115 18.7566 0 26.2939 0C33.8312 0 39.9415 6.18115 39.9415 13.8062C39.9415 21.4307 33.8312 27.6118 26.2939 27.6118C18.7566 27.6118 12.6464 21.4307 12.6464 13.8062Z" clip-rule="evenodd" fill="#0099DF" fill-opacity="1.000000" fill-rule="evenodd" mask="url(#mask_32_1589)"/>
+	<path id="Right" d="" fill="#979797" fill-opacity="0.000000" fill-rule="nonzero"/>
+	<path id="Middle" d="M17.4414 2.29053C14.507 4.82275 12.6464 8.59082 12.6464 12.7983C12.6464 17.0059 14.507 20.7739 17.4414 23.3062C20.3757 20.7739 22.2364 17.0059 22.2364 12.7983C22.2364 8.59082 20.3757 4.82275 17.4414 2.29053Z" clip-rule="evenodd" fill="#6C6BBD" fill-opacity="1.000000" fill-rule="evenodd"/>
+</svg>
