@@ -11,7 +11,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class CategoryService {
+public class CategoryService implements CategoryServiceInterface {
     private final CategoryRepository categoryRepository;
 
     public List<Category> findAll() {
