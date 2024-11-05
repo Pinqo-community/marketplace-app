@@ -38,7 +38,7 @@ public class Product{
 
     private String valeurNutri;
 
-    private String listeIngrédients;
+    private String listeIngredients;
 
     @NotNull(message = "La quantité en stock ne peut pas être nulle")
     @Min(value = 0, message = "La quantité en stock doit être supérieure ou égale à 0")
