@@ -6,6 +6,15 @@ MapContainer {
   position: relative;
 }
 
+.map {
+  height: 691px;
+  width: 100%;
+
+  @include media-query($breakpoint-sm) {
+    height: 600px;
+  }
+}
+
 /* ------------------------------------ Leaflet ----------------------------------- */
 
 :global(.leaflet-popup-content-wrapper) {
