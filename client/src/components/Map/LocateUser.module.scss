@@ -14,6 +14,7 @@
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
   cursor: pointer;
   z-index: 9999;
+  fill: #979797;
 }
 
 .locateUser svg {
@@ -28,8 +29,15 @@
 .userLocationIcon {
   width: 15px !important;
   height: 15px !important;
-  background-color: #007bff;
   border-radius: 50%;
   border: 2px solid $color-white;
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+
+  &.active {
+    background-color: #007bff;
+  }
+
+  &.inactive {
+    background-color: #bfbfbf;
+  }
 }

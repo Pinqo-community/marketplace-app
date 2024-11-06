@@ -1,33 +1,77 @@
-import { useMap } from "react-leaflet";
 import L from "leaflet";
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
+import { useMap } from "react-leaflet";
+import { LocateUserProps } from "../../types/types";
 import styles from "./LocateUser.module.scss";
 
-const LocateUser: React.FC = () => {
+const LocateUser: React.FC<LocateUserProps> = ({ mapRef, defaultPosition }) => {
   /* -------------------------------------------------------------------------- */
   /*                                  Statement                                 */
   /* -------------------------------------------------------------------------- */
 
   const map = useMap();
   const [position, setPosition] = useState(false);
+  const [defaultMarker, setDefaultMarker] = useState<L.Marker | null>(null);
 
   /* -------------------------------------------------------------------------- */
   /*                                  Function                                  */
   /* -------------------------------------------------------------------------- */
 
-  const handleLocationClick = () => {
+  /* --------------------------- Marqueur par défaut --------------------------- */
+
+  useEffect(() => {
+    const marker = L.marker(defaultPosition, {
+      icon: new L.DivIcon({
+        className: `${styles.userLocationIcon} ${styles.inactive}`,
+      }),
+    }).addTo(map);
+    setDefaultMarker(marker);
+
+    // Cleanup du marqueur lors du démontage
+    return () => {
+      marker.remove();
+    };
+  }, [map, defaultPosition]);
+
+  /* ----------------------------- Géolocalisation ---------------------------- */
+
+  const handleLocation = useCallback(() => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition((position) => {
         const { latitude, longitude } = position.coords;
         setPosition(true);
         map.flyTo([latitude, longitude], 13);
+
+        // Retire le marqueur par défaut et ajouter le marqueur utilisateur
+        if (defaultMarker) map.removeLayer(defaultMarker);
+
         const userLocationIcon = new L.DivIcon({
-          className: styles.userLocationIcon,
+          className: `${styles.userLocationIcon} ${styles.active}`,
         });
         L.marker([latitude, longitude], { icon: userLocationIcon }).addTo(map);
       });
     }
-  };
+  }, [map, defaultMarker]);
+
+  /* ------------------------------------ Observer ----------------------------------- */
+
+  // Observer pour voir si la map est visible et lancer la localisation
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) {
+          handleLocation();
+        }
+      },
+      { threshold: 0.7 }
+    );
+    const mapElement = mapRef.current;
+    if (mapElement) observer.observe(mapElement);
+
+    return () => {
+      if (mapElement) observer.unobserve(mapElement);
+    };
+  }, [mapRef, handleLocation]);
 
   /* -------------------------------------------------------------------------- */
   /*                                   Render                                   */
@@ -38,7 +82,7 @@ const LocateUser: React.FC = () => {
       className={styles.locateUser}
       onClick={(e) => {
         e.stopPropagation();
-        handleLocationClick();
+        handleLocation();
       }}
     >
       <svg

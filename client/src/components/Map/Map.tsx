@@ -2,6 +2,7 @@
 import "leaflet/dist/leaflet.css";
 import { MapContainer, TileLayer } from "react-leaflet";
 import "react-leaflet-markercluster/dist/styles.min.css";
+
 // Assets and styles
 import "leaflet.markercluster/dist/leaflet.markercluster";
 import styles from "./Map.module.scss";
@@ -10,11 +11,19 @@ import styles from "./Map.module.scss";
 import { Producer } from "../../types/Producer";
 import ClusterMarkers from "./ClusterMarkers";
 import LocateUser from "./LocateUser";
+import { useRef, useState } from "react";
 
 const Map: React.FC = () => {
   /* -------------------------------------------------------------------------- */
   /*                                  Statement                                 */
   /* -------------------------------------------------------------------------- */
+
+  const mapRef = useRef<HTMLDivElement>(null);
+
+  const [defaultPosition] = useState<{ lat: number; lng: number }>({
+    lat: 44.85173127060631,
+    lng: -0.25886535644531256,
+  });
 
   const jawgApiKey = import.meta.env.VITE_JAWG_API_KEY;
 
@@ -579,10 +588,10 @@ const Map: React.FC = () => {
   /*                                   Render                                   */
   /* -------------------------------------------------------------------------- */
   return (
-    <div className={styles.mapContainer}>
+    <div ref={mapRef} className={styles.mapContainer}>
       <MapContainer
         className={styles.map}
-        center={[44.85173127060631, -0.25886535644531256]}
+        center={defaultPosition}
         zoom={11}
         style={{ height: "691px", width: "100%" }}
       >
@@ -591,7 +600,7 @@ const Map: React.FC = () => {
           url={`https://tile.jawg.io/jawg-lagoon/{z}/{x}/{y}{r}.png?access-token=${jawgApiKey}`}
         />
         <ClusterMarkers producers={producers} />
-        <LocateUser />
+        <LocateUser mapRef={mapRef} defaultPosition={defaultPosition} />
       </MapContainer>
     </div>
   );
