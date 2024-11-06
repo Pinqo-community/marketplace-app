@@ -1,4 +1,4 @@
-package com.marketplace.security.user;
+package com.marketplace.model.user;
 
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 

@@ -3,7 +3,7 @@ package com.marketplace.security.oauth;
 import com.marketplace.entity.User;
 import com.marketplace.exception.UserAlreadyExistsException;
 import com.marketplace.repository.UserRepository;
-import com.marketplace.security.user.OAuth2UserInfos;
+import com.marketplace.model.user.OAuth2UserInfos;
 import com.marketplace.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;

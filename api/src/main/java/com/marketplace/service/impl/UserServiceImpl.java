@@ -7,7 +7,7 @@ import com.marketplace.exception.UserAlreadyExistsException;
 import com.marketplace.model.RoleType;
 import com.marketplace.repository.RoleRepository;
 import com.marketplace.repository.UserRepository;
-import com.marketplace.security.user.UserInfos;
+import com.marketplace.model.user.UserInfos;
 import com.marketplace.service.BuyerService;
 import com.marketplace.service.UserService;
 import jakarta.transaction.Transactional;

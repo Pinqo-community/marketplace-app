@@ -1,4 +1,4 @@
-package com.marketplace.security.user;
+package com.marketplace.model.user;
 
 import com.marketplace.dto.RegisterRequest;
 

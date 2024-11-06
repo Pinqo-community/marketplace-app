@@ -3,7 +3,7 @@ package com.marketplace.security.oauth;
 import com.marketplace.entity.User;
 import com.marketplace.exception.UserAlreadyExistsException;
 import com.marketplace.repository.UserRepository;
-import com.marketplace.security.user.OidcUserInfos;
+import com.marketplace.model.user.OidcUserInfos;
 import com.marketplace.service.UserService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;

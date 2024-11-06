@@ -7,7 +7,7 @@ import com.marketplace.exception.InvalidTokenException;
 import com.marketplace.exception.WrongCredentialException;
 import com.marketplace.repository.UserRepository;
 import com.marketplace.security.jwt.JwtService;
-import com.marketplace.security.user.BasicUserInfos;
+import com.marketplace.model.user.BasicUserInfos;
 import com.marketplace.service.AuthService;
 import com.marketplace.service.UserService;
 import lombok.RequiredArgsConstructor;
