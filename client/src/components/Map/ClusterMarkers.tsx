@@ -25,16 +25,14 @@ const ClusterMarkers = ({ producers }: { producers: Producer[] }) => {
               />
               <h3 class="${styles.name}">${producer.name}</h3>
             </div>
-            <div class="${styles.producerStatus}">
-              <div class="${styles.dot} ${
-        producer.isOpen ? styles.open : styles.closed
-      }"></div>
-              <div class="${styles.statusText} ${
+           <div class="${styles.producerStatus} ${
         producer.isOpen ? styles.open : styles.closed
       }">
-                ${producer.isOpen ? "Disponible" : "Indisponible"}
-              </div>
+            <div class="${styles.dot}"></div>
+            <div class="${styles.statusText}">
+              ${producer.isOpen ? "Disponible" : "Indisponible"}
             </div>
+          </div>
             <div class="${styles.moreInfo}">
               <div class="${styles.moreInfoText}">Voir plus</div>
               <img src="${arrowIcon}" alt="arrow" />
