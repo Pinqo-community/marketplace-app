@@ -9,7 +9,6 @@
 
   .producerInfo {
     display: flex;
-    align-items: center;
     gap: $gap-sm;
 
     .name {
@@ -29,6 +28,7 @@
     align-items: center;
     gap: 8px;
     max-width: 140px;
+    margin-left: 19px;
 
     .dot {
       height: 8px;
