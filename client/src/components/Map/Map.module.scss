@@ -50,3 +50,8 @@ MapContainer {
     background: $color-white;
   }
 }
+
+:global(.leaflet-bar) :global(a.leaflet-disabled) {
+  background-color: #e1e1e100 !important;
+  color: #bbb;
+}

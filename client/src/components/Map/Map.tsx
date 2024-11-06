@@ -8,10 +8,10 @@ import "leaflet.markercluster/dist/leaflet.markercluster";
 import styles from "./Map.module.scss";
 
 // Types and Components
+import { useRef, useState } from "react";
 import { Producer } from "../../types/Producer";
 import ClusterMarkers from "./ClusterMarkers";
 import LocateUser from "./LocateUser";
-import { useRef, useState } from "react";
 
 const Map: React.FC = () => {
   /* -------------------------------------------------------------------------- */
@@ -589,7 +589,13 @@ const Map: React.FC = () => {
   /* -------------------------------------------------------------------------- */
   return (
     <div ref={mapRef} className={styles.mapContainer}>
-      <MapContainer className={styles.map} center={defaultPosition} zoom={11}>
+      <MapContainer
+        className={styles.map}
+        center={defaultPosition}
+        zoom={11}
+        minZoom={10}
+        maxBoundsViscosity={1.0}
+      >
         <TileLayer
           attribution='<a href="https://jawg.io" title="Tiles Courtesy of Jawg Maps" target="_blank">&copy; <b>Jawg</b>Maps</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url={`https://tile.jawg.io/jawg-lagoon/{z}/{x}/{y}{r}.png?access-token=${jawgApiKey}`}
