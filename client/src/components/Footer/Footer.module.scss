@@ -99,6 +99,10 @@
 
           @include media-query($breakpoint-sm) {
             align-items: center;
+
+            &:last-child {
+              display: none;
+            }
           }
 
           .columnTitle {
