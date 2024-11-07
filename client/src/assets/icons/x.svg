@@ -1,0 +1,14 @@
+<svg width="20.000000" height="20.000000" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+	<desc>
+			Created with Pixso.
+	</desc>
+	<defs>
+		<clipPath id="clip32_1544">
+			<rect id="Social Icons" rx="0.000000" width="19.000000" height="19.000000" transform="translate(0.500000 0.500000)" fill="white" fill-opacity="0"/>
+		</clipPath>
+	</defs>
+	<rect id="Social Icons" rx="0.000000" width="19.000000" height="19.000000" transform="translate(0.500000 0.500000)" fill="#FFFFFF" fill-opacity="0"/>
+	<g clip-path="url(#clip32_1544)">
+		<path id="Vector" d="M15.27 1.58L18.08 1.58L11.94 8.6L19.16 18.15L13.5 18.15L9.07 12.36L4 18.15L1.19 18.15L7.76 10.64L0.83 1.58L6.63 1.58L10.63 6.88L15.27 1.58ZM14.28 16.47L15.84 16.47L5.78 3.18L4.11 3.18L14.28 16.47Z" fill="#02AF5E" fill-opacity="1.000000" fill-rule="nonzero"/>
+	</g>
+</svg>
