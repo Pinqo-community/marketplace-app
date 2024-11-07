@@ -1,0 +1,43 @@
+@use "../../scss/global";
+@use "../../scss/variables" as *;
+@use "../../scss/mixins" as *;
+
+.locateUser {
+  position: absolute;
+  margin-right: 20px;
+  top: 60vh;
+  right: 0;
+  background-color: $color-white;
+
+  border-radius: $border-radius-circle;
+  padding: 10px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+  cursor: pointer;
+  z-index: 9999;
+  fill: #979797;
+}
+
+.locateUser svg {
+  width: 24px;
+  height: 24px;
+}
+
+.active {
+  fill: #007bff;
+}
+
+.userLocationIcon {
+  width: 15px !important;
+  height: 15px !important;
+  border-radius: 50%;
+  border: 2px solid $color-white;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+
+  &.active {
+    background-color: #007bff;
+  }
+
+  &.inactive {
+    background-color: #bfbfbf;
+  }
+}

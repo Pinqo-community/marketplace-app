@@ -1,5 +1,5 @@
 @use "variables" as *;
-@use "mixins";
+@use "mixins" as *;
 
 // Reset global
 *,
@@ -104,4 +104,8 @@ button {
   padding: 0;
   margin: 0;
   cursor: pointer;
+}
+
+h2 {
+  @include font-style($size: $font-size-xxl, $weight: $font-weight-bold);
 }

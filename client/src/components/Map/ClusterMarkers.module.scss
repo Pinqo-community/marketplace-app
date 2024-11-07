@@ -1,0 +1,83 @@
+@use "../../scss/global";
+@use "../../scss/variables" as *;
+@use "../../scss/mixins" as *;
+
+.producer {
+  display: flex;
+  flex-direction: column;
+  gap: $gap-xs;
+
+  .producerInfo {
+    display: flex;
+    gap: $gap-sm;
+
+    .name {
+      @include font-style($size: $font-size-xl, $weight: $font-weight-bold, $line-height: 32px);
+    }
+
+    .profilePhoto {
+      width: 30px;
+      height: 30px;
+      border-radius: $border-radius-circle;
+    }
+  }
+
+  .producerStatus {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    max-width: 140px;
+    margin-left: 19px;
+
+    &.open {
+      .dot {
+        background-color: $success-color;
+      }
+      .statusText {
+        color: $success-color;
+      }
+    }
+
+    &.closed {
+      .dot {
+        background-color: $error-color;
+      }
+      .statusText {
+        color: $error-color;
+      }
+    }
+
+    .dot {
+      height: 8px;
+      width: 8px;
+      border-radius: $border-radius-circle;
+      display: inline-block;
+    }
+
+    .statusText {
+      @include font-style($size: $font-size-md, $weight: $font-weight-normal, $line-height: 16px);
+    }
+  }
+
+  .moreInfo {
+    display: flex;
+    justify-content: end;
+    align-items: center;
+    gap: 15px;
+
+    cursor: pointer;
+    transition: all 0.1s ease-in-out;
+
+    .moreInfoText {
+      font-family: Inter;
+      font-size: 14px;
+      font-weight: 400;
+      color: $primary-color;
+    }
+
+    &:hover {
+      transform: translateX(5px);
+    }
+  }
+}

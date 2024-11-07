@@ -9,6 +9,11 @@ $color-black: #000000;
 $color-dark: #171717;
 $color-light: #f5f5f5;
 
+// Status Colors
+$success-color: #00b800;
+$error-color: #ff0000;
+$warning-color: #ffcc00;
+
 // Font Styles
 $font-family: "Inter", sans-serif;
 
@@ -18,17 +23,25 @@ $font-size-sm: 14px;
 $font-size-md: 16px;
 $font-size-lg: 20px;
 $font-size-xl: 24px;
-$font-size-xxl: 32px;
+$font-size-xxl: 36px;
 
 // Font Weights
 $font-weight-normal: 400;
 $font-weight-medium: 500;
 $font-weight-bold: 700;
 
+//Gaps
+$gap-xs: 5px;
+$gap-sm: 10px;
+$gap-md: 20px;
+$gap-lg: 30px;
+$gap-xl: 40px;
+
 // Border Radius
 $border-radius-sm: 4px;
 $border-radius-md: 8px;
 $border-radius-lg: 16px;
+$border-radius-circle: 50%;
 
 // Shadows
 $box-shadow-light: 0 2px 4px rgba(0, 0, 0, 0.1);
