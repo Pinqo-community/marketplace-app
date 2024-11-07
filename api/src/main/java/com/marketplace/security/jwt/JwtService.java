@@ -4,6 +4,7 @@ import com.marketplace.dto.JwtResponse;
 import com.marketplace.entity.User;
 import com.marketplace.repository.UserRepository;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -88,13 +89,21 @@ public class JwtService {
 
 
     public Boolean validateToken(String token, UserDetails userDetails) {
+        if (isExpired(token)) {
+            return false;
+        }
+
         Long userId = Long.parseLong(extractSubject(token));
         User user = userRepository.findById(userId).orElseThrow(() -> new UsernameNotFoundException("User not found"));
-        return user.getUsername().equals(userDetails.getUsername()) && !isExpired(token);
+        return user.getUsername().equals(userDetails.getUsername());
     }
 
     public Boolean isExpired(String token) {
-        return extractExpiration(token).before(new Date());
+        try {
+            return extractExpiration(token).before(new Date());
+        } catch (ExpiredJwtException e) {
+            return true;
+        }
     }
 
     public Date extractExpiration(String token) {
