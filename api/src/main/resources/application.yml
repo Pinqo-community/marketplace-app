@@ -24,6 +24,13 @@ spring:
   profiles:
     default: dev
 
+  springdoc:
+    api-docs:
+      enabled: true
+    swagger-ui:
+      enabled: true
+
 server:
   servlet:
     context-path: /api/v1/
+
