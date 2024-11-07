@@ -99,7 +99,7 @@ public class AuthController {
             )
     })
     @PostMapping("/login")
-    public ResponseEntity<JwtResponse> register(
+    public ResponseEntity<JwtResponse> login(
             @Valid
             @RequestBody
             @Parameter(

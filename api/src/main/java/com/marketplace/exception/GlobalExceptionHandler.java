@@ -46,9 +46,9 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler({WrongCredentialException.class, InvalidTokenException.class})
     public ResponseEntity<ExceptionResponse> handleWrongCredentialException(Exception ex, WebRequest request) {
-        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(
                 new ExceptionResponse(
-                        HttpStatus.FORBIDDEN.value(),
+                        HttpStatus.UNAUTHORIZED.value(),
                         ex.getMessage(),
                         ((ServletWebRequest) request).getRequest().getRequestURI()
                 )
