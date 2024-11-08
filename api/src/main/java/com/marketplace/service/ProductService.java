@@ -31,7 +31,7 @@ public interface ProductService {
      * @param id The ID of the product to retrieve.
      * @return An Optional containing the product if found, or empty if not.
      */
-    Optional<Product> getProductById(Long id);
+    Product getProductById(Long id);
 
     /**
      * Updates an existing product with the details provided in the DTO.

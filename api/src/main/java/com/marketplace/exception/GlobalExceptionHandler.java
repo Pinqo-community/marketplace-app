@@ -33,6 +33,17 @@ public class GlobalExceptionHandler {
         );
     }
 
+    @ExceptionHandler(ProductNotFoundException.class)
+    public ResponseEntity<ExceptionResponse> handleProductNotFoundException(ProductNotFoundException ex, WebRequest request) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                new ExceptionResponse(
+                        HttpStatus.NOT_FOUND.value(),
+                        ex.getMessage(),
+                        ((ServletWebRequest) request).getRequest().getRequestURI()
+                )
+        );
+    }
+
     @ExceptionHandler
     public ResponseEntity<ExceptionResponse> handleInternalException(Exception ex, WebRequest request) {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(

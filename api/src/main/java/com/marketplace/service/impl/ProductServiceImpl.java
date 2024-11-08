@@ -2,9 +2,10 @@ package com.marketplace.service.impl;
 
 import com.marketplace.dto.ProductDto;
 import com.marketplace.entity.Product;
+import com.marketplace.exception.ProductNotFoundException;
 import com.marketplace.repository.ProductRepository;
 import com.marketplace.service.ProductService;
-import com.marketplace.mapper.ProductMapper;
+import com.marketplace.utils.mapper.ProductMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -20,7 +21,6 @@ import java.util.Optional;
 public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository productRepository;
-    private final ProductMapper productMapper;
 
     /**
      * Creates a new product entity based on the provided DTO.
@@ -30,7 +30,7 @@ public class ProductServiceImpl implements ProductService {
      */
     @Override
     public Product createProduct(ProductDto productDto) {
-        Product product = productMapper.toEntity(productDto);
+        Product product = ProductMapper.INSTANCE.toEntity(productDto);
             return productRepository.save(product);
     }
 
@@ -51,8 +51,8 @@ public class ProductServiceImpl implements ProductService {
      * @return An Optional containing the product entity if found.
      */
     @Override
-    public Optional<Product> getProductById(Long id) {
-        return productRepository.findById(id);
+    public Product getProductById(Long id) {
+        return productRepository.findById(id).orElseThrow(() -> new ProductNotFoundException("Ce produit n'existe pas"));
     }
 
     /**
@@ -67,7 +67,7 @@ public class ProductServiceImpl implements ProductService {
     public Product updateProduct(Long id, ProductDto productDto) {
         return productRepository.findById(id)
                 .map(existingProduct -> {
-                    Product updatedProduct = productMapper.toEntity(productDto);
+                    Product updatedProduct = ProductMapper.INSTANCE.toEntity(productDto);
 
                     // Copy all fields from updatedProduct to existingProduct
                     existingProduct.setName(updatedProduct.getName());
