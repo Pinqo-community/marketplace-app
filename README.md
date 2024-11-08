@@ -22,18 +22,22 @@ Analytical tools: Allow consumers to assess the environmental impact of their pu
 
 ## Technologies
 
-**Frontend**
+### **Frontend**
 
-- React
-- [CSS framework or styling solution]
-- Vite
+![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)
+![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white)
+![Redux Toolkit](https://img.shields.io/badge/Redux%20Toolkit-764ABC?style=for-the-badge&logo=redux&logoColor=white)
+![SCSS](https://img.shields.io/badge/SCSS%20Modules-CC6699?style=for-the-badge&logo=sass&logoColor=white)
+![Vite](https://img.shields.io/badge/Vite-646CFF?style=for-the-badge&logo=vite&logoColor=white)
 
-**Backend**
+---
 
-- Java
-- Spring Boot
-- PostgreSQL
-- Stripe (for payments)
+### **Backend**
+
+![Java](https://img.shields.io/badge/Java-007396?style=for-the-badge&logo=java&logoColor=white)
+![Spring Boot](https://img.shields.io/badge/Spring%20Boot-6DB33F?style=for-the-badge&logo=spring-boot&logoColor=white)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-4169E1?style=for-the-badge&logo=postgresql&logoColor=white)
+![Stripe](https://img.shields.io/badge/Stripe-008CDD?style=for-the-badge&logo=stripe&logoColor=white)
 
 ## Features FrontEnd
 
@@ -55,6 +59,13 @@ Analytical tools: Allow consumers to assess the environmental impact of their pu
 - Install Java and Gradle
 - Create a PostgreSQL database and configure the connection details in api/src/main/resources/application.yml
 - Create a Stripe account and obtain your API keys.
+- Configure the map API key:
+  - Obtain an API key from [Jawg Maps](https://jawg.io).
+  - Add the API key to your environment variables file or configuration setup.
+  - Example setup in `.env`:
+    ```env
+    REACT_APP_MAP_API_KEY=your-api-key-here
+    ```
 
 ## Getting Started
 
