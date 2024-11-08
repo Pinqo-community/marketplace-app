@@ -1,9 +1,13 @@
 package com.marketplace.service.impl;
 
+import com.marketplace.dto.category.CategoryCreateDto;
+import com.marketplace.dto.category.CategoryResponseDto;
+import com.marketplace.dto.category.CategoryUpdateDto;
 import com.marketplace.entity.Category;
 import com.marketplace.exception.AlreadyExistsException;
 import com.marketplace.exception.NotFoundException;
 import com.marketplace.repository.CategoryRepository;
+import com.marketplace.utils.mapper.CategoryMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import java.util.List;
@@ -13,21 +17,33 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CategoryService implements CategoryServiceInterface {
     private final CategoryRepository categoryRepository;
+    private final CategoryMapper categoryMapper;
 
-    public List<Category> findAll() {
-        return categoryRepository.findAll();
+    public List<CategoryResponseDto> findAll() {
+        return categoryMapper.toResponseList(categoryRepository.findAll());
     }
 
-    public Category findById(Long id) {
-        return categoryRepository.findById(id)
+    public CategoryResponseDto findById(Long id) {
+        Category category = categoryRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Il n'existe pas de catégorie avec cet ID : " + id));
+        return categoryMapper.toResponse(category);
     }
 
-    public Category save(Category category) {
-        if (categoryRepository.existsByName(category.getName())) {
-            throw new AlreadyExistsException("Il existe déja une catégorie avec ce nom : " + category.getName());
+    public CategoryResponseDto create(CategoryCreateDto categoryCreateDto) {
+        if (categoryRepository.existsByName(categoryCreateDto.getName())) {
+                throw new AlreadyExistsException("Il existe déja une catégorie avec ce nom : " + categoryCreateDto.getName());
         }
-        return categoryRepository.save(category);
+        Category category = categoryMapper.toEntity(categoryCreateDto);
+        Category createdCategory = categoryRepository.save(category);
+        return categoryMapper.toResponse(createdCategory);
+    }
+
+    public CategoryResponseDto update(CategoryUpdateDto categoryUpdateDto, Long id) {
+        Category category = categoryRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Il n'existe pas de catégorie avec cet ID : " + id));
+        categoryMapper.updateCategoryFromDto(categoryUpdateDto, category);
+        Category updatedCategory = categoryRepository.save(category);
+        return categoryMapper.toResponse(updatedCategory);
     }
 
     public void deleteById(Long id) {

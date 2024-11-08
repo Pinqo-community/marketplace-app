@@ -1,9 +1,12 @@
 package com.marketplace.controller;
 
 import com.marketplace.dto.ExceptionResponse;
-import com.marketplace.entity.Category;
+import com.marketplace.dto.category.CategoryCreateDto;
+import com.marketplace.dto.category.CategoryResponseDto;
+import com.marketplace.dto.category.CategoryUpdateDto;
 import com.marketplace.service.impl.CategoryService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -30,12 +33,12 @@ public class CategoryController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Successfully retrieved all categories",
                     content = @Content(mediaType = "application/json",
-                              array = @ArraySchema(schema = @Schema(implementation = Category.class)))),
+                              array = @ArraySchema(schema = @Schema(implementation = CategoryResponseDto.class)))),
             @ApiResponse(responseCode = "500", description = "Internal server error",
                     content = @Content(mediaType = "application/json",
                               schema = @Schema(implementation = ExceptionResponse.class)))
     })
-    public ResponseEntity<List<Category>> getAllCategories() {
+    public ResponseEntity<List<CategoryResponseDto>> getAllCategories() {
         try {
             log.info("GET /categories - START");
             return ResponseEntity.ok(categoryService.findAll());
@@ -45,11 +48,12 @@ public class CategoryController {
     }
 
     @GetMapping("/{id}")
-    @Operation(summary = "Get category by ID", description = "Find the category with the given ID. If it doesn't exists, returns an error")
+    @Operation(summary = "Get category by ID", description = "Find the category with the given ID")
+    @Parameter(name="id", description = "The ID of the category you want to find")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Category successfully retrieved",
                     content = @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = Category.class))),
+                            schema = @Schema(implementation = CategoryResponseDto.class))),
             @ApiResponse(responseCode = "404", description = "Category not found with this id",
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = ExceptionResponse.class))),
@@ -57,7 +61,7 @@ public class CategoryController {
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = ExceptionResponse.class)))
     })
-    public ResponseEntity<Category> getCategoryById(@PathVariable("id") Long id) {
+    public ResponseEntity<CategoryResponseDto> getCategoryById(@PathVariable("id") Long id) {
         try {
             log.info("GET /categories/{id} - START");
             return ResponseEntity.ok(categoryService.findById(id));
@@ -67,11 +71,11 @@ public class CategoryController {
     }
 
     @PostMapping
-    @Operation(summary = "Create category", description = "Add a new category. If a category with this name already exists, return an error")
+    @Operation(summary = "Create category", description = "Add a new category")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Category successfully created",
                     content = @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = Category.class))),
+                            schema = @Schema(implementation = CategoryResponseDto.class))),
             @ApiResponse(responseCode = "409", description = "Category with this name already exists",
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = ExceptionResponse.class))),
@@ -79,21 +83,22 @@ public class CategoryController {
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = ExceptionResponse.class)))
     })
-    public ResponseEntity<Category> createCategory(@RequestBody Category category) {
+    public ResponseEntity<CategoryResponseDto> createCategory(@RequestBody CategoryCreateDto categoryCreateDto) {
         try {
             log.info("POST /categories - START");
-            return ResponseEntity.status(HttpStatus.CREATED).body(categoryService.save(category));
+            return ResponseEntity.status(HttpStatus.CREATED).body(categoryService.create(categoryCreateDto));
         } finally {
             log.info("POST /categories - DONE");
         }
     }
 
     @PutMapping("/{id}")
-    @Operation(summary = "Update category", description = "Update an existing category with a given ID and return it. If there is no category with this ID, return an error.")
+    @Operation(summary = "Update category", description = "Update an existing category with a given ID")
+    @Parameter(name="id", description = "The ID of the category you want to update")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Category successfully updated",
                     content = @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = Category.class))),
+                            schema = @Schema(implementation = CategoryResponseDto.class))),
             @ApiResponse(responseCode = "404", description = "Category not found with this id",
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = ExceptionResponse.class))),
@@ -101,19 +106,18 @@ public class CategoryController {
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = ExceptionResponse.class)))
     })
-    public ResponseEntity<Category> updateCategory(@PathVariable("id") Long id, @RequestBody Category category) {
+    public ResponseEntity<CategoryResponseDto> updateCategory(@PathVariable("id") Long id, @RequestBody CategoryUpdateDto categoryUpdateDto) {
         try {
             log.info("PUT /categories/{id} - START");
-            Category existingCategory = categoryService.findById(id);
-            existingCategory.setName(category.getName());
-            return ResponseEntity.ok(categoryService.save(existingCategory));
+            return ResponseEntity.ok(categoryService.update(categoryUpdateDto, id));
         } finally {
             log.info("PUT /categories/{id} - DONE");
         }
     }
 
     @DeleteMapping("/{id}")
-    @Operation(summary = "Delete category", description = "Delete the category with the given ID and return it. If there is no category with this ID, return an error.")
+    @Operation(summary = "Delete category", description = "Delete the category with the given ID")
+    @Parameter(name="id", description = "The ID of the category you want to update")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "204", description = "Category successfully deleted",
                     content = @Content()),
