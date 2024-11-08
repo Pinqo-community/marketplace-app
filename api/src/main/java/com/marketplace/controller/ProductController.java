@@ -3,6 +3,7 @@ package com.marketplace.controller;
 import com.marketplace.dto.ProductDto;
 import com.marketplace.entity.Product;
 import com.marketplace.service.ProductService;
+import com.marketplace.utils.mapper.ProductMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -42,7 +43,7 @@ public class ProductController {
     public ResponseEntity<Product> createProduct(@Valid @RequestBody ProductDto productDto) {
         log.info("POST /products - Creating a new product");
         Product product = convertToEntity(productDto);
-        Product savedProduct = productService.createProduct(product);
+        Product savedProduct = productService.createProduct(productDto);
         log.info("POST /products - Product created successfully");
         return new ResponseEntity<>(savedProduct, HttpStatus.CREATED);
     }
@@ -77,17 +78,18 @@ public class ProductController {
             @ApiResponse(responseCode = "200", description = "Product successfully recovered."),
             @ApiResponse(responseCode = "404", description = "No product found.")
     })
-    public ResponseEntity<Product> getProductById(
+    public ResponseEntity<ProductDto> getProductById(
             @Parameter(description = "Unique product identifier", required = true) @PathVariable("id") Long id) {
             log.info("GET /products/{} - Retrieving product", id);
-            Optional<Product> product = productService.getProductById(id);
-            if (product.isPresent()) {
-                log.info("GET /products/{} - Product found", id);
-                return new ResponseEntity<>(product.get(), HttpStatus.OK);
-            } else {
-                log.warn("GET /products/{} - Product not found", id);
-                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-            }
+            Product product = productService.getProductById(id);
+            return new ResponseEntity<>(ProductMapper.INSTANCE.toDto(product), HttpStatus.OK);
+//            if (product.isPresent()) {
+//                log.info("GET /products/{} - Product found", id);
+//                return new ResponseEntity<>(product.get(), HttpStatus.OK);
+//            } else {
+//                log.warn("GET /products/{} - Product not found", id);
+//                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+//            }
     }
 
     /**
@@ -103,25 +105,19 @@ public class ProductController {
             @ApiResponse(responseCode = "200", description = "Product successfully updated."),
             @ApiResponse(responseCode = "404", description = "No product found.")
     })
-    public ResponseEntity<Product> updateProduct(
+    public ResponseEntity<ProductDto> updateProduct(
             @Parameter(description = "Unique product identifier", required = true)
             @PathVariable("id") Long id,
             @Valid @RequestBody ProductDto productDto) {
         try {
             log.info("PUT /products/{} -  Updating product", id);
 
-
-            Product existingProduct = existingProductOpt.get();
-            Product updatedProduct = convertToEntity(productDto);
-            updatedProduct.setId(id);
-
-            Product savedProduct = productService.updateProduct(id, updatedProduct);
-            return new ResponseEntity<>(updatedProduct, HttpStatus.OK);
-            } finally{
+            Product savedProduct = productService.updateProduct(id, productDto);
+            return new ResponseEntity<>(ProductMapper.INSTANCE.toDto(savedProduct), HttpStatus.OK);
+        } finally {
             log.info("PUT /products/{} - END: Product updated successfully", id);
-
         }
-            }
+    }
 
     /**
      * Deletes a product by its unique identifier.
