@@ -1,11 +1,36 @@
-import styles from "./ProductCard.module.scss";
-import tomate from "../../assets/images/tomate.png";
-import star from "../../assets/icons/star.svg";
+import { animate, motion } from "framer-motion";
+import { useEffect, useState } from "react";
 import bag from "../../assets/icons/bag.svg";
+import star from "../../assets/icons/star.svg";
+import tomate from "../../assets/images/tomate.png";
+import styles from "./ProductCard.module.scss";
 
 const ProductCard: React.FC = () => {
+  const [quantity, setQuantity] = useState(1);
+  const [displayQuantity, setDisplayQuantity] = useState(1);
+
+  useEffect(() => {
+    const controls = animate(displayQuantity, quantity, {
+      duration: 0.3,
+      onUpdate: (value) => setDisplayQuantity(Math.round(value)),
+    });
+    return controls.stop;
+  }, [quantity, displayQuantity]);
+
+  const buttonVariants = {
+    initial: { scale: 1 },
+    hover: { scale: 1.1 },
+    tap: { scale: 0.95 },
+  };
+
   return (
-    <article className={styles.productCard}>
+    <motion.article
+      whileHover={{ scale: 1.02 }}
+      transition={{
+        duration: 0.1,
+      }}
+      className={styles.productCard}
+    >
       <div className={styles.imageContainer}>
         <img src={tomate} alt="Tomate" className={styles.productImage} />
       </div>
@@ -30,33 +55,53 @@ const ProductCard: React.FC = () => {
 
         <div className={styles.actions}>
           <div className={styles.quantity}>
-            <button
+            <motion.button
               className={styles.quantityBtn}
               aria-label="Diminuer la quantité"
+              disabled={quantity === 1}
+              onClick={() => setQuantity((prevQuantity) => prevQuantity - 1)}
+              variants={buttonVariants}
+              initial="initial"
+              whileTap="tap"
             >
               -
-            </button>
-            <input
-              type="number"
-              value={1}
-              min={1}
-              max={100}
+            </motion.button>
+
+            <motion.div
               className={styles.quantityInput}
               aria-label="Quantité"
-            />
-            <button
+              key={displayQuantity}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.2 }}
+            >
+              {displayQuantity}
+            </motion.div>
+
+            <motion.button
               className={styles.quantityBtn}
               aria-label="Augmenter la quantité"
+              disabled={quantity === 100}
+              onClick={() => setQuantity((prevQuantity) => prevQuantity + 1)}
+              variants={buttonVariants}
+              initial="initial"
+              whileTap="tap"
             >
               +
-            </button>
+            </motion.button>
           </div>
-          <button className={styles.addToCart} aria-label="Ajouter au panier">
-            <img src={bag} alt="" className={styles.bagIcon} />
-          </button>
+
+          <motion.button
+            className={styles.addToCart}
+            aria-label="Ajouter au panier"
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.9 }}
+          >
+            <img src={bag} alt="bag" className={styles.bagIcon} />
+          </motion.button>
         </div>
       </div>
-    </article>
+    </motion.article>
   );
 };
 
