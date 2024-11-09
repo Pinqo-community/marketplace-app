@@ -117,7 +117,7 @@ public class CategoryController {
 
     @DeleteMapping("/{id}")
     @Operation(summary = "Delete category", description = "Delete the category with the given ID")
-    @Parameter(name="id", description = "The ID of the category you want to update")
+    @Parameter(name="id", description = "The ID of the category you want to delete")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "204", description = "Category successfully deleted",
                     content = @Content()),
