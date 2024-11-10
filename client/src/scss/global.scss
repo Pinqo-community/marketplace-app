@@ -107,5 +107,9 @@ button {
 }
 
 h2 {
+  @include font-style($size: $font-size-xxl, $weight: $font-weight-bold);
+}
+
+h3 {
   @include font-style($size: $font-size-xl, $weight: $font-weight-bold);
 }

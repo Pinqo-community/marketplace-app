@@ -37,7 +37,7 @@ const ProductCard: React.FC = () => {
 
       <div className={styles.content}>
         <div className={styles.header}>
-          <h2 className={styles.title}>Tomate</h2>
+          <h3 className={styles.title}>Tomate</h3>
           <div className={styles.rating}>
             <img src={star} alt="Rating" className={styles.starIcon} />
             <span className={styles.ratingValue}>4.5</span>
