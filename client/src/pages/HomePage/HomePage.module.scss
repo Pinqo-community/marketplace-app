@@ -1,14 +1,18 @@
 @use "../../scss/global";
 @use "../../scss/variables" as *;
 @use "../../scss/mixins" as *;
+@use "../../scss/shared" as *;
 
-.section {
+section {
   padding: 20px;
   max-width: $screen-xl;
   margin: 0 auto;
 
   .title {
-    margin-bottom: 30px;
+    @include media-query($breakpoint-xs) {
+      font-size: 30px;
+      text-align: center;
+    }
   }
 
   .mapContainer {
@@ -21,6 +25,34 @@
     .map {
       width: 100%;
       height: 100%;
+    }
+  }
+}
+
+/* -------------------------------------------------------------------------- */
+/*                              Popular Products                              */
+/* -------------------------------------------------------------------------- */
+
+.popularProducts {
+  .sectionContainer {
+    .titleContainer {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 30px;
+
+      @include media-query($breakpoint-xs) {
+        display: block;
+      }
+    }
+    .productsGrid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: $gap-lg;
+      justify-content: space-between;
+
+      @include media-query($breakpoint-md) {
+        justify-content: center;
+      }
     }
   }
 }
