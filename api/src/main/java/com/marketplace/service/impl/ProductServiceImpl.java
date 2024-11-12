@@ -31,6 +31,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public Product createProduct(ProductDto productDto) {
         Product product = ProductMapper.INSTANCE.toEntity(productDto);
+        log.info("Product before save: " + product);
             return productRepository.save(product);
     }
 
@@ -69,7 +70,6 @@ public class ProductServiceImpl implements ProductService {
                 .map(existingProduct -> {
                     Product updatedProduct = ProductMapper.INSTANCE.toEntity(productDto);
 
-                    // Copy all fields from updatedProduct to existingProduct
                     existingProduct.setName(updatedProduct.getName());
                     existingProduct.setDescription(updatedProduct.getDescription());
                     existingProduct.setPhoto(updatedProduct.getPhoto());
@@ -81,7 +81,7 @@ public class ProductServiceImpl implements ProductService {
 
                     return productRepository.save(existingProduct);
                 })
-                .orElseThrow(() -> new ProductNotFoundException("Product not found with ID: " + id));
+                .orElseThrow(() -> new ProductNotFoundException("Ce produit n'existe pas"));
     }
 
     /**

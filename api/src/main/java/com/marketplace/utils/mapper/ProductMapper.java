@@ -3,7 +3,6 @@ package com.marketplace.utils.mapper;
 import com.marketplace.dto.ProductDto;
 import com.marketplace.entity.Product;
 import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 
 /**

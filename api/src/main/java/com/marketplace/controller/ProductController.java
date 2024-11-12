@@ -7,7 +7,6 @@ import com.marketplace.utils.mapper.ProductMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import lombok.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import io.swagger.v3.oas.annotations.*;
@@ -16,7 +15,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 
 import jakarta.validation.Valid;
 import java.util.List;
-import java.util.Optional;
+
 
 /**
  * Controller for managing products in the marketplace.
@@ -40,12 +39,12 @@ public class ProductController {
     @PostMapping
     @Operation(summary = "Create a product", description = "Add a new product in the marketplace")
     @ApiResponse(responseCode = "201", description = "Successfully created product")
-    public ResponseEntity<Product> createProduct(@Valid @RequestBody ProductDto productDto) {
+    public ResponseEntity<ProductDto> createProduct(@Valid @RequestBody ProductDto productDto) {
         log.info("POST /products - Creating a new product");
-        Product product = convertToEntity(productDto);
         Product savedProduct = productService.createProduct(productDto);
+        ProductDto savedProductDto = ProductMapper.INSTANCE.toDto(savedProduct);
         log.info("POST /products - Product created successfully");
-        return new ResponseEntity<>(savedProduct, HttpStatus.CREATED);
+        return new ResponseEntity<>(saveProductDto, HttpStatus.CREATED);
     }
 
     /**
@@ -80,27 +79,20 @@ public class ProductController {
     })
     public ResponseEntity<ProductDto> getProductById(
             @Parameter(description = "Unique product identifier", required = true) @PathVariable("id") Long id) {
-            log.info("GET /products/{} - Retrieving product", id);
-            Product product = productService.getProductById(id);
-            return new ResponseEntity<>(ProductMapper.INSTANCE.toDto(product), HttpStatus.OK);
-//            if (product.isPresent()) {
-//                log.info("GET /products/{} - Product found", id);
-//                return new ResponseEntity<>(product.get(), HttpStatus.OK);
-//            } else {
-//                log.warn("GET /products/{} - Product not found", id);
-//                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-//            }
+        log.info("GET /products/{} - Retrieving product", id);
+        Product product = productService.getProductById(id);
+        return new ResponseEntity<>(ProductMapper.INSTANCE.toDto(product), HttpStatus.OK);
     }
 
     /**
      * Updates an existing product's information.
      *
-     * @param id The unique identifier of the product to update.
+     * @param id         The unique identifier of the product to update.
      * @param productDto The product data transfer object containing updated product details.
      * @return A ResponseEntity with the updated product and HTTP status 200, or status 404 if not found.
      */
     @PutMapping("/{id}")
-    @Operation(summary = "Update a product", description = "Updates informations on an existing product.")
+    @Operation(summary = "Update a product", description = "Updates information on an existing product.")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Product successfully updated."),
             @ApiResponse(responseCode = "404", description = "No product found.")
@@ -128,28 +120,18 @@ public class ProductController {
     @DeleteMapping("/{id}")
     @Operation(summary = "Delete a product", description = "Deletes a product based on its ID.")
     @ApiResponses({
-            @ApiResponse(responseCode = "204", description = "Product sucessfull deleted"),
+            @ApiResponse(responseCode = "204", description = "Product successful deleted"),
             @ApiResponse(responseCode = "404", description = "No product find")
     })
     public ResponseEntity<HttpStatus> deleteProduct(
             @Parameter(description = "Unique product identifier", required = true)
             @PathVariable("id") Long id) {
-                log.info("DELETE /products/{} - Deleting product", id);
-                productService.deleteProduct(id);
-                log.info("DELETE /products/{} - Product deleted successfully", id);
-                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        log.info("DELETE /products/{} - Deleting product", id);
+        productService.deleteProduct(id);
+        log.info("DELETE /products/{} - Product deleted successfully", id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+
     }
 
-    private Product convertToEntity(ProductDto productDto) {
-        return Product.builder()
-                .name(productDto.getName())
-                .description(productDto.getDescription())
-                .photo(productDto.getPhoto())
-                .unitPrice(productDto.getUnitPrice())
-                .nutritionalValue(productDto.getNutritionalValue())
-                .listOfIngredients(productDto.getListOfIngredients())
-                .stockQuantity(productDto.getStockQuantity())
-                .criticalLevel(productDto.getCriticalLevel())
-                .build();
-    }
 }
+
