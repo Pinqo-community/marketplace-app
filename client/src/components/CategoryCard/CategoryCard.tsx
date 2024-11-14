@@ -1,13 +1,12 @@
+import { CategoryCardProps } from "../../types/Category";
 import styles from "./CategoryCard.module.scss";
-import fruit from "../../assets/images/fruit-category.png";
 
-const CategoryCard: React.FC = () => {
+const CategoryCard: React.FC<CategoryCardProps> = ({ title, image }) => {
   return (
-    <div className={styles.categoryCard}>
-      <img className={styles.image} src={fruit} alt="fruit" />
-      <h3 className={styles.title}>Fruits</h3>
-    </div>
+    <article className={styles.categoryCard} role="button" tabIndex={0}>
+      <img className={styles.image} src={image} alt={`Catégorie ${title}`} />
+      <h3 className={styles.title}>{title}</h3>
+    </article>
   );
 };
-
 export default CategoryCard;
