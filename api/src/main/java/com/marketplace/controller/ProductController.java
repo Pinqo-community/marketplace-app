@@ -29,6 +29,7 @@ import java.util.List;
 public class ProductController {
 
     private final ProductService productService;
+    private final ProductMapper productMapper;
 
     /**
      * Creates a new product in the marketplace.
@@ -41,10 +42,12 @@ public class ProductController {
     @ApiResponse(responseCode = "201", description = "Successfully created product")
     public ResponseEntity<ProductDto> createProduct(@Valid @RequestBody ProductDto productDto) {
         log.info("POST /products - Creating a new product");
+        log.info("Received productDto: {}", productDto);
         Product savedProduct = productService.createProduct(productDto);
-        ProductDto savedProductDto = ProductMapper.INSTANCE.toDto(savedProduct);
+        ProductDto savedProductDto = productMapper.toDto(savedProduct);
         log.info("POST /products - Product created successfully");
-        return new ResponseEntity<>(saveProductDto, HttpStatus.CREATED);
+        return new ResponseEntity<>(savedProductDto, HttpStatus.CREATED);
+
     }
 
     /**
@@ -81,7 +84,7 @@ public class ProductController {
             @Parameter(description = "Unique product identifier", required = true) @PathVariable("id") Long id) {
         log.info("GET /products/{} - Retrieving product", id);
         Product product = productService.getProductById(id);
-        return new ResponseEntity<>(ProductMapper.INSTANCE.toDto(product), HttpStatus.OK);
+        return new ResponseEntity<>(productMapper.toDto(product), HttpStatus.OK);
     }
 
     /**
@@ -105,7 +108,7 @@ public class ProductController {
             log.info("PUT /products/{} -  Updating product", id);
 
             Product savedProduct = productService.updateProduct(id, productDto);
-            return new ResponseEntity<>(ProductMapper.INSTANCE.toDto(savedProduct), HttpStatus.OK);
+            return new ResponseEntity<>(productMapper.toDto(savedProduct), HttpStatus.OK);
         } finally {
             log.info("PUT /products/{} - END: Product updated successfully", id);
         }

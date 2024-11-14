@@ -1,7 +1,6 @@
 package com.marketplace.dto;
 
 import lombok.*;
-
 import jakarta.validation.constraints.*;
 import java.math.BigDecimal;
 
@@ -11,6 +10,7 @@ import java.math.BigDecimal;
  */
 @Getter
 @Setter
+@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder

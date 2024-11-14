@@ -4,11 +4,15 @@ import com.marketplace.entity.Product;
 import com.marketplace.dto.ProductDto;
 
 import java.util.List;
-import java.util.Optional;
+
+
+
+
 
 /**
  * Interface defining CRUD operations for managing products.
  */
+
 public interface ProductService {
     /**
      * Creates a new product based on the provided DTO.
