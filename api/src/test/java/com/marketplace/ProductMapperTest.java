@@ -33,7 +33,7 @@ public class ProductMapperTest {
     }
 
     @Test
-    public void testProductDtoToProductMapping_withValidator() {
+    public void testProductDtoToProductMappingWithValidator() {
         ProductDto productDto = ProductDto.builder()
                 .name("Test Product")
                 .description("Test Description")
