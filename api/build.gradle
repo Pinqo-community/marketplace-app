@@ -38,6 +38,8 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
+	implementation 'jakarta.validation:jakarta.validation-api:3.0.2'
+
 
 	// JWT
 	implementation 'io.jsonwebtoken:jjwt:0.12.6'
@@ -51,10 +53,13 @@ dependencies {
 	// MapStruct
 	implementation 'org.mapstruct:mapstruct:1.6.2'
 	annotationProcessor 'org.mapstruct:mapstruct-processor:1.6.2'
+	implementation 'org.projectlombok:lombok-mapstruct-binding:0.2.0'
 
 	// Lombok
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
+
+
 
 	// Development tools
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'

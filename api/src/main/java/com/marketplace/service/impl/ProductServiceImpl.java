@@ -7,20 +7,22 @@ import com.marketplace.repository.ProductRepository;
 import com.marketplace.service.ProductService;
 import com.marketplace.utils.mapper.ProductMapper;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 /**
  * Implementation of the ProductService interface, providing CRUD operations
  * for product management.
  */
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository productRepository;
+    private final ProductMapper productMapper;
 
     /**
      * Creates a new product entity based on the provided DTO.
@@ -30,9 +32,10 @@ public class ProductServiceImpl implements ProductService {
      */
     @Override
     public Product createProduct(ProductDto productDto) {
-        Product product = ProductMapper.INSTANCE.toEntity(productDto);
-        log.info("Product before save: " + product);
-            return productRepository.save(product);
+        log.info("Received ProductDto: {}", productDto);
+        Product product = productMapper.toEntity(productDto);
+        log.info("Converted Product: {}", product);
+        return productRepository.save(product);
     }
 
     /**
@@ -68,7 +71,7 @@ public class ProductServiceImpl implements ProductService {
     public Product updateProduct(Long id, ProductDto productDto) {
         return productRepository.findById(id)
                 .map(existingProduct -> {
-                    Product updatedProduct = ProductMapper.INSTANCE.toEntity(productDto);
+                    Product updatedProduct = productMapper.toEntity(productDto);
 
                     existingProduct.setName(updatedProduct.getName());
                     existingProduct.setDescription(updatedProduct.getDescription());

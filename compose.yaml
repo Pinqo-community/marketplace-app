@@ -14,6 +14,8 @@ services:
     build:
       context: ./api
       dockerfile: Dockerfile.dev
+    command: >
+      /bin/sh -c "./gradlew clean build --refresh-dependencies && ./gradlew bootRun"
     ports:
       - "8080:8080"
     container_name: marketplace-backend
@@ -45,6 +47,27 @@ services:
         target: /app
       - type: volume
         target: /app/node_modules
+
+  backend-tests:
+    build:
+      context: ./api
+      dockerfile: Dockerfile.dev
+    container_name: marketplace-backend-tests
+    command: >
+      /bin/sh -c "./gradlew clean test --refresh-dependencies"
+    environment:
+      DB_NAME: ${DB_NAME}
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_HOST: db
+      DB_PORT: 5432
+    depends_on:
+      - db
+    networks:
+      - app-network
+    volumes:
+      - ./api:/app:cached
+      - gradle-cache:/home/gradle/.gradle
 
   db:
     image: postgres:15

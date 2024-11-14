@@ -5,12 +5,11 @@ import lombok.*;
 import lombok.NoArgsConstructor;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.*;
 import java.math.BigDecimal;
 
 /**
  * Represents a product in the marketplace.
- * This entity contains informations about a product.
+ * This entity contains information about a product.
  */
 
 @Builder
