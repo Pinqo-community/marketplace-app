@@ -1,0 +1,30 @@
+@use "../../scss/global" as *;
+@use "../../scss/variables" as *;
+@use "../../scss/mixins" as *;
+
+.categoryCard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 196px;
+  height: 245px;
+  gap: $gap-sm;
+  padding: 10px;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  background-color: #f2f2f2;
+  border-radius: $border-radius-md;
+
+  .image {
+    width: 169px;
+    height: 169px;
+    object-fit: cover;
+    border-radius: $border-radius-md;
+  }
+
+  // TODO : À enlever après la 0.6.0
+  .title {
+    @include font-style($size: $font-size-xl, $weight: $font-weight-bold);
+  }
+}
