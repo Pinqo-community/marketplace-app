@@ -1,9 +1,9 @@
-import { animate, motion } from "framer-motion";
-import { useEffect, useState } from "react";
+import { motion } from "framer-motion";
+import { useState } from "react";
 import bag from "../../assets/icons/bag.svg";
 import star from "../../assets/icons/star.svg";
-import styles from "./ProductCard.module.scss";
 import { ProductProps } from "../../types/Product";
+import styles from "./ProductCard.module.scss";
 
 const ProductCard: React.FC<ProductProps> = ({ product }) => {
   /* -------------------------------------------------------------------------- */
@@ -14,11 +14,9 @@ const ProductCard: React.FC<ProductProps> = ({ product }) => {
   const MAX_QUANTITY = 100;
 
   const [currentQuantity, setCurrentQuantity] = useState(MIN_QUANTITY);
-  const [displayedQuantity, setDisplayedQuantity] = useState(MIN_QUANTITY);
 
   const buttonVariants = {
     initial: { scale: 1 },
-    hover: { scale: 1.1 },
     tap: { scale: 0.95 },
   };
 
@@ -30,15 +28,6 @@ const ProductCard: React.FC<ProductProps> = ({ product }) => {
   /* -------------------------------------------------------------------------- */
   /*                                  Function                                  */
   /* -------------------------------------------------------------------------- */
-
-  // Animation de changement de quantité
-  useEffect(() => {
-    const controls = animate(displayedQuantity, currentQuantity, {
-      duration: 0.3,
-      onUpdate: (value) => setDisplayedQuantity(Math.round(value)),
-    });
-    return controls.stop;
-  }, [currentQuantity, displayedQuantity]);
 
   /* -------------------------------------------------------------------------- */
   /*                                   Render                                   */
@@ -100,7 +89,7 @@ const ProductCard: React.FC<ProductProps> = ({ product }) => {
                 aria-label="Diminuer la quantité"
                 disabled={currentQuantity === MIN_QUANTITY}
                 onClick={() =>
-                  setCurrentQuantity((prevQuantity) => prevQuantity - 1)
+                  setCurrentQuantity((prev) => Math.max(MIN_QUANTITY, prev - 1))
                 }
                 variants={buttonVariants}
                 initial="initial"
@@ -109,16 +98,15 @@ const ProductCard: React.FC<ProductProps> = ({ product }) => {
                 -
               </motion.button>
 
-              <motion.div
+              <motion.span
                 className={styles.quantityInput}
-                aria-label="Quantité"
-                key={displayedQuantity}
+                key={currentQuantity}
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                transition={{ duration: 0.2 }}
+                transition={{ duration: 0.3 }}
               >
-                {displayedQuantity}
-              </motion.div>
+                {currentQuantity}
+              </motion.span>
 
               <motion.button
                 className={styles.quantityBtn}
