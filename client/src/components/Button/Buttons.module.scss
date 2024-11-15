@@ -39,7 +39,7 @@
 .primaryButton {
   color: $color-white;
   background-color: $primary-color;
-  padding: 12px 48px 12px 48px;
+  padding: 14px 48px 14px 48px;
   border-radius: $border-radius-md;
   transition: background-color 0.2s ease-in-out;
   @include font-style($size: $font-size-sm, $weight: $font-weight-semibold);
