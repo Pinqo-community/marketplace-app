@@ -22,7 +22,6 @@ import java.util.List;
 public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository productRepository;
-    private final ProductMapper productMapper;
 
     /**
      * Creates a new product entity based on the provided DTO.
@@ -33,10 +32,10 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public ProductDto createProduct(ProductDto productDto) {
         log.info("Received ProductDto: {}", productDto);
-        Product product = productMapper.toEntity(productDto);
+        Product product = ProductMapper.INSTANCE.toEntity(productDto);
         log.info("Converted Product: {}", product);
         Product savedProduct = productRepository.save(product);
-        return productMapper.toDto(savedProduct);
+        return ProductMapper.INSTANCE.toDto(savedProduct);
     }
 
     /**
@@ -72,7 +71,7 @@ public class ProductServiceImpl implements ProductService {
     public Product updateProduct(Long id, ProductDto productDto) {
         return productRepository.findById(id)
                 .map(existingProduct -> {
-                    Product updatedProduct = productMapper.toEntity(productDto);
+                    Product updatedProduct = ProductMapper.INSTANCE.toEntity(productDto);
 
                     existingProduct.setName(updatedProduct.getName());
                     existingProduct.setDescription(updatedProduct.getDescription());

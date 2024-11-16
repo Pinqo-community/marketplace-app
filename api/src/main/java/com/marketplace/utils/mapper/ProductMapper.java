@@ -3,7 +3,7 @@ package com.marketplace.utils.mapper;
 import com.marketplace.dto.ProductDto;
 import com.marketplace.entity.Product;
 import org.mapstruct.Mapper;
-
+import org.mapstruct.factory.Mappers;
 
 
 /**
@@ -11,6 +11,8 @@ import org.mapstruct.Mapper;
  */
 @Mapper(componentModel = "spring")
 public interface ProductMapper {
+
+    ProductMapper INSTANCE = Mappers.getMapper( ProductMapper.class );
 
     /**
      * Converts a Product entity to a ProductDto.
