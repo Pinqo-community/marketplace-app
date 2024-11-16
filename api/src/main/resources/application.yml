@@ -43,3 +43,5 @@ app:
   security:
     access-token:
       secret-key: ${JWT_SECRET}
+      access-token-expiration: 900000 #15mins
+      refresh-token-expiration: 86400000 #1day

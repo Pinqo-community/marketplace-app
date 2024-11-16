@@ -24,9 +24,9 @@ import java.util.Map;
 public class JwtService {
     private final UserRepository userRepository;
 
-    // Expiration access token = 15 minutes
+    @Value("${app.security.access-token.access-token-expiration}")
     private final long accessTokenExpiration = 15 * 60 * 1000;
-    // Expiration refresh token = 1 jour
+    @Value("${app.security.access-token.refresh-token-expiration}")
     private final long refreshAccessTokenExpiration = 24 * 60 * 60 * 1000;
 
     @Value("${app.security.access-token.secret-key}")
