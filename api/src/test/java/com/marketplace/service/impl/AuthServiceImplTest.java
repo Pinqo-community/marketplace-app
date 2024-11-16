@@ -15,6 +15,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 
 import java.util.Optional;
@@ -77,6 +78,24 @@ class AuthServiceImplTest {
 
         assertThrows(WrongCredentialException.class,
                 () -> authenticationService.authenticate(request));
+    }
+
+    @Test
+    void authenticate_ShouldThrowException_WhenInvalidCredentials() {
+        // Given
+        LoginRequest request = new LoginRequest("user@email.com", "wrongpassword");
+        User user = new User();
+        user.setProvider("local");
+        when(userRepository.findByEmail(request.email())).thenReturn(Optional.of(user));
+        when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class)))
+                .thenThrow(new BadCredentialsException("Bad credentials"));
+
+        // When & Then
+        WrongCredentialException exception = assertThrows(
+                WrongCredentialException.class,
+                () -> authenticationService.authenticate(request)
+        );
+        assertEquals("Les identifiants sont invalides", exception.getMessage());
     }
 
     @Test
