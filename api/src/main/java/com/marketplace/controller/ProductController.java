@@ -42,9 +42,7 @@ public class ProductController {
     @ApiResponse(responseCode = "201", description = "Successfully created product")
     public ResponseEntity<ProductDto> createProduct(@Valid @RequestBody ProductDto productDto) {
         log.info("POST /products - Creating a new product");
-        log.info("Received productDto: {}", productDto);
-        Product savedProduct = productService.createProduct(productDto);
-        ProductDto savedProductDto = productMapper.toDto(savedProduct);
+        ProductDto savedProductDto = productService.createProduct(productDto);
         log.info("POST /products - Product created successfully");
         return new ResponseEntity<>(savedProductDto, HttpStatus.CREATED);
 

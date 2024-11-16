@@ -20,7 +20,7 @@ public interface ProductService {
      * @param productDto Data Transfer Object containing product details.
      * @return The created product entity.
      */
-    Product createProduct(ProductDto productDto);
+    ProductDto createProduct(ProductDto productDto);
 
     /**
      * Retrieves all products from the database.

@@ -31,11 +31,12 @@ public class ProductServiceImpl implements ProductService {
      * @return The saved product entity.
      */
     @Override
-    public Product createProduct(ProductDto productDto) {
+    public ProductDto createProduct(ProductDto productDto) {
         log.info("Received ProductDto: {}", productDto);
         Product product = productMapper.toEntity(productDto);
         log.info("Converted Product: {}", product);
-        return productRepository.save(product);
+        Product savedProduct = productRepository.save(product);
+        return productMapper.toDto(savedProduct);
     }
 
     /**
