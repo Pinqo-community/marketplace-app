@@ -41,6 +41,7 @@ public class AuthServiceImpl implements AuthService {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.email(), request.password()));
         } catch (Exception e) {
             e.printStackTrace();
+            throw new WrongCredentialException("Les identifiants sont invalides");
         }
 
         return user;
