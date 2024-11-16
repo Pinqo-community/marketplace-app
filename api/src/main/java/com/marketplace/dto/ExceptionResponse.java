@@ -1,15 +1,21 @@
 package com.marketplace.dto;
 
 import com.marketplace.model.ErrorDetail;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
 public record ExceptionResponse(
+        @Schema(description = "Status code", example="400")
         int status,
+        @Schema(description = "Timestamp", example="2024-11-16T14:30:45.123")
         LocalDateTime timestamp,
+        @Schema(description = "Error message", example="Invalid Token")
         String message,
+        @Schema(description = "Request path", example="/api/v1/auth/register")
         String path,
+        @Schema(description = "Validation errors")
         List<ErrorDetail> errors
 ) {
     public ExceptionResponse {
