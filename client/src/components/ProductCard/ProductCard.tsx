@@ -29,6 +29,14 @@ const ProductCard: React.FC<ProductProps> = ({ product }) => {
   /*                                  Function                                  */
   /* -------------------------------------------------------------------------- */
 
+  const handleQuantityChange = (value: number) => {
+    const validatedValue = Math.max(
+      MIN_QUANTITY,
+      Math.min(MAX_QUANTITY, value)
+    );
+    setCurrentQuantity(validatedValue);
+  };
+
   /* -------------------------------------------------------------------------- */
   /*                                   Render                                   */
   /* -------------------------------------------------------------------------- */
@@ -105,7 +113,14 @@ const ProductCard: React.FC<ProductProps> = ({ product }) => {
                 animate={{ opacity: 1 }}
                 transition={{ duration: 0.3 }}
               >
-                {currentQuantity}
+                <input
+                  type="number"
+                  value={currentQuantity}
+                  onChange={(e) => handleQuantityChange(Number(e.target.value))}
+                  className={styles.inputField}
+                  min={MIN_QUANTITY}
+                  max={MAX_QUANTITY}
+                />
               </motion.span>
 
               <motion.button

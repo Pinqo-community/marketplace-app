@@ -97,6 +97,18 @@ table {
   border-spacing: 0;
 }
 
+// Input reset
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type="number"] {
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+
 // Button
 button {
   background: none;
