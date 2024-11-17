@@ -50,7 +50,9 @@ section {
         justify-content: center;
 
         &:first-child {
-          transform: rotate(180deg);
+          img {
+            transform: rotate(180deg);
+          }
         }
       }
     }

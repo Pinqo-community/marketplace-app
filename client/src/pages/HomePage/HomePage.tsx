@@ -8,6 +8,7 @@ import CategoryCard from "../../components/CategoryCard/CategoryCard";
 import Map from "../../components/Map/Map";
 import MainLayout from "../../layouts/MainLayout";
 import styles from "./HomePage.module.scss";
+import { motion } from "framer-motion";
 
 const HomePage: React.FC = () => {
   /* -------------------------------------------------------------------------- */
@@ -59,6 +60,28 @@ const HomePage: React.FC = () => {
   ];
   const prevRef = useRef(null);
   const nextRef = useRef(null);
+
+  const buttonVariants = {
+    initial: {
+      scale: 1,
+      opacity: 0.5,
+    },
+    hover: {
+      scale: 1.1,
+      opacity: 1,
+      transition: {
+        duration: 0.2,
+        ease: "easeInOut",
+      },
+    },
+    tap: {
+      scale: 0.95,
+      transition: {
+        duration: 0.1,
+      },
+    },
+  };
+
   /* -------------------------------------------------------------------------- */
   /*                                  Function                                  */
   /* -------------------------------------------------------------------------- */
@@ -72,12 +95,27 @@ const HomePage: React.FC = () => {
         <div className={styles.titleContainer}>
           <h2>Catégories</h2>
           <div className={styles.arrowContainer}>
-            <button ref={prevRef} className={styles.arrow}>
+            <motion.button
+              ref={prevRef}
+              className={styles.arrow}
+              variants={buttonVariants}
+              initial="initial"
+              whileHover="hover"
+              whileTap="tap"
+            >
               <img src={arrowSlider} />
-            </button>
-            <button ref={nextRef} className={styles.arrow}>
+            </motion.button>
+
+            <motion.button
+              ref={nextRef}
+              className={styles.arrow}
+              variants={buttonVariants}
+              initial="initial"
+              whileHover="hover"
+              whileTap="tap"
+            >
               <img src={arrowSlider} />
-            </button>
+            </motion.button>
           </div>
         </div>
         <div className={styles.categoryContainer}>
