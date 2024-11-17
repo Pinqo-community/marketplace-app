@@ -14,13 +14,12 @@
   cursor: pointer;
 
   .imageContainer {
-    width: 265px;
-    height: 233px;
+    aspect-ratio: 1/1;
     border-radius: $border-radius-md;
 
     img {
       width: 100%;
-      height: inherit;
+      height: 100%;
       border-radius: $border-radius-md;
       object-fit: cover;
     }
