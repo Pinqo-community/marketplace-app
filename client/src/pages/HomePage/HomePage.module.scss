@@ -11,7 +11,6 @@ section {
   .title {
     @include media-query($breakpoint-xs) {
       font-size: 30px;
-      text-align: center;
     }
   }
 
@@ -39,11 +38,8 @@ section {
       display: flex;
       justify-content: space-between;
       margin-bottom: 30px;
-
-      @include media-query($breakpoint-xs) {
-        display: block;
-      }
     }
+
     .productsGrid {
       display: flex;
       flex-wrap: wrap;

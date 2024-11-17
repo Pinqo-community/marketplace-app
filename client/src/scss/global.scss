@@ -108,6 +108,9 @@ button {
 
 h2 {
   @include font-style($size: $font-size-xxl, $weight: $font-weight-bold);
+  @include media-query($breakpoint-xs) {
+    line-height: 1;
+  }
 }
 
 h3 {
