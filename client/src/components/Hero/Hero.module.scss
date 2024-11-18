@@ -36,23 +36,37 @@
     width: 100%;
     margin-left: 20%;
 
-    @include media-query($breakpoint-sm) {
-      margin-left: 0;
-      text-align: center;
-      align-items: center;
-
-      @include media-query($breakpoint-xs) {
-        h1 {
-          font-size: 38px;
-          line-height: normal;
-        }
-      }
-    }
-
     h1 {
       display: flex;
       flex-direction: column;
       width: max-content;
+    }
+
+    @include media-query($breakpoint-md) {
+      margin-left: 15%;
+    }
+
+    @include media-query($breakpoint-sm) {
+      margin-left: 4vw;
+      text-align: center;
+      align-items: center;
+    }
+
+    @include media-query($breakpoint-xs) {
+      margin-left: 0;
+    }
+
+    @include media-query($breakpoint-md) {
+      h1 {
+        font-size: 38px;
+        line-height: normal;
+      }
+    }
+
+    @include media-query($breakpoint-xs) {
+      h1 {
+        font-size: 32px;
+      }
     }
   }
 }
