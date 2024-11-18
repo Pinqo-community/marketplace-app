@@ -8,24 +8,31 @@ const Hero: React.FC = () => {
       <div className={styles.content}>
         <h1>
           <motion.span
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
             transition={{ duration: 0.5 }}
           >
-            Commander{" "}
+            Commander
           </motion.span>
           <motion.span
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5, delay: 0.5 }}
+          >
+            les meilleurs produits
+          </motion.span>
+          <motion.span
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
             transition={{ duration: 0.5, delay: 1 }}
           >
-            les meilleurs produits près de chez vous
+            près de chez vous
           </motion.span>
         </h1>
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 2 }}
+          transition={{ duration: 0.5, delay: 1 }}
         >
           <PrimaryButton light>Voir la boutique</PrimaryButton>
         </motion.div>
