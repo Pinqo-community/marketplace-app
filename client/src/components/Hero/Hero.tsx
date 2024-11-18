@@ -5,6 +5,7 @@ import styles from "./Hero.module.scss";
 const Hero: React.FC = () => {
   return (
     <section className={styles.hero}>
+      <div className={styles.overlay}></div>
       <div className={styles.content}>
         <h1>
           <motion.span
