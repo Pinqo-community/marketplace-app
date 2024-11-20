@@ -5,6 +5,8 @@ import com.marketplace.entity.Product;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 
+import java.util.List;
+
 
 /**
  * Mapper interface for converting between Product and ProductDto objects.
@@ -29,5 +31,12 @@ public interface ProductMapper {
      * @return The converted Product entity.
      */
     Product toEntity(ProductDto productDto);
+
+    /**
+     * Converts a list of product entities to a list of ProductDto
+     * @param products The Products entity to be converted.
+     * @return The converted ProductDtoList.
+     */
+    List<ProductDto> toDtoList(List<Product> products);
 }
 
