@@ -2,14 +2,17 @@ package com.marketplace.service.impl;
 
 import com.marketplace.dto.LoginRequest;
 import com.marketplace.dto.RegisterRequest;
+import com.marketplace.entity.InvalidRefreshToken;
 import com.marketplace.entity.User;
 import com.marketplace.exception.InvalidTokenException;
 import com.marketplace.exception.WrongCredentialException;
+import com.marketplace.repository.InvalidRefreshTokenRepository;
 import com.marketplace.repository.UserRepository;
 import com.marketplace.security.jwt.JwtService;
 import com.marketplace.model.user.BasicUserInfos;
 import com.marketplace.service.AuthService;
 import com.marketplace.service.UserService;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -17,11 +20,13 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class AuthServiceImpl implements AuthService {
     private final UserRepository userRepository;
     private final UserService userService;
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
+    private final InvalidRefreshTokenRepository invalidRefreshTokenRepository;
 
     @Override
     public User register(RegisterRequest request) {
@@ -49,9 +54,16 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public User refreshToken(String refreshToken) {
-        if (jwtService.isExpired(refreshToken) || !jwtService.extractClaimValue(refreshToken, "typ").equals("Refresh")) {
+        if (jwtService.isExpired(refreshToken) || !jwtService.extractClaimValue(refreshToken, "typ").equals("Refresh") || invalidRefreshTokenRepository.existsByToken(refreshToken)) {
             throw new InvalidTokenException("Token invalide");
         }
+
+        invalidRefreshTokenRepository.save(
+                InvalidRefreshToken.builder()
+                        .token(refreshToken)
+                        .expiryDate(jwtService.extractExpiration(refreshToken))
+                        .build()
+        );
 
         Long userId = Long.parseLong(jwtService.extractSubject(refreshToken));
         return userRepository.findById(userId).orElseThrow(() -> new InvalidTokenException("Token invalide"));
