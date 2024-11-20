@@ -17,7 +17,6 @@ import java.math.BigDecimal;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-
 @Entity
 @Table(name = "product")
 public class Product{
@@ -32,4 +31,14 @@ public class Product{
     private String listOfIngredients;
     private Integer stockQuantity;
     private Integer criticalLevel;
+
+    @Column(nullable = false, columnDefinition = "BOOLEAN DEFAULT TRUE")
+    @Builder.Default
+    private Boolean active = true;
+
+
+
+
+
 }
+

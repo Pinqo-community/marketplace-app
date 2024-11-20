@@ -33,6 +33,9 @@ public class GlobalExceptionHandler {
         );
     }
 
+    @ExceptionHandler(NotFoundException.class)
+    public ResponseEntity<ExceptionResponse> handleNotFoundException(NotFoundException ex, WebRequest request) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
     @ExceptionHandler(UserAlreadyExistsException.class)
     public ResponseEntity<ExceptionResponse> handleUserAlreadyExists(UserAlreadyExistsException ex, WebRequest request) {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(
@@ -55,6 +58,18 @@ public class GlobalExceptionHandler {
         );
     }
 
+        @ExceptionHandler(UnavailableProductException.class)
+        @ResponseStatus(HttpStatus.GONE)
+        public ResponseEntity<ExceptionResponse>handleUnavailableProductException(UnavailableProductException ex, WebRequest request) {
+            return ResponseEntity.status(HttpStatus.GONE).body(
+                    new ExceptionResponse(
+                            HttpStatus.GONE.value(),
+                            ex.getMessage(),
+                            ((ServletWebRequest) request).getRequest().getRequestURI()
+                    )
+            );
+        }
+
     @ExceptionHandler
     public ResponseEntity<ExceptionResponse> handleInternalException(Exception ex, WebRequest request) {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
@@ -65,4 +80,6 @@ public class GlobalExceptionHandler {
                 )
         );
     }
+
+
 }

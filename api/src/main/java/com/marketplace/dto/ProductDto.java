@@ -73,4 +73,7 @@ public class ProductDto {
     @NotNull(message = "Le seuil critique ne peut pas être nul")
     @Min(value = 0, message = "Le seuil critique doit être supérieur ou égal à 1")
     private Integer criticalLevel;
+
+    @NotNull(message = "L'état actif ou inactif du produit est obligatoire.")
+    private Boolean active;
 }
