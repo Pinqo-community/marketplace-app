@@ -7,7 +7,7 @@ const CategoryCard: React.FC<CategoryCardProps> = ({ title, image }) => {
     <motion.article
       whileHover={{
         scale: 1.05,
-        boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.2)",
+        boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.13)",
       }}
       transition={{ type: "spring", stiffness: 300 }}
       className={styles.categoryCard}
