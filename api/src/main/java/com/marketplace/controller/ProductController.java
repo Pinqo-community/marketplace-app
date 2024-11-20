@@ -4,6 +4,8 @@ import com.marketplace.dto.ProductDto;
 import com.marketplace.entity.Product;
 import com.marketplace.service.ProductService;
 import com.marketplace.utils.mapper.ProductMapper;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -85,6 +87,7 @@ public class ProductController {
     @Operation(summary = "Get a product by ID", description = "Retrieves a product based on its identifier.")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Product successfully recovered."),
+
             @ApiResponse(responseCode = "404", description = "No product found.")
     })
     public ResponseEntity<ProductDto> getProductById(
@@ -95,6 +98,27 @@ public class ProductController {
             return new ResponseEntity<>(productMapper.toDto(product), HttpStatus.OK);
         } finally {
             log.info("GET /products/{} - END: product recovered", id);
+        }
+    }
+
+
+    @Operation(summary = "Retrieve products by status", description = "Fetches products filtered by their active/inactive status.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Products retrieved successfully",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Product.class))}),
+                    @ApiResponse(responseCode = "400", description = "Invalid input parameter"),
+                    @ApiResponse(responseCode = "500", description = "Internal server error"),
+                    @ApiResponse(responseCode = "404", description = "No products found for the given status.")
+            })
+    @GetMapping("/status")
+    public ResponseEntity<List<ProductDto>> getProductsByStatus(@RequestParam Boolean active) {
+        try {
+            log.info("GET /products/status{} - START: Retrieving products", active);
+            List<ProductDto> products = productService.getProductsByStatus(active);
+            return ResponseEntity.ok(products);
+        } finally {
+            log.info("GET /products/status{} - END: products successfully retrieved", active);
         }
     }
 

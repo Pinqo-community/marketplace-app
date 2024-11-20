@@ -5,10 +5,6 @@ import com.marketplace.dto.ProductDto;
 
 import java.util.List;
 
-
-
-
-
 /**
  * Interface defining CRUD operations for managing products.
  */
@@ -36,6 +32,13 @@ public interface ProductService {
      * @return An Optional containing the product if found, or empty if not.
      */
     Product getProductById(Long id);
+
+    /**
+     * Select products by status
+     * @param active  product's status
+     * @return A list of all products function  their status
+     */
+    List<ProductDto> getProductsByStatus(Boolean active);
 
     /**
      * Updates an existing product with the details provided in the DTO.

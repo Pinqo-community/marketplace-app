@@ -1,36 +1,34 @@
-//package com.marketplace;
+//package com.marketplace.utils.mapper;
 //
 //import com.marketplace.dto.ProductDto;
 //import com.marketplace.entity.Product;
-//import com.marketplace.utils.mapper.ProductMapper;
 //import jakarta.validation.ConstraintViolation;
-//import jakarta.validation.Validation;
-//import jakarta.validation.Validator;
-//import jakarta.validation.ValidatorFactory;
-//import org.junit.jupiter.api.BeforeEach;
 //import org.junit.jupiter.api.Test;
-//import org.springframework.beans.factory.annotation.Autowired;
+//import org.junit.jupiter.api.extension.ExtendWith;
+//import org.mockito.InjectMocks;
+//import org.mockito.Mock;
+//import org.mockito.junit.jupiter.MockitoExtension;
 //import org.springframework.boot.test.context.SpringBootTest;
+//
 //import java.math.BigDecimal;
 //import java.util.Set;
 //
 //import static org.junit.jupiter.api.Assertions.*;
 //
 //@SpringBootTest
-///*
-//  Vérifie que ProductManager convertit correctement un ProductDTO en Product avec toutes les valeurs renseignées
-// */
+//@ExtendWith(MockitoExtension.class)
+//
 //public class ProductMapperTest {
-//    @Autowired
+//
+//    @Mock
 //    private ProductMapper productMapper;
 //
-//    private Validator validator;
+//    @InjectMocks
+//    private jakarta.validation.Validator validator;
 //
-//    @BeforeEach
-//    public void setUp() {
-//        ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
-//        validator = factory.getValidator();
-//    }
+//    @InjectMocks
+//    private ProductMapperTest testInstance;
+//
 //
 //    @Test
 //    public void testProductDtoToProductMappingWithValidator() {
@@ -45,7 +43,7 @@
 //                .criticalLevel(5)
 //                .build();
 //
-//        // Validation du ProductDto
+//
 //        Set<ConstraintViolation<ProductDto>> violations = validator.validate(productDto);
 //        assertTrue(violations.isEmpty(), "Le ProductDto contient des violations de contraintes : " + violations);
 //
@@ -63,12 +61,11 @@
 //    }
 //
 //    /**
-//     * simule un ProductDto invalide
-//     * puis vérifie que les contraintes de validation sont bien déclenchées et signalées par le Validator.
+//     * simulates an invalid ProductDto
+//     * then checks that validation constraints are triggered and signaled by the Validator.
 //     */
 //    @Test
-//    public void testProductDtoToProductMapping_withInvalidDto() {
-//        // Création d'un ProductDto avec un champ obligatoire manquant
+//    public void testProductDtoToProductMappingWithInvalidDto() {
 //        ProductDto invalidProductDto = ProductDto.builder()
 //                .description("Test Description")
 //                .photo("test-photo-url")
@@ -77,8 +74,9 @@
 //                .criticalLevel(5)
 //                .build();
 //
-//        // Validation de ProductDto et vérification de la violation
 //        Set<ConstraintViolation<ProductDto>> violations = validator.validate(invalidProductDto);
 //        assertFalse(violations.isEmpty(), "Le ProductDto devrait contenir des violations de contraintes");
 //    }
 //}
+
+
