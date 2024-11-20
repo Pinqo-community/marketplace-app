@@ -33,11 +33,22 @@ public class GlobalExceptionHandler {
         );
     }
 
-    @ExceptionHandler(ProductNotFoundException.class)
-    public ResponseEntity<ExceptionResponse> handleProductNotFoundException(ProductNotFoundException ex, WebRequest request) {
+    @ExceptionHandler(NotFoundException.class)
+    public ResponseEntity<ExceptionResponse> handleNotFoundException(NotFoundException ex, WebRequest request) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
                 new ExceptionResponse(
                         HttpStatus.NOT_FOUND.value(),
+                        ex.getMessage(),
+                        ((ServletWebRequest) request).getRequest().getRequestURI()
+                )
+        );
+    }
+
+    @ExceptionHandler(UnavailableProductException.class)
+    public ResponseEntity<ExceptionResponse>handleUnavailableProductException(UnavailableProductException ex, WebRequest request) {
+        return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).body(
+                new ExceptionResponse(
+                        HttpStatus.SERVICE_UNAVAILABLE.value(),
                         ex.getMessage(),
                         ((ServletWebRequest) request).getRequest().getRequestURI()
                 )
@@ -54,4 +65,6 @@ public class GlobalExceptionHandler {
                 )
         );
     }
+
+
 }

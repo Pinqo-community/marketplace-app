@@ -2,7 +2,8 @@ package com.marketplace.service.impl;
 
 import com.marketplace.dto.ProductDto;
 import com.marketplace.entity.Product;
-import com.marketplace.exception.ProductNotFoundException;
+import com.marketplace.exception.NotFoundException;
+import com.marketplace.exception.UnavailableProductException;
 import com.marketplace.repository.ProductRepository;
 import com.marketplace.service.ProductService;
 import com.marketplace.utils.mapper.ProductMapper;
@@ -56,7 +57,17 @@ public class ProductServiceImpl implements ProductService {
      */
     @Override
     public Product getProductById(Long id) {
-        return productRepository.findById(id).orElseThrow(() -> new ProductNotFoundException("Ce produit n'existe pas"));
+        return productRepository.findById(id)
+                .map(product -> {
+                    if (!product.getActive()) {
+                        throw new UnavailableProductException("Le produit avec l'ID " + id + " est inactif ou non disponible.");
+                    }
+                    if (product.getStockQuantity() == 0) {
+                        throw new UnavailableProductException("Le produit est en rupture de stock.");
+                    }
+                    return product;
+                })
+                .orElseThrow(() -> new NotFoundException("Ce produit n'existe pas"));
     }
 
     /**
@@ -71,6 +82,7 @@ public class ProductServiceImpl implements ProductService {
     public Product updateProduct(Long id, ProductDto productDto) {
         return productRepository.findById(id)
                 .map(existingProduct -> {
+
                     Product updatedProduct = ProductMapper.INSTANCE.toEntity(productDto);
 
                     existingProduct.setName(updatedProduct.getName());
@@ -81,10 +93,11 @@ public class ProductServiceImpl implements ProductService {
                     existingProduct.setListOfIngredients(updatedProduct.getListOfIngredients());
                     existingProduct.setStockQuantity(updatedProduct.getStockQuantity());
                     existingProduct.setCriticalLevel(updatedProduct.getCriticalLevel());
+                    existingProduct.setActive(updatedProduct.getActive());
 
                     return productRepository.save(existingProduct);
                 })
-                .orElseThrow(() -> new ProductNotFoundException("Ce produit n'existe pas"));
+                .orElseThrow(() -> new NotFoundException("Ce produit n'existe pas"));
     }
 
     /**
@@ -94,8 +107,12 @@ public class ProductServiceImpl implements ProductService {
      */
     @Override
     public void deleteProduct(Long id) {
+        if (!productRepository.existsById(id)) {
+            throw new NotFoundException("Ce produit n'existe pas");
+        }
         productRepository.deleteById(id);
     }
+
 
 }
 
