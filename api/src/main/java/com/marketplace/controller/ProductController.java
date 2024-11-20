@@ -41,10 +41,14 @@ public class ProductController {
     @Operation(summary = "Create a product", description = "Add a new product in the marketplace")
     @ApiResponse(responseCode = "201", description = "Successfully created product")
     public ResponseEntity<ProductDto> createProduct(@Valid @RequestBody ProductDto productDto) {
-        log.info("POST /products - Creating a new product");
-        ProductDto savedProductDto = productService.createProduct(productDto);
-        log.info("POST /products - Product created successfully");
-        return new ResponseEntity<>(savedProductDto, HttpStatus.CREATED);
+        try {
+            log.info("POST /products - START: Creating a new product");
+            ProductDto savedProductDto = productService.createProduct(productDto);
+            log.info("POST /products - Product created successfully");
+            return new ResponseEntity<>(savedProductDto, HttpStatus.CREATED);
+        } finally {
+            log.info("POST /products - END: new product created");
+        }
 
     }
 
@@ -60,10 +64,15 @@ public class ProductController {
             @ApiResponse(responseCode = "204", description = "No products found.")
     })
     public ResponseEntity<List<Product>> getAllProducts() {
-        log.info("GET /products - Retrieving all products");
-        List<Product> products = productService.getAllProducts();
-        log.info("GET /products - Retrieved {} products", products.size());
-        return new ResponseEntity<>(products, HttpStatus.OK);
+        try {
+            log.info("GET /products - START");
+            List<Product> products = productService.getAllProducts();
+            log.info("GET /products - Retrieved {} products", products.size());
+            return new ResponseEntity<>(products, HttpStatus.OK);
+        } finally {
+            log.info("GET /products - DONE");
+
+        }
     }
 
     /**
@@ -80,9 +89,13 @@ public class ProductController {
     })
     public ResponseEntity<ProductDto> getProductById(
             @Parameter(description = "Unique product identifier", required = true) @PathVariable("id") Long id) {
-        log.info("GET /products/{} - Retrieving product", id);
-        Product product = productService.getProductById(id);
-        return new ResponseEntity<>(productMapper.toDto(product), HttpStatus.OK);
+        try {
+            log.info("GET /products/{} - START: Retrieving product", id);
+            Product product = productService.getProductById(id);
+            return new ResponseEntity<>(productMapper.toDto(product), HttpStatus.OK);
+        } finally {
+            log.info("GET /products/{} - END: product recovered", id);
+        }
     }
 
     /**
@@ -103,8 +116,7 @@ public class ProductController {
             @PathVariable("id") Long id,
             @Valid @RequestBody ProductDto productDto) {
         try {
-            log.info("PUT /products/{} -  Updating product", id);
-
+            log.info("PUT /products/{} - START:  Updating product", id);
             Product savedProduct = productService.updateProduct(id, productDto);
             return new ResponseEntity<>(productMapper.toDto(savedProduct), HttpStatus.OK);
         } finally {
@@ -127,10 +139,14 @@ public class ProductController {
     public ResponseEntity<HttpStatus> deleteProduct(
             @Parameter(description = "Unique product identifier", required = true)
             @PathVariable("id") Long id) {
-        log.info("DELETE /products/{} - Deleting product", id);
-        productService.deleteProduct(id);
-        log.info("DELETE /products/{} - Product deleted successfully", id);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        try {
+            log.info("DELETE /products/{} - Deleting product", id);
+            productService.deleteProduct(id);
+            log.info("DELETE /products/{} - Product deleted successfully", id);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } finally {
+            log.info("DELETE /products/{} - DONE", id);
+        }
 
     }
 
