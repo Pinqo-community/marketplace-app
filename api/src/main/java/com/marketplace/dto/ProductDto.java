@@ -1,5 +1,6 @@
 package com.marketplace.dto;
-
+import com.marketplace.validation.OnCreate;
+import com.marketplace.validation.OnUpdate;
 import lombok.*;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
@@ -17,6 +18,10 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 @Builder
 public class ProductDto {
+
+    @Null(groups = OnCreate.class)
+    @NotNull(groups = OnUpdate.class)
+    private Long id;
     /**
      * Product name.
      * Cannot be empty and must be between 1 and 100 characters long.
@@ -71,9 +76,10 @@ public class ProductDto {
      * Cannot be zero and must be greater than or equal to 1.
      */
     @NotNull(message = "Le seuil critique ne peut pas être nul")
-    @Min(value = 0, message = "Le seuil critique doit être supérieur ou égal à 1")
+    @Min(value = 1, message = "Le seuil critique doit être supérieur ou égal à 1")
     private Integer criticalLevel;
 
     @NotNull(message = "L'état actif ou inactif du produit est obligatoire.")
     private Boolean active;
 }
+

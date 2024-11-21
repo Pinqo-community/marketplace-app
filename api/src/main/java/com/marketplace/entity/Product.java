@@ -33,7 +33,7 @@ public class Product{
     private Integer criticalLevel;
 
     @Column(nullable = false, columnDefinition = "BOOLEAN DEFAULT TRUE")
-    @Builder.Default
+    @Builder.Default // This ensures a default value when using the Builder pattern
     private Boolean active = true;
 
 

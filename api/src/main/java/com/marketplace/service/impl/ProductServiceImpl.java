@@ -63,9 +63,6 @@ public class ProductServiceImpl implements ProductService {
                     if (!product.getActive()) {
                         throw new UnavailableProductException("Le produit avec l'ID " + id + " est inactif ou non disponible.");
                     }
-                    if (product.getStockQuantity() == 0) {
-                        throw new UnavailableProductException("Le produit est en rupture de stock.");
-                    }
                     return product;
                 })
                 .orElseThrow(() -> new NotFoundException("Ce produit n'existe pas"));
@@ -100,22 +97,16 @@ public class ProductServiceImpl implements ProductService {
      */
     @Override
     public Product updateProduct(Long id, ProductDto productDto) {
+        if (!id.equals(productDto.getId())) {
+            throw new IllegalArgumentException("L'Id de l'url ne correspond pas à l'Id du DTO");
+        }
+
         return productRepository.findById(id)
                 .map(existingProduct -> {
 
                     Product updatedProduct = ProductMapper.INSTANCE.toEntity(productDto);
-
-                    existingProduct.setName(updatedProduct.getName());
-                    existingProduct.setDescription(updatedProduct.getDescription());
-                    existingProduct.setPhoto(updatedProduct.getPhoto());
-                    existingProduct.setUnitPrice(updatedProduct.getUnitPrice());
-                    existingProduct.setNutritionalValue(updatedProduct.getNutritionalValue());
-                    existingProduct.setListOfIngredients(updatedProduct.getListOfIngredients());
-                    existingProduct.setStockQuantity(updatedProduct.getStockQuantity());
-                    existingProduct.setCriticalLevel(updatedProduct.getCriticalLevel());
-                    existingProduct.setActive(updatedProduct.getActive());
-
-                    return productRepository.save(existingProduct);
+                    updatedProduct.setId(existingProduct.getId());
+                    return productRepository.save(updatedProduct);
                 })
                 .orElseThrow(() -> new NotFoundException("Ce produit n'existe pas"));
     }
