@@ -97,6 +97,18 @@ table {
   border-spacing: 0;
 }
 
+// Input reset
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type="number"] {
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+
 // Button
 button {
   background: none;
@@ -106,6 +118,17 @@ button {
   cursor: pointer;
 }
 
+h1 {
+  @include font-style($size: 64px, $weight: $font-weight-extrabold, $color: $color-white, $line-height: 72px);
+}
+
 h2 {
   @include font-style($size: $font-size-xxl, $weight: $font-weight-bold);
+  @include media-query($breakpoint-xs) {
+    line-height: 1;
+  }
+}
+
+h3 {
+  @include font-style($size: $font-size-xl, $weight: $font-weight-bold);
 }

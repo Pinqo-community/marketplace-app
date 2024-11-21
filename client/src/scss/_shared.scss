@@ -1,0 +1,23 @@
+@use "variables" as *;
+@use "mixins" as *;
+
+.moreInfo {
+  display: flex;
+  justify-content: end;
+  align-items: center;
+  gap: 15px;
+
+  cursor: pointer;
+  transition: all 0.1s ease-in-out;
+
+  .moreInfoText {
+    font-family: Inter;
+    font-size: 14px;
+    font-weight: 400;
+    color: $primary-color;
+  }
+
+  &:hover {
+    transform: translateX(5px);
+  }
+}
