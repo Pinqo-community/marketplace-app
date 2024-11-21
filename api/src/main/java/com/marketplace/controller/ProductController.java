@@ -1,5 +1,7 @@
 package com.marketplace.controller;
 
+import com.marketplace.validation.OnCreate;
+import com.marketplace.validation.OnUpdate;
 import com.marketplace.dto.ProductDto;
 import com.marketplace.entity.Product;
 import com.marketplace.service.ProductService;
@@ -8,6 +10,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -40,6 +43,7 @@ public class ProductController {
      * @return A ResponseEntity with the created product and HTTP status 201.
      */
     @PostMapping
+    @Validated(OnCreate.class)
     @Operation(summary = "Create a product", description = "Add a new product in the marketplace")
     @ApiResponse(responseCode = "201", description = "Successfully created product")
     public ResponseEntity<ProductDto> createProduct(@Valid @RequestBody ProductDto productDto) {
@@ -130,6 +134,7 @@ public class ProductController {
      * @return A ResponseEntity with the updated product and HTTP status 200, or status 404 if not found.
      */
     @PutMapping("/{id}")
+    @Validated(OnUpdate.class)
     @Operation(summary = "Update a product", description = "Updates information on an existing product.")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Product successfully updated."),
