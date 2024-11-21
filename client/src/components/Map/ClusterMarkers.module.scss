@@ -1,6 +1,7 @@
 @use "../../scss/global";
 @use "../../scss/variables" as *;
 @use "../../scss/mixins" as *;
+@use "../../scss/shared" as *;
 
 .producer {
   display: flex;
@@ -57,27 +58,6 @@
 
     .statusText {
       @include font-style($size: $font-size-md, $weight: $font-weight-normal, $line-height: 16px);
-    }
-  }
-
-  .moreInfo {
-    display: flex;
-    justify-content: end;
-    align-items: center;
-    gap: 15px;
-
-    cursor: pointer;
-    transition: all 0.1s ease-in-out;
-
-    .moreInfoText {
-      font-family: Inter;
-      font-size: 14px;
-      font-weight: 400;
-      color: $primary-color;
-    }
-
-    &:hover {
-      transform: translateX(5px);
     }
   }
 }
