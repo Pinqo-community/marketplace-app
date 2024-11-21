@@ -2,12 +2,11 @@ package com.marketplace.controller;
 
 import com.marketplace.dto.*;
 import com.marketplace.entity.User;
-import com.marketplace.security.jwt.JwtService;
+import com.marketplace.service.JwtService;
 import com.marketplace.service.AuthService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;

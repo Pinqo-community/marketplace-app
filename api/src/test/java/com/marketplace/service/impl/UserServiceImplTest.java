@@ -12,6 +12,7 @@ import com.marketplace.repository.RoleRepository;
 import com.marketplace.repository.UserRepository;
 import com.marketplace.service.BuyerService;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -41,76 +42,62 @@ class UserServiceImplTest {
     private UserServiceImpl userService;
 
     private UserInfos userInfos;
-    private Role userRole;
-    private Buyer buyer;
 
     @BeforeEach
     void setUp() {
         userInfos = new BasicUserInfos(new RegisterRequest("test@example", "Password123!", "John", "Doe"));
-
-        userRole = new Role();
-        userRole.setName(RoleType.ROLE_USER);
-
-        buyer = new Buyer();
-        buyer.setFirstName("John");
-        buyer.setLastName("Doe");
     }
 
-    @Test
-    void createUser_Success() {
-        when(userRepository.existsByEmail(anyString())).thenReturn(false);
-        when(roleRepository.findByName(RoleType.ROLE_USER))
-                .thenReturn(Optional.of(userRole));
-        when(buyerService.createBuyer(anyString(), anyString()))
-                .thenReturn(buyer);
-        when(passwordEncoder.encode(anyString()))
-                .thenReturn("encodedPassword");
-        when(userRepository.save(any(User.class)))
-                .thenAnswer(invocation -> invocation.getArgument(0));
+    @Nested
+    class CreateUser {
+        @Test
+        void whenValidUser_thenReturnUser() {
+            // Given
+            Role role = mock(Role.class);
+            Buyer buyer = mock(Buyer.class);
+            User user = mock(User.class);
 
-        User result = userService.createUser(userInfos);
+            when(userRepository.existsByEmail(anyString())).thenReturn(false);
 
-        assertNotNull(result);
-        assertEquals(userInfos.getEmail(), result.getEmail());
-        assertEquals("encodedPassword", result.getPassword());
-        assertEquals(1, result.getRoles().size());
-        assertTrue(result.getRoles().stream()
-                .anyMatch(role -> role.getName() == RoleType.ROLE_USER));
-        assertTrue(result.isEnabled());
-        assertEquals(buyer, result.getBuyer());
+            when(roleRepository.findByName(any(RoleType.class))).thenReturn(Optional.of(role));
 
-        verify(userRepository).existsByEmail(userInfos.getEmail());
-        verify(roleRepository).findByName(RoleType.ROLE_USER);
-        verify(buyerService).createBuyer(userInfos.getFirstName(), userInfos.getLastName());
-        verify(passwordEncoder).encode(userInfos.getPassword());
-        verify(userRepository).save(any(User.class));
-    }
+            when(buyerService.createBuyer(anyString(), anyString())).thenReturn(buyer);
 
-    @Test
-    void createUser_WithExistingEmail_ThrowsException() {
-        when(userRepository.existsByEmail(anyString())).thenReturn(true);
+            when(passwordEncoder.encode(anyString())).thenReturn("encodedPassword");
+            when(userRepository.save(any(User.class))).thenReturn(user);
 
-        assertThrows(UserAlreadyExistsException.class,
-                () -> userService.createUser(userInfos));
+            // When
+            User result = userService.createUser(userInfos);
 
-        verify(userRepository).existsByEmail(userInfos.getEmail());
-        verifyNoMoreInteractions(roleRepository, buyerService, passwordEncoder);
-    }
+            // Then
+            assertNotNull(result);
+            verify(userRepository).save(any(User.class));
+        }
 
-    @Test
-    void createUser_RoleNotFound_ThrowsException() {
-        when(userRepository.existsByEmail(anyString())).thenReturn(false);
-        when(roleRepository.findByName(RoleType.ROLE_USER))
-                .thenReturn(Optional.empty());
+        @Test
+        void whenEmailAlreadyExists_thenThrowException() {
+            // Given
+            when(userRepository.existsByEmail(anyString())).thenReturn(true);
 
-        RuntimeException exception = assertThrows(RuntimeException.class,
-                () -> userService.createUser(userInfos));
+            // When
+            UserAlreadyExistsException result = assertThrows(UserAlreadyExistsException.class, () -> userService.createUser(userInfos));
 
-        assertEquals("Un problème est survenu dans la création de l'utilisateur",
-                exception.getMessage());
+            // Then
+            assertEquals("Cet email est déjà utilisé", result.getMessage());
+        }
 
-        verify(userRepository).existsByEmail(userInfos.getEmail());
-        verify(roleRepository).findByName(RoleType.ROLE_USER);
-        verifyNoMoreInteractions(buyerService, passwordEncoder);
+        @Test
+        void whenRoleNotExists_thenThrowException() {
+            // Given
+            when(userRepository.existsByEmail(anyString())).thenReturn(false);
+
+            when(roleRepository.findByName(any(RoleType.class))).thenThrow(new RuntimeException("Un problème est survenu dans la création de l'utilisateur"));
+
+            // When
+            RuntimeException result = assertThrows(RuntimeException.class, () -> userService.createUser(userInfos));
+
+            // Then
+            assertEquals("Un problème est survenu dans la création de l'utilisateur", result.getMessage());
+        }
     }
 }

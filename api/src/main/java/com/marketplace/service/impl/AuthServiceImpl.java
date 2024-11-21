@@ -8,14 +8,15 @@ import com.marketplace.exception.InvalidTokenException;
 import com.marketplace.exception.WrongCredentialException;
 import com.marketplace.repository.InvalidRefreshTokenRepository;
 import com.marketplace.repository.UserRepository;
-import com.marketplace.security.jwt.JwtService;
 import com.marketplace.model.user.BasicUserInfos;
 import com.marketplace.service.AuthService;
+import com.marketplace.service.JwtService;
 import com.marketplace.service.UserService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -44,8 +45,7 @@ public class AuthServiceImpl implements AuthService {
 
         try {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.email(), request.password()));
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (AuthenticationException e) {
             throw new WrongCredentialException("Les identifiants sont invalides");
         }
 
@@ -67,6 +67,5 @@ public class AuthServiceImpl implements AuthService {
 
         Long userId = Long.parseLong(jwtService.extractSubject(refreshToken));
         return userRepository.findById(userId).orElseThrow(() -> new InvalidTokenException("Token invalide"));
-
     }
 }

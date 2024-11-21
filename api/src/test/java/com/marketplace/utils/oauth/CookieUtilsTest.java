@@ -1,6 +1,7 @@
 package com.marketplace.utils.oauth;
 
 import jakarta.servlet.http.Cookie;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -14,115 +15,156 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(MockitoExtension.class)
 class CookieUtilsTest {
-    @Test
-    void getCookie_WhenCookieExists_ShouldReturnCookie() {
-        MockHttpServletRequest request = new MockHttpServletRequest();
-        Cookie expectedCookie = new Cookie("test-cookie", "test-value");
-        request.setCookies(expectedCookie);
+    @Nested
+    class GetCookie {
+        @Test
+        void getCookie_WhenCookieExists_ShouldReturnCookie() {
+            // Given
+            MockHttpServletRequest request = new MockHttpServletRequest();
+            Cookie expectedCookie = new Cookie("test-cookie", "test-value");
+            request.setCookies(expectedCookie);
 
-        Optional<Cookie> result = CookieUtils.getCookie(request, "test-cookie");
+            // When
+            Optional<Cookie> result = CookieUtils.getCookie(request, "test-cookie");
 
-        assertTrue(result.isPresent());
-        assertEquals("test-cookie", result.get().getName());
-        assertEquals("test-value", result.get().getValue());
+            // Then
+            assertTrue(result.isPresent());
+            assertEquals("test-cookie", result.get().getName());
+            assertEquals("test-value", result.get().getValue());
+        }
+
+        @Test
+        void getCookie_WhenCookieDoesNotExist_ShouldReturnEmpty() {
+            // Given
+            MockHttpServletRequest request = new MockHttpServletRequest();
+            request.setCookies(new Cookie("other-cookie", "other-value"));
+
+            // When
+            Optional<Cookie> result = CookieUtils.getCookie(request, "test-cookie");
+
+            // Then
+            assertFalse(result.isPresent());
+        }
+
+        @Test
+        void getCookie_WhenNoCookies_ShouldReturnEmpty() {
+            // Given
+            MockHttpServletRequest request = new MockHttpServletRequest();
+
+            // When
+            Optional<Cookie> result = CookieUtils.getCookie(request, "test-cookie");
+
+            // Then
+            assertFalse(result.isPresent());
+        }
     }
 
-    @Test
-    void getCookie_WhenCookieDoesNotExist_ShouldReturnEmpty() {
-        MockHttpServletRequest request = new MockHttpServletRequest();
-        request.setCookies(new Cookie("other-cookie", "other-value"));
+    @Nested
+    class AddCookie {
+        @Test
+        void addCookie_ShouldAddCookieWithCorrectAttributes() {
+            // Given
+            MockHttpServletResponse response = new MockHttpServletResponse();
+            String name = "test-cookie";
+            String value = "test-value";
+            int maxAge = 3600;
 
-        Optional<Cookie> result = CookieUtils.getCookie(request, "test-cookie");
+            // When
+            CookieUtils.addCookie(response, name, value, maxAge);
 
-        assertFalse(result.isPresent());
+            // Then
+            Cookie[] cookies = response.getCookies();
+            assertEquals(1, cookies.length);
+            Cookie addedCookie = cookies[0];
+            assertEquals(name, addedCookie.getName());
+            assertEquals(value, addedCookie.getValue());
+            assertEquals(maxAge, addedCookie.getMaxAge());
+            assertEquals("/", addedCookie.getPath());
+            assertTrue(addedCookie.isHttpOnly());
+        }
     }
 
-    @Test
-    void getCookie_WhenNoCookies_ShouldReturnEmpty() {
-        MockHttpServletRequest request = new MockHttpServletRequest();
+    @Nested
+    class DeleteCookie {
+        @Test
+        void deleteCookie_WhenCookieExists_ShouldDeleteCookie() {
+            // Given
+            MockHttpServletRequest request = new MockHttpServletRequest();
+            MockHttpServletResponse response = new MockHttpServletResponse();
+            Cookie cookieToDelete = new Cookie("test-cookie", "test-value");
+            request.setCookies(cookieToDelete);
 
-        Optional<Cookie> result = CookieUtils.getCookie(request, "test-cookie");
+            // When
+            CookieUtils.deleteCookie(request, response, "test-cookie");
 
-        assertFalse(result.isPresent());
+            // Then
+            Cookie[] responseCookies = response.getCookies();
+            assertEquals(1, responseCookies.length);
+            Cookie deletedCookie = responseCookies[0];
+            assertEquals("test-cookie", deletedCookie.getName());
+            assertEquals("", deletedCookie.getValue());
+            assertEquals(0, deletedCookie.getMaxAge());
+            assertEquals("/", deletedCookie.getPath());
+        }
+
+        @Test
+        void deleteCookie_WhenCookieDoesNotExist_ShouldDoNothing() {
+            // Given
+            MockHttpServletRequest request = new MockHttpServletRequest();
+            MockHttpServletResponse response = new MockHttpServletResponse();
+            request.setCookies(new Cookie("other-cookie", "other-value"));
+
+            // When
+            CookieUtils.deleteCookie(request, response, "test-cookie");
+
+            // Then
+            assertEquals(0, response.getCookies().length);
+        }
     }
 
-    @Test
-    void addCookie_ShouldAddCookieWithCorrectAttributes() {
-        MockHttpServletResponse response = new MockHttpServletResponse();
-        String name = "test-cookie";
-        String value = "test-value";
-        int maxAge = 3600;
+    @Nested
+    class Serialize {
+        @Test
+        void serialize_ShouldSerializeObjectToBase64String() {
+            // Given
+            TestObject testObject = new TestObject("test value");
 
-        CookieUtils.addCookie(response, name, value, maxAge);
+            // When
+            String serialized = CookieUtils.serialize(testObject);
 
-        Cookie[] cookies = response.getCookies();
-        assertEquals(1, cookies.length);
-        Cookie addedCookie = cookies[0];
-        assertEquals(name, addedCookie.getName());
-        assertEquals(value, addedCookie.getValue());
-        assertEquals(maxAge, addedCookie.getMaxAge());
-        assertEquals("/", addedCookie.getPath());
-        assertTrue(addedCookie.isHttpOnly());
+            // Then
+            assertNotNull(serialized);
+            assertTrue(serialized.length() > 0);
+            assertDoesNotThrow(() -> java.util.Base64.getUrlDecoder().decode(serialized));
+        }
     }
 
-    @Test
-    void deleteCookie_WhenCookieExists_ShouldDeleteCookie() {
-        MockHttpServletRequest request = new MockHttpServletRequest();
-        MockHttpServletResponse response = new MockHttpServletResponse();
-        Cookie cookieToDelete = new Cookie("test-cookie", "test-value");
-        request.setCookies(cookieToDelete);
+    @Nested
+    class Deserialize {
+        @Test
+        void deserialize_ShouldDeserializeFromCookie() {
+            // Given
+            TestObject originalObject = new TestObject("test value");
+            String serialized = CookieUtils.serialize(originalObject);
+            Cookie cookie = new Cookie("test-cookie", serialized);
 
-        CookieUtils.deleteCookie(request, response, "test-cookie");
+            // When
+            TestObject deserialized = CookieUtils.deserialize(cookie, TestObject.class);
 
-        Cookie[] responseCookies = response.getCookies();
-        assertEquals(1, responseCookies.length);
-        Cookie deletedCookie = responseCookies[0];
-        assertEquals("test-cookie", deletedCookie.getName());
-        assertEquals("", deletedCookie.getValue());
-        assertEquals(0, deletedCookie.getMaxAge());
-        assertEquals("/", deletedCookie.getPath());
-    }
+            // Then
+            assertNotNull(deserialized);
+            assertEquals(originalObject.getValue(), deserialized.getValue());
+        }
 
-    @Test
-    void deleteCookie_WhenCookieDoesNotExist_ShouldDoNothing() {
-        MockHttpServletRequest request = new MockHttpServletRequest();
-        MockHttpServletResponse response = new MockHttpServletResponse();
-        request.setCookies(new Cookie("other-cookie", "other-value"));
+        @Test
+        void deserialize_WithInvalidData_ShouldThrowException() {
+            // Given
+            Cookie cookie = new Cookie("test-cookie", "invalid-base64-data");
 
-        CookieUtils.deleteCookie(request, response, "test-cookie");
-
-        assertEquals(0, response.getCookies().length);
-    }
-
-    @Test
-    void serialize_ShouldSerializeObjectToBase64String() {
-        TestObject testObject = new TestObject("test value");
-
-        String serialized = CookieUtils.serialize(testObject);
-
-        assertNotNull(serialized);
-        assertTrue(serialized.length() > 0);
-        assertDoesNotThrow(() -> java.util.Base64.getUrlDecoder().decode(serialized));
-    }
-
-    @Test
-    void deserialize_ShouldDeserializeFromCookie() {
-        TestObject originalObject = new TestObject("test value");
-        String serialized = CookieUtils.serialize(originalObject);
-        Cookie cookie = new Cookie("test-cookie", serialized);
-
-        TestObject deserialized = CookieUtils.deserialize(cookie, TestObject.class);
-
-        assertNotNull(deserialized);
-        assertEquals(originalObject.getValue(), deserialized.getValue());
-    }
-
-    @Test
-    void deserialize_WithInvalidData_ShouldThrowException() {
-        Cookie cookie = new Cookie("test-cookie", "invalid-base64-data");
-
-        assertThrows(IllegalArgumentException.class, () ->
-                CookieUtils.deserialize(cookie, TestObject.class));
+            // When
+            assertThrows(IllegalArgumentException.class, () ->
+                    CookieUtils.deserialize(cookie, TestObject.class));
+        }
     }
 
     // serialisation/deserialisation class for testing

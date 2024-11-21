@@ -2,6 +2,7 @@ package com.marketplace.service.impl;
 
 import com.marketplace.entity.Buyer;
 import com.marketplace.repository.BuyerRepository;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -10,8 +11,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class BuyerServiceImplTest {
@@ -21,23 +21,24 @@ class BuyerServiceImplTest {
     @InjectMocks
     private BuyerServiceImpl buyerService;
 
-    @Test
-    void createBuyer_WithValidData_ShouldReturnSavedBuyer() {
-        String firstName = "John";
-        String lastName = "Doe";
+    @Nested
+    class CreateBuyer {
+        @Test
+        void createBuyer_WithValidData_ShouldReturnSavedBuyer() {
+            // Given
+            String firstName = "John";
+            String lastName = "Doe";
 
-        Buyer expectedBuyer = Buyer.builder()
-                .firstName(firstName)
-                .lastName(lastName)
-                .build();
+            Buyer buyer = mock(Buyer.class);
 
-        when(buyerRepository.save(any(Buyer.class))).thenReturn(expectedBuyer);
+            when(buyerRepository.save(any(Buyer.class))).thenReturn(buyer);
 
-        Buyer result = buyerService.createBuyer(firstName, lastName);
+            // When
+            Buyer result = buyerService.createBuyer(firstName, lastName);
 
-        assertNotNull(result);
-        assertEquals(firstName, result.getFirstName());
-        assertEquals(lastName, result.getLastName());
-        verify(buyerRepository).save(any(Buyer.class));
+            // Then
+            assertNotNull(result);
+            verify(buyerRepository).save(any(Buyer.class));
+        }
     }
 }

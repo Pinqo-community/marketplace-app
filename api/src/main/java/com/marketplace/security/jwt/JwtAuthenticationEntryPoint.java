@@ -20,6 +20,7 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
 
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException {
+        System.out.println("WE ARE HERE");
         ExceptionResponse errorResponse = new ExceptionResponse(
                 HttpServletResponse.SC_UNAUTHORIZED,
                 LocalDateTime.now(),

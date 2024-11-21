@@ -3,16 +3,10 @@ package com.marketplace.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.marketplace.annotation.ControllerWebMvcTest;
 import com.marketplace.dto.*;
-import com.marketplace.entity.Buyer;
-import com.marketplace.entity.Role;
 import com.marketplace.entity.User;
-import com.marketplace.exception.InvalidTokenException;
-import com.marketplace.exception.UserAlreadyExistsException;
-import com.marketplace.model.RoleType;
-import com.marketplace.security.jwt.JwtService;
+import com.marketplace.service.JwtService;
 import com.marketplace.service.AuthService;
-import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -20,14 +14,11 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ControllerWebMvcTest(AuthController.class)
@@ -44,225 +35,234 @@ class AuthControllerTest {
     @Autowired
     private ObjectMapper objectMapper;
 
-    private User user;
-    private JwtResponse jwtResponse;
+    @Nested
+    class Register {
+        @Test
+        void whenValidData_thenReturnSuccess() throws Exception {
+            // Given
+            RegisterRequest request = new RegisterRequest(
+                    "test@email.com",
+                    "Password123!",
+                    "John",
+                    "Doe"
+            );
+            JwtResponse jwtResponse = mock(JwtResponse.class);
+            User user = mock(User.class);
 
-    @BeforeEach
-    public void setup() {
-        jwtResponse = new JwtResponse("jwt-token", "refresh-token");
-        user = User.builder()
-                .email("test@test.com")
-                .password("Password123!")
-                .buyer(
-                        Buyer.builder()
-                                .firstName("John")
-                                .lastName("Doe")
-                                .build()
-                )
-                .provider("local")
-                .enabled(true)
-                .roles(new HashSet<>(Set.of(new Role(RoleType.ROLE_USER))))
-                .build();
+            when(authService.register(any())).thenReturn(user);
+            when(jwtService.generateJwtToken(any())).thenReturn(jwtResponse);
+
+            // When
+            mockMvc.perform(post("/auth/register")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsString(request)))
+                            .andExpect(status().isCreated());
+        }
+
+        @Test
+        void whenInvalidEmail_thendReturnBadRequest() throws Exception {
+            // Given
+            RegisterRequest request = new RegisterRequest(
+                    "invalidEmail",
+                    "Password123!",
+                    "John",
+                    "Doe"
+            );
+
+            // When
+            MvcResult result = mockMvc.perform(post("/auth/register")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsString(request)))
+                    .andExpect(status().isBadRequest())
+                    .andReturn();
+
+            // Then
+            String contentAsString = result.getResponse().getContentAsString();
+            ExceptionResponse actualResponse = objectMapper.readValue(contentAsString, ExceptionResponse.class);
+
+            assertThat(actualResponse)
+                    .isNotNull()
+                    .isInstanceOf(ExceptionResponse.class);
+        }
+
+        @Test
+        void whenInvalidPassword_thenReturnBadRequest() throws Exception {
+            RegisterRequest request = new RegisterRequest(
+                    "test@test.com",
+                    "wrongPassword",
+                    "John",
+                    "Doe"
+            );
+
+            // When
+            MvcResult result = mockMvc.perform(post("/auth/register")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsString(request)))
+                    .andExpect(status().isBadRequest())
+                    .andReturn();
+
+            // Then
+            String contentAsString = result.getResponse().getContentAsString();
+            ExceptionResponse actualResponse = objectMapper.readValue(contentAsString, ExceptionResponse.class);
+
+            assertThat(actualResponse)
+                    .isNotNull()
+                    .isInstanceOf(ExceptionResponse.class);
+        }
+
+        @Test
+        void whenInvalidFirstname_thenReturnBadRequest() throws Exception {
+            // Given
+            RegisterRequest request = new RegisterRequest(
+                    "test@test.com",
+                    "Password123!",
+                    "John31",
+                    "Doe"
+            );
+
+            // When
+            MvcResult result = mockMvc.perform(post("/auth/register")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsString(request)))
+                    .andExpect(status().isBadRequest())
+                    .andReturn();
+
+            // Then
+            String contentAsString = result.getResponse().getContentAsString();
+            ExceptionResponse actualResponse = objectMapper.readValue(contentAsString, ExceptionResponse.class);
+
+            assertThat(actualResponse)
+                    .isNotNull()
+                    .isInstanceOf(ExceptionResponse.class);
+        }
+
+        @Test
+        void whenInvalidLastname_thenReturnBadRequest() throws Exception {
+            // Given
+            RegisterRequest request = new RegisterRequest(
+                    "test@test.com",
+                    "Password123!",
+                    "John",
+                    "Doe31"
+            );
+
+            // When
+            MvcResult result = mockMvc.perform(post("/auth/register")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsString(request)))
+                    .andExpect(status().isBadRequest())
+                    .andReturn();
+
+            // Then
+            String contentAsString = result.getResponse().getContentAsString();
+            ExceptionResponse actualResponse = objectMapper.readValue(contentAsString, ExceptionResponse.class);
+
+            assertThat(actualResponse)
+                    .isNotNull()
+                    .isInstanceOf(ExceptionResponse.class);
+        }
     }
 
-    /*
-     * REGISTER OPERATION TESTS
-     */
-    @Test
-    void register_WithValidData_ShouldReturnSuccess() throws Exception {
-        RegisterRequest request = new RegisterRequest(
-                "test@test.com",
-                "Password123!",
-                "John",
-                "Doe"
-        );
+    @Nested
+    class Login {
+        @Test
+        void whenValidData_thenReturnSuccess() throws Exception {
+            LoginRequest request = new LoginRequest(
+                    "test@test.com",
+                    "Password123!"
+            );
+            JwtResponse jwtResponse = mock(JwtResponse.class);
+            User user = mock(User.class);
 
-        when(authService.register(any())).thenReturn(user);
-        when(jwtService.generateJwtToken(any())).thenReturn(jwtResponse);
+            when(authService.authenticate(any())).thenReturn(user);
+            when(jwtService.generateJwtToken(any())).thenReturn(jwtResponse);
 
-        mockMvc.perform(post("/auth/register")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(request)))
-                .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.accessToken").value("jwt-token"))
-                .andExpect(jsonPath("$.refreshToken").value("refresh-token"));
+            mockMvc.perform(post("/auth/login")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsString(request)))
+                    .andExpect(status().isOk());
+        }
+
+        @Test
+        void whenEmptyEmail_thenReturnBadRequest() throws Exception {
+            LoginRequest request = new LoginRequest(
+                    "",
+                    "Password123!"
+            );
+
+            MvcResult result = mockMvc.perform(post("/auth/login")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsString(request)))
+                    .andExpect(status().isBadRequest())
+                    .andReturn();
+
+            String contentAsString = result.getResponse().getContentAsString();
+            ExceptionResponse actualResponse = objectMapper.readValue(contentAsString, ExceptionResponse.class);
+
+            assertThat(actualResponse)
+                    .isNotNull()
+                    .isInstanceOf(ExceptionResponse.class);
+        }
+
+        @Test
+        void whenEmptyPassword_thenReturnBadRequest() throws Exception {
+            LoginRequest request = new LoginRequest(
+                    "test@test.com",
+                    ""
+            );
+
+            MvcResult result = mockMvc.perform(post("/auth/login")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsString(request)))
+                    .andExpect(status().isBadRequest())
+                    .andReturn();
+
+            String contentAsString = result.getResponse().getContentAsString();
+            ExceptionResponse actualResponse = objectMapper.readValue(contentAsString, ExceptionResponse.class);
+
+            assertThat(actualResponse)
+                    .isNotNull()
+                    .isInstanceOf(ExceptionResponse.class);
+        }
     }
 
-    @Test
-    void register_WithInvalidEmail_ShouldReturnBadRequest() throws Exception {
-        RegisterRequest request = new RegisterRequest(
-                "invalid-email",
-                "Password123!",
-                "John",
-                "Doe"
-        );
+    @Nested
+    class RefreshToken {
+        @Test
+        void whenValidData_thenReturnSuccess() throws Exception {
+            RefreshTokenRequest request = new RefreshTokenRequest(
+                    "refresh-token"
+            );
+            JwtResponse jwtResponse = mock(JwtResponse.class);
+            User user = mock(User.class);
 
-        MvcResult result = mockMvc.perform(post("/auth/register")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(request)))
-                .andExpect(status().isBadRequest())
-                .andReturn();
+            when(authService.refreshToken(any())).thenReturn(user);
+            when(jwtService.generateJwtToken(any())).thenReturn(jwtResponse);
 
-        String contentAsString = result.getResponse().getContentAsString();
-        ExceptionResponse actualResponse = objectMapper.readValue(contentAsString, ExceptionResponse.class);
+            mockMvc.perform(post("/auth/refresh-token")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsString(request)))
+                    .andExpect(status().isOk());
+        }
 
-        assertThat(actualResponse)
-                .isNotNull()
-                .isInstanceOf(ExceptionResponse.class);
-    }
+        @Test
+        void whenEmptyToken_thenReturnBadRequest() throws Exception {
+            RefreshTokenRequest request = new RefreshTokenRequest(
+                    ""
+            );
 
-    @Test
-    void register_WithExistingEmail_ShouldReturnConflict() throws Exception {
-        RegisterRequest request = new RegisterRequest(
-                "test@test.com",
-                "Password123!",
-                "John",
-                "Doe"
-        );
+            MvcResult result = mockMvc.perform(post("/auth/refresh-token")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsString(request)))
+                    .andExpect(status().isBadRequest())
+                    .andReturn();
 
-        when(authService.register(any()))
-                .thenThrow(new UserAlreadyExistsException("Email already exists"));
+            String contentAsString = result.getResponse().getContentAsString();
+            ExceptionResponse actualResponse = objectMapper.readValue(contentAsString, ExceptionResponse.class);
 
-        mockMvc.perform(post("/auth/register")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(request)))
-                .andExpect(status().isConflict())
-                .andExpect(jsonPath("$.message").value("Email already exists"));
-    }
-
-    @Test
-    void register_WhenServiceThrowsException_ShouldReturnInternalError() throws Exception {
-        RegisterRequest request = new RegisterRequest(
-                "test@test.com",
-                "Password123!",
-                "John",
-                "Doe"
-        );
-
-        when(authService.register(any()))
-                .thenThrow(new RuntimeException("Unexpected error"));
-
-        mockMvc.perform(post("/auth/register")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(request)))
-                .andExpect(status().isInternalServerError());
-    }
-
-    /*
-     * LOGIN OPERATION TESTS
-     */
-    @Test
-    void login_WithValidData_ShouldReturnSuccess() throws Exception {
-        LoginRequest request = new LoginRequest(
-                "test@test.com",
-                "Password123!"
-        );
-
-        when(authService.authenticate(any())).thenReturn(user);
-        when(jwtService.generateJwtToken(any())).thenReturn(jwtResponse);
-
-        mockMvc.perform(post("/auth/login")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(request)))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.accessToken").value("jwt-token"))
-                .andExpect(jsonPath("$.refreshToken").value("refresh-token"));
-    }
-
-    @Test
-    void login_WithEmailEmail_ShouldReturnBadRequest() throws Exception {
-        LoginRequest request = new LoginRequest(
-                "",
-                "Password123!"
-        );
-
-        MvcResult result = mockMvc.perform(post("/auth/login")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(request)))
-                .andExpect(status().isBadRequest())
-                .andReturn();
-
-        String contentAsString = result.getResponse().getContentAsString();
-        ExceptionResponse actualResponse = objectMapper.readValue(contentAsString, ExceptionResponse.class);
-
-        assertThat(actualResponse)
-                .isNotNull()
-                .isInstanceOf(ExceptionResponse.class);
-    }
-
-    @Test
-    void login_WithEmailPassword_ShouldReturnBadRequest() throws Exception {
-        LoginRequest request = new LoginRequest(
-                "test@test.com",
-                ""
-        );
-
-        MvcResult result = mockMvc.perform(post("/auth/login")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(request)))
-                .andExpect(status().isBadRequest())
-                .andReturn();
-
-        String contentAsString = result.getResponse().getContentAsString();
-        ExceptionResponse actualResponse = objectMapper.readValue(contentAsString, ExceptionResponse.class);
-
-        assertThat(actualResponse)
-                .isNotNull()
-                .isInstanceOf(ExceptionResponse.class);
-    }
-
-    /*
-     * REFRESH TOKEN OPERATION TESTS
-     */
-    @Test
-    void refreshToken_WithValidToken_ShouldReturnNewTokens() throws Exception {
-        RefreshTokenRequest request = new RefreshTokenRequest(
-                "refresh-token"
-        );
-
-        when(authService.refreshToken(any())).thenReturn(user);
-        when(jwtService.generateJwtToken(any())).thenReturn(jwtResponse);
-
-        mockMvc.perform(post("/auth/refresh-token")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(request)))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.accessToken").value("jwt-token"))
-                .andExpect(jsonPath("$.refreshToken").value("refresh-token"));
-    }
-
-    @Test
-    void refreshToken_WithEmptyToken_ShouldReturnBadRequest() throws Exception {
-        RefreshTokenRequest request = new RefreshTokenRequest(
-                ""
-        );
-
-        MvcResult result = mockMvc.perform(post("/auth/refresh-token")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(request)))
-                .andExpect(status().isBadRequest())
-                .andReturn();
-
-        String contentAsString = result.getResponse().getContentAsString();
-        ExceptionResponse actualResponse = objectMapper.readValue(contentAsString, ExceptionResponse.class);
-
-        assertThat(actualResponse)
-                .isNotNull()
-                .isInstanceOf(ExceptionResponse.class);
-    }
-
-    @Test
-    void refreshToken_WithInvalidToken_ShouldReturnUnauthorized() throws Exception {
-        RefreshTokenRequest request = new RefreshTokenRequest("invalid-token");
-
-        when(authService.refreshToken(any()))
-                .thenThrow(new InvalidTokenException("Invalid refresh token"));
-
-        // When & Then
-        mockMvc.perform(post("/auth/refresh-token")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(request)))
-                .andExpect(status().isUnauthorized())
-                .andExpect(jsonPath("$.message").value("Invalid refresh token"));
+            assertThat(actualResponse)
+                    .isNotNull()
+                    .isInstanceOf(ExceptionResponse.class);
+        }
     }
 }

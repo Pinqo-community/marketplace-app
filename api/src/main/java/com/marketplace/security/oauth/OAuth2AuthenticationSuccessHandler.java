@@ -1,9 +1,10 @@
 package com.marketplace.security.oauth;
 
+import com.marketplace.dto.JwtResponse;
 import com.marketplace.entity.User;
 import com.marketplace.exception.UserNotFoundException;
 import com.marketplace.repository.UserRepository;
-import com.marketplace.security.jwt.JwtService;
+import com.marketplace.service.JwtService;
 import com.marketplace.utils.oauth.CookieUtils;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
@@ -67,18 +68,15 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
             user = userRepository.findByEmail(oAuth2User.getAttributes().get("email").toString()).orElseThrow(() -> new UserNotFoundException("User not found"));
         }
 
-        String accessToken = "";
-        String refreshToken = "";
-        if (user != null) {
-            accessToken = jwtService.generateAccessToken(user);
-            refreshToken = jwtService.generateRefreshToken(user);
-
-            userRepository.save(user);
-        } else {
+        if (user == null) {
             throw new RuntimeException("A problem has occured while trying to access the user");
         }
 
-        return UriComponentsBuilder.fromUriString(targetUrl).queryParam("access_token", accessToken).queryParam("refresh_token", refreshToken).build().toUriString();
+        JwtResponse token = jwtService.generateJwtToken(user);
+
+        userRepository.save(user);
+
+        return UriComponentsBuilder.fromUriString(targetUrl).queryParam("access_token", token.accessToken()).queryParam("refresh_token", token.refreshToken()).build().toUriString();
     }
 
     protected void clearAuthenticationAttributes(HttpServletRequest request, HttpServletResponse response) {
