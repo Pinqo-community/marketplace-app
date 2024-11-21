@@ -1,0 +1,91 @@
+@use "../../scss/global" as *;
+@use "../../scss/variables" as *;
+@use "../../scss/mixins" as *;
+
+.hero {
+  position: relative;
+  overflow: hidden;
+  height: 90vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  color: $color-white;
+
+  &::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -5px;
+    right: -5px;
+    bottom: 0;
+    background-image: url("../../assets/images/hero-banner.png");
+    background-size: cover;
+    background-position: center;
+    z-index: 1;
+  }
+
+  .content {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    text-align: start;
+    gap: $gap-lg;
+    max-width: 600px;
+    width: 100%;
+    margin-left: 20%;
+
+    h1 {
+      display: flex;
+      flex-direction: column;
+      width: max-content;
+    }
+
+    @include media-query($breakpoint-md) {
+      margin-left: 15%;
+    }
+
+    @include media-query($breakpoint-sm) {
+      margin-left: 4vw;
+      text-align: center;
+      align-items: center;
+    }
+
+    @include media-query($breakpoint-xs) {
+      margin-left: 0;
+    }
+
+    @include media-query($breakpoint-md) {
+      h1 {
+        font-size: 38px;
+        line-height: normal;
+      }
+    }
+
+    @include media-query($breakpoint-xs) {
+      h1 {
+        font-size: 32px;
+      }
+    }
+  }
+}
+
+@keyframes blurAnimation {
+  0% {
+    backdrop-filter: blur(0);
+  }
+  100% {
+    backdrop-filter: blur(2px);
+  }
+}
+
+.overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  animation: blurAnimation 3s ease-in-out forwards;
+  width: 65rem;
+  z-index: 1;
+}
