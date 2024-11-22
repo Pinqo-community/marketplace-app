@@ -1,4 +1,5 @@
 package com.marketplace.dto;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.marketplace.validation.OnCreate;
 import com.marketplace.validation.OnUpdate;
 import lombok.*;
@@ -21,6 +22,7 @@ public class ProductDto {
 
     @Null(groups = OnCreate.class)
     @NotNull(groups = OnUpdate.class)
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Long id;
     /**
      * Product name.
