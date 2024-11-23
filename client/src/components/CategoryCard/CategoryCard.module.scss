@@ -22,9 +22,4 @@
     object-fit: cover;
     border-radius: $border-radius-md;
   }
-
-  // TODO : À enlever après la 0.6.0
-  .title {
-    @include font-style($size: $font-size-xl, $weight: $font-weight-bold);
-  }
 }

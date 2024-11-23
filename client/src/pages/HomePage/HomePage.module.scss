@@ -28,6 +28,35 @@ section {
   }
 }
 
+/* -------------------------------------------------------------------------- */
+/*                              Popular Products                              */
+/* -------------------------------------------------------------------------- */
+
+.popularProducts {
+  .sectionContainer {
+    .titleContainer {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 30px;
+    }
+
+    .productsGrid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: $gap-lg;
+      justify-items: center;
+
+      @include media-query($breakpoint-md) {
+        justify-content: center;
+      }
+    }
+  }
+}
+
+/* -------------------------------------------------------------------------- */
+/*                              Category Section                              */
+/* -------------------------------------------------------------------------- */
+
 .categorySection {
   .titleContainer {
     display: flex;
@@ -63,30 +92,5 @@ section {
     flex-wrap: wrap;
     justify-content: space-between;
     gap: 20px;
-  }
-}
-
-/* -------------------------------------------------------------------------- */
-/*                              Popular Products                              */
-/* -------------------------------------------------------------------------- */
-
-.popularProducts {
-  .sectionContainer {
-    .titleContainer {
-      display: flex;
-      justify-content: space-between;
-      margin-bottom: 30px;
-    }
-
-    .productsGrid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-      gap: $gap-lg;
-      justify-items: center;
-
-      @include media-query($breakpoint-md) {
-        justify-content: center;
-      }
-    }
   }
 }
