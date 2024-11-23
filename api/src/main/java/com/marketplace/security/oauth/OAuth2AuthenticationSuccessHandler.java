@@ -84,13 +84,12 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
         httpCookieOAuth2AuthorizationRequestRepository.removeAuthorizationRequestCookies(request, response);
     }
 
-    // TODO: Replace redirect uri by the client one
     private boolean isAuthorizedRedirectUri(String uri) {
         URI clientRedirectUri = URI.create(uri);
         String[] urls = clientUrl.split(",");
         List<String> authorizedRedirectUris = new ArrayList<>();
         for (String url : urls) {
-            authorizedRedirectUris.add(url.trim() + "/api/v1/auth/oauth");
+            authorizedRedirectUris.add(url.trim() + "/oauth/redirect");
         }
 
         return authorizedRedirectUris.stream().anyMatch(authorizedRedirectUri -> {
