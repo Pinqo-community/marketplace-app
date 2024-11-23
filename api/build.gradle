@@ -70,6 +70,27 @@ jacoco {
 	reportsDirectory = layout.buildDirectory.dir('reports/jacoco')
 }
 
+jacocoTestCoverageVerification {
+	violationRules {
+		rule {
+			element = 'BUNDLE'
+			limit {
+				counter = 'LINE'
+				value = 'COVEREDRATIO'
+				minimum = 0.5
+			}
+
+			excludes = [
+					'com.marketplace.configuration.*',
+					'com.marketplace.model.*',
+					'com.marketplace.dto.*',
+					'com.marketplace.entity.*',
+					'com.marketplace.exception.*'
+			]
+		}
+	}
+}
+
 jacocoTestReport {
 	dependsOn test
 	reports {
@@ -174,16 +195,6 @@ task printCoverageReport(type: Task, dependsOn: jacocoTestReport) {
 test {
 	useJUnitPlatform()
 	finalizedBy jacocoTestReport
-}
-
-jacocoTestCoverageVerification {
-	violationRules {
-		rule {
-			limit {
-				minimum = 0.5
-			}
-		}
-	}
 }
 
 jacocoTestReport.dependsOn test
