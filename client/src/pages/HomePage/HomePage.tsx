@@ -3,6 +3,7 @@ import { useRef } from "react";
 import "swiper/css";
 import { Navigation } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
+import { NavigationOptions } from "swiper/types";
 import { useGetCategoriesQuery } from "../../api/categoriesApi";
 import { useGetProductsQuery } from "../../api/productsApi";
 import arrowSlider from "../../assets/icons/arrow-slider.svg";
@@ -139,9 +140,10 @@ const HomePage: React.FC = () => {
               prevEl: prevRef.current,
               nextEl: nextRef.current,
             }}
-            onBeforeInit={(swiper: typeof Swiper) => {
-              swiper.params.navigation.prevEl = prevRef.current;
-              swiper.params.navigation.nextEl = nextRef.current;
+            onBeforeInit={(swiper) => {
+              const navigation = swiper.params.navigation as NavigationOptions;
+              navigation.prevEl = prevRef.current;
+              navigation.nextEl = nextRef.current;
             }}
             spaceBetween={20}
             loop={true}
