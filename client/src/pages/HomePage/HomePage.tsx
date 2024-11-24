@@ -143,9 +143,16 @@ const HomePage: React.FC = () => {
               swiper.params.navigation.prevEl = prevRef.current;
               swiper.params.navigation.nextEl = nextRef.current;
             }}
-            spaceBetween={50}
-            slidesPerView={6}
+            spaceBetween={20}
             loop={true}
+            slidesPerView={6}
+            breakpoints={{
+              320: { slidesPerView: 1 },
+              580: { slidesPerView: 3 },
+              768: { slidesPerView: 4 },
+              1024: { slidesPerView: 5 },
+              1440: { slidesPerView: 6 },
+            }}
           >
             {categories?.map((item) => (
               <SwiperSlide key={item.id}>
