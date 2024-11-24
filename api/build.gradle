@@ -1,5 +1,3 @@
-import javax.xml.parsers.SAXParserFactory
-
 plugins {
 	id 'java'
 	id 'org.springframework.boot' version '3.3.4'
@@ -9,6 +7,8 @@ plugins {
 
 group = 'com.marketplace'
 version = '0.0.1-SNAPSHOT'
+
+apply from: 'jacoco.gradle'
 
 java {
 	toolchain {
@@ -64,139 +64,3 @@ dependencies {
 	testImplementation 'org.springframework.security:spring-security-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
-
-jacoco {
-	toolVersion = "0.8.12"
-	reportsDirectory = layout.buildDirectory.dir('reports/jacoco')
-}
-
-jacocoTestCoverageVerification {
-	violationRules {
-		rule {
-			element = 'BUNDLE'
-			limit {
-				counter = 'LINE'
-				value = 'COVEREDRATIO'
-				minimum = 0.5
-			}
-
-			excludes = [
-					'com.marketplace.configuration.*',
-					'com.marketplace.model.*',
-					'com.marketplace.dto.*',
-					'com.marketplace.entity.*',
-					'com.marketplace.exception.*'
-			]
-		}
-	}
-}
-
-jacocoTestReport {
-	dependsOn test
-	reports {
-		xml.required = true
-		csv.required = false
-		html.required = true
-		html.outputLocation = layout.buildDirectory.dir('reports/jacoco/html')
-	}
-
-	afterEvaluate {
-		classDirectories.setFrom(files(classDirectories.files.collect {
-			fileTree(dir: it, exclude: [
-					'com/marketplace/configuration/**',
-					'com/marketplace/model/**',
-					'com/marketplace/dto/**',
-					'com/marketplace/entity/**',
-					'com/marketplace/exception/**',
-			])
-		}))
-	}
-}
-
-task printCoverageReport(type: Task, dependsOn: jacocoTestReport) {
-	doLast {
-		def reportFile = layout.buildDirectory.file('reports/jacoco/test/jacocoTestReport.xml').get().asFile
-
-		if (reportFile.exists()) {
-			try {
-				// Configuration sécurisée du parseur XML
-				def xmlParser = javax.xml.parsers.SAXParserFactory.newInstance()
-				xmlParser.setValidating(false)
-				xmlParser.setNamespaceAware(true)
-				xmlParser.setFeature("http://apache.org/xml/features/nonvalidating/load-dtd-grammar", false)
-				xmlParser.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false)
-
-				def report = new XmlParser(xmlParser.newSAXParser()).parse(reportFile)
-
-				println "\n========== Rapport de Couverture de Tests =========="
-
-				// Calculer les totaux globaux
-				def counters = [:]
-				report.counter.each { counter ->
-					def type = counter.'@type'
-					def covered = counter.'@covered'.toInteger()
-					def missed = counter.'@missed'.toInteger()
-					def total = covered + missed
-					def percentage = total > 0 ? (covered * 100.0 / total).round(2) : 0
-
-					counters[type] = [
-							covered: covered,
-							missed: missed,
-							total: total,
-							percentage: percentage
-					]
-				}
-
-				// Afficher les totaux
-				counters.each { type, data ->
-					println String.format("%-12s: %6.2f%% (%d/%d)",
-							type,
-							data.percentage,
-							data.covered,
-							data.total
-					)
-				}
-
-				// Afficher les détails par package
-				println "\nDétail par package :"
-				println "-----------------"
-				report.package.each { pkg ->
-					def pkgName = pkg.'@name'
-					def lineCounter = pkg.counter.find { it.'@type' == 'LINE' }
-					if (lineCounter) {
-						def covered = lineCounter.'@covered'.toInteger()
-						def missed = lineCounter.'@missed'.toInteger()
-						def total = covered + missed
-						def percentage = total > 0 ? (covered * 100.0 / total).round(2) : 0
-
-						println String.format("%-40s: %6.2f%% (%d/%d)",
-								pkgName,
-								percentage,
-								covered,
-								total
-						)
-					}
-				}
-
-				println "\n================================================"
-
-			} catch (Exception e) {
-				println "Erreur lors de la lecture du rapport : ${e.message}"
-				println "Chemin du fichier : ${reportFile.absolutePath}"
-				e.printStackTrace()
-			}
-		} else {
-			println "Rapport non trouvé : ${reportFile.absolutePath}"
-			println "Assurez-vous d'avoir exécuté les tests avec succès."
-		}
-	}
-}
-
-test {
-	useJUnitPlatform()
-	finalizedBy jacocoTestReport
-}
-
-jacocoTestReport.dependsOn test
-check.dependsOn jacocoTestReport
-jacocoTestReport.finalizedBy printCoverageReport
