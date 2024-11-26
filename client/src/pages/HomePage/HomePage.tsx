@@ -1,11 +1,11 @@
+import { motion } from "framer-motion";
+import { useGetProductsQuery } from "../../api/productsApi";
+import arrowIcon from "../../assets/icons/arrow.svg";
 import Hero from "../../components/Hero/Hero";
 import Map from "../../components/Map/Map";
 import ProductCard from "../../components/ProductCard/ProductCard";
 import MainLayout from "../../layouts/MainLayout";
 import styles from "./HomePage.module.scss";
-import { motion } from "framer-motion";
-import arrowIcon from "../../assets/icons/arrow.svg";
-import { useGetProductsQuery } from "../../api/productsApi";
 
 const HomePage: React.FC = () => {
   /* -------------------------------------------------------------------------- */
@@ -71,7 +71,9 @@ const HomePage: React.FC = () => {
         aria-labelledby="local-producers-title"
       >
         <div className={styles.sectionContainer}>
-          <h2 className={styles.title}>Les producteurs près de chez vous</h2>
+          <div className={styles.titleContainer}>
+            <h2 className={styles.title}>Les producteurs près de chez vous</h2>
+          </div>
           <div className={styles.mapWrapper}>
             <Map />
           </div>

@@ -34,8 +34,8 @@
 
     .header {
       display: flex;
-      justify-content: space-between;
       align-items: baseline;
+      gap: $gap-md;
 
       .rating {
         display: flex;

@@ -106,7 +106,9 @@ const ProductCard: React.FC<ProductProps> = ({ product }) => {
                 -
               </motion.button>
 
-              <motion.span
+              <motion.label
+                htmlFor="quantity"
+                aria-label="Quantité"
                 className={styles.quantityInput}
                 key={currentQuantity}
                 initial={{ opacity: 0 }}
@@ -115,13 +117,15 @@ const ProductCard: React.FC<ProductProps> = ({ product }) => {
               >
                 <input
                   type="number"
+                  name="quantity"
+                  id="quantity"
                   value={currentQuantity}
                   onChange={(e) => handleQuantityChange(Number(e.target.value))}
                   className={styles.inputField}
                   min={MIN_QUANTITY}
                   max={MAX_QUANTITY}
                 />
-              </motion.span>
+              </motion.label>
 
               <motion.button
                 className={styles.quantityBtn}
