@@ -1,15 +1,15 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import fruit from "../assets/images/fruit-category.png";
 
 const categories = [
   {
     id: 1,
     name: "Fruits",
-    image: fruit,
+    image:
+      "https://plus.unsplash.com/premium_photo-1683133445874-1939d22758df?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1yZWxhdGVkfDQzfHx8ZW58MHx8fHx8",
   },
   {
     id: 2,
-    name: "Légumes",
+    name: "Légumes vert bio",
     image:
       "https://images.unsplash.com/photo-1590779033100-9f60a05a013d?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
   },

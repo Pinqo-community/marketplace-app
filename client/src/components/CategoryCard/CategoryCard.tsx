@@ -3,6 +3,19 @@ import { CategoryCardProps } from "../../types/Category";
 import styles from "./CategoryCard.module.scss";
 
 const CategoryCard: React.FC<CategoryCardProps> = ({ title, image }) => {
+  /* -------------------------------------------------------------------------- */
+  /*                                  Functions                                 */
+  /* -------------------------------------------------------------------------- */
+
+  const getDynamicStyles = (text: string) => {
+    if (text.length > 15) {
+      return { fontSize: "18px", lineHeight: "2" };
+    }
+  };
+
+  /* -------------------------------------------------------------------------- */
+  /*                                   Render                                   */
+  /* -------------------------------------------------------------------------- */
   return (
     <motion.article
       whileHover={{
@@ -15,7 +28,9 @@ const CategoryCard: React.FC<CategoryCardProps> = ({ title, image }) => {
       tabIndex={0}
     >
       <img className={styles.image} src={image} alt={`Catégorie ${title}`} />
-      <h3 className={styles.title}>{title}</h3>
+      <h3 className={styles.title} style={getDynamicStyles(title)}>
+        {title}
+      </h3>
     </motion.article>
   );
 };
