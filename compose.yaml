@@ -15,13 +15,13 @@ services:
       context: ./api
       dockerfile: Dockerfile.dev
     command: >
-      /bin/sh -c "./gradlew clean build --refresh-dependencies && ./gradlew bootRun"
+      ./gradlew bootRun --continuous -Dspring-boot.run.profiles=dev -Dspring.devtools.restart.enabled=true -Dspring.devtools.livereload.enable=true
     ports:
       - "8080:8080"
     container_name: marketplace-backend
     volumes:
-      - ./api:/app:cached
-      - gradle-cache:/home/gradle/.gradle
+      - ./api:/app:rw,cached
+      - gradle-cache:/home/gradle/.gradle:rw
     depends_on:
       - db
     networks:
@@ -67,7 +67,7 @@ services:
       - app-network
     volumes:
       - ./api:/app:cached
-      - gradle-cache:/home/gradle/.gradle
+      - gradle-cache:/home/gradle/.gradle:rw
 
   db:
     image: postgres:15

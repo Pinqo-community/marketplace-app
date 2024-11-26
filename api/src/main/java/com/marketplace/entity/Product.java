@@ -29,16 +29,25 @@ public class Product{
     private BigDecimal unitPrice;
     private String nutritionalValue;
     private String listOfIngredients;
+
+    @Column(nullable = false)
     private Integer stockQuantity;
+
+    @Column(columnDefinition = "INTEGER DEFAULT 1")
+    private Integer minQuantity;
+
+    @Column(columnDefinition = "INTEGER DEFAULT 100")
+    private Integer maxQuantity;
+
+    @Column(nullable = false, columnDefinition = "INTEGER DEFAULT 1")
+    private Integer stepQuantity;
+
+    @Column(columnDefinition = "INTEGER DEFAULT 1")
     private Integer criticalLevel;
 
     @Column(nullable = false, columnDefinition = "BOOLEAN DEFAULT TRUE")
     @Builder.Default // This ensures a default value when using the Builder pattern
     private Boolean active = true;
-
-
-
-
 
 }
 

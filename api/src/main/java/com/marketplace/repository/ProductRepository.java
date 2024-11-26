@@ -8,5 +8,8 @@ import java.util.List;
 
 @Repository
 public interface ProductRepository extends JpaRepository <Product, Long>{
+
     List<Product> findByActive(Boolean active);
+    List<Product> findByActiveAndStockQuantityGreaterThan(boolean active, int stockQuantity);
+
 }

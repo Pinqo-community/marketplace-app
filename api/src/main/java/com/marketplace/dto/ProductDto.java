@@ -1,7 +1,6 @@
 package com.marketplace.dto;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.marketplace.validation.OnCreate;
-import com.marketplace.validation.OnUpdate;
 import lombok.*;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
@@ -21,7 +20,6 @@ import java.math.BigDecimal;
 public class ProductDto {
 
     @Null(groups = OnCreate.class)
-    @NotNull(groups = OnUpdate.class)
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Long id;
     /**
@@ -73,6 +71,33 @@ public class ProductDto {
     @Min(value = 0, message = "La quantité en stock doit être supérieure ou égale à 0")
     private Integer stockQuantity;
 
+
+    /**
+     * Minimum quantity of product in stock.
+     * Cannot be zero and must be greater than or equal to 1.
+     */
+    @NotNull(message = "La quantité minimale ne peut pas être nulle")
+    @Min(value = 1, message = "La quantité minimale doit être supérieure ou égale à 1")
+    private Integer minQuantity;
+
+
+    /**
+     * Maximum quantity of product in stock.
+     * Cannot be zero and must be greater than or equal to 1.
+     */
+    @Max(value = 1000, message = "La quantité maximale ne peut pas être supérieure à 1000")
+    private Integer maxQuantity;
+
+    /**
+     * Step quantity of product in stock.
+     * Cannot be zero and must be greater than or equal to 1.
+     */
+    @NotNull(message = "Le palier de quantité ne peut pas être nul")
+    @Positive(message = "Le palier de quantité doit être positif")
+    @Min(value = 1, message = "Le palier de quantité doit être supérieur ou égal à 1")
+    @Digits(integer = 3, fraction = 0, message = "Le palier de quantité doit être un nombre valide avec jusqu'à 3 chiffres")
+    private Integer stepQuantity;
+
     /**
      * Critical product threshold (minimum quantity before alert).
      * Cannot be zero and must be greater than or equal to 1.
@@ -81,6 +106,10 @@ public class ProductDto {
     @Min(value = 1, message = "Le seuil critique doit être supérieur ou égal à 1")
     private Integer criticalLevel;
 
+    /**
+     * Product active or inactive.
+     * Cannot be null.
+     */
     @NotNull(message = "L'état actif ou inactif du produit est obligatoire.")
     private Boolean active;
 }

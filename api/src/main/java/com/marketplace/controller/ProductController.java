@@ -1,7 +1,7 @@
 package com.marketplace.controller;
 
+
 import com.marketplace.validation.OnCreate;
-import com.marketplace.validation.OnUpdate;
 import com.marketplace.dto.ProductDto;
 import com.marketplace.entity.Product;
 import com.marketplace.service.ProductService;
@@ -33,6 +33,7 @@ import java.util.List;
 @Slf4j
 public class ProductController {
 
+
     private final ProductService productService;
     private final ProductMapper productMapper;
 
@@ -58,28 +59,27 @@ public class ProductController {
 
     }
 
-    /**
-     * Retrieves all products available in the marketplace.
-     *
-     * @return A ResponseEntity with a list of products and HTTP status 200, or status 204 if no products found.
-     */
-    @GetMapping
-    @Operation(summary = "Get all products", description = "Retrieves a list of all products.")
-    @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "Product list successfully retrieved."),
-            @ApiResponse(responseCode = "204", description = "No products found.")
-    })
-    public ResponseEntity<List<Product>> getAllProducts() {
-        try {
-            log.info("GET /products - START");
-            List<Product> products = productService.getAllProducts();
-            log.info("GET /products - Retrieved {} products", products.size());
-            return new ResponseEntity<>(products, HttpStatus.OK);
-        } finally {
-            log.info("GET /products - DONE");
 
+    @GetMapping
+    @Operation(summary = "Get available products", description = "Retrieve products with stock > 0 for customers.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Available products retrieved successfully."),
+            @ApiResponse(responseCode = "204", description = "No products available."),
+            @ApiResponse(responseCode = "500", description = "Internal server error.")
+    })
+    public ResponseEntity<List<ProductDto>> getAvailableProducts() {
+        try {
+            log.info("GET /products/available - START");
+            List<Product> availableProducts = productService.getAvailableProducts();
+            List<ProductDto> productDtos = productMapper.toDtoList(availableProducts);
+            log.info("GET /products/available - Retrieved {} available products", productDtos.size());
+            return ResponseEntity.ok(productDtos);
+        } finally {
+            log.info("GET /products/available - DONE");
         }
     }
+
+
 
     /**
      * Retrieves a product by its unique identifier.
@@ -106,7 +106,7 @@ public class ProductController {
     }
 
 
-    @Operation(summary = "Retrieve products by status", description = "Fetches products filtered by their active/inactive status.")
+    @Operation(summary = "Retrieve products by status", description = "Retrieve products filtered by their active/inactive status for producers.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Products retrieved successfully",
                     content = {@Content(mediaType = "application/json",
@@ -134,8 +134,7 @@ public class ProductController {
      * @return A ResponseEntity with the updated product and HTTP status 200, or status 404 if not found.
      */
     @PutMapping("/{id}")
-    @Validated(OnUpdate.class)
-    @Operation(summary = "Update a product", description = "Updates information on an existing product.")
+    @Operation(summary = "Update a product", description = "The ID in the URL is mandatory and overrides any ID provided in the request body.")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Product successfully updated."),
             @ApiResponse(responseCode = "404", description = "No product found.")
@@ -146,6 +145,7 @@ public class ProductController {
             @Valid @RequestBody ProductDto productDto) {
         try {
             log.info("PUT /products/{} - START:  Updating product", id);
+            productDto.setId(id);
             Product savedProduct = productService.updateProduct(id, productDto);
             return new ResponseEntity<>(productMapper.toDto(savedProduct), HttpStatus.OK);
         } finally {
