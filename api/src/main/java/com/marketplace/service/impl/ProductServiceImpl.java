@@ -34,6 +34,9 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public ProductDto createProduct(ProductDto productDto) {
         log.info("Received ProductDto: {}", productDto);
+        if (productDto.getMinQuantity() >= productDto.getMaxQuantity()) {
+            throw new IllegalArgumentException("La quantité minimale doit être inférieure à la quantité maximale");
+        }
         Product product = ProductMapper.INSTANCE.toEntity(productDto);
         log.info("Converted Product: {}", product);
         Product savedProduct = productRepository.save(product);
@@ -41,14 +44,25 @@ public class ProductServiceImpl implements ProductService {
     }
 
     /**
-     * Retrieves all product entities from the database.
+     * Retrieves all products with stock > 0 for customers.
      *
-     * @return A list of all product entities.
+     * @return A list of available products.
      */
     @Override
-    public List<Product> getAllProducts() {
-        return productRepository.findAll();
+    public List<Product> getAvailableProducts() {
+        log.info("Retrieving products with stock > 0 and active status");
+
+        List<Product> products = productRepository.findByActiveAndStockQuantityGreaterThan(true, 0);
+
+        if (products.isEmpty()) {
+            log.warn("No products with stock > 0 found.");
+            throw new NotFoundException("Aucun produit disponible avec un stock supérieur à zéro.");
+        }
+            return products;
+
     }
+
+
 
     /**
      * Retrieves a product entity by its ID.
@@ -97,9 +111,6 @@ public class ProductServiceImpl implements ProductService {
      */
     @Override
     public Product updateProduct(Long id, ProductDto productDto) {
-        if (!id.equals(productDto.getId())) {
-            throw new IllegalArgumentException("L'Id de l'url ne correspond pas à l'Id du DTO");
-        }
 
         return productRepository.findById(id)
                 .map(existingProduct -> {

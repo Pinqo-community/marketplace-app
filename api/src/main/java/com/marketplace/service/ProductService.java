@@ -18,12 +18,14 @@ public interface ProductService {
      */
     ProductDto createProduct(ProductDto productDto);
 
+
     /**
-     * Retrieves all products from the database.
+     * Retrieves all products with stock > 0 for customers.
      *
-     * @return A list of all products.
+     * @return A list of available products.
      */
-    List<Product> getAllProducts();
+    List<Product> getAvailableProducts();
+
 
     /**
      * Retrieves a product by its unique ID.
@@ -55,4 +57,7 @@ public interface ProductService {
      * @param id The ID of the product to delete.
      */
     void deleteProduct(Long id);
+
+
+
 }

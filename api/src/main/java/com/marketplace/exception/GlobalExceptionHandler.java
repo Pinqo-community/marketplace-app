@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.context.request.ServletWebRequest;
 import org.springframework.web.context.request.WebRequest;
 
@@ -34,6 +35,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(NotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
     public ResponseEntity<ExceptionResponse> handleNotFoundException(NotFoundException ex, WebRequest request) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
                 new ExceptionResponse(
@@ -45,6 +47,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(UnavailableProductException.class)
+    @ResponseStatus(HttpStatus.SERVICE_UNAVAILABLE)
     public ResponseEntity<ExceptionResponse>handleUnavailableProductException(UnavailableProductException ex, WebRequest request) {
         return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).body(
                 new ExceptionResponse(
@@ -56,14 +59,17 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<ExceptionResponse> handleIllegalArgumentException(IllegalArgumentException ex, WebRequest request) {
-        ExceptionResponse response = new ExceptionResponse(
-                HttpStatus.BAD_REQUEST.value(),
-                ex.getMessage(),
-                ((ServletWebRequest) request).getRequest().getRequestURI()
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public ResponseEntity<ExceptionResponse>handleIllegalArgumentException(IllegalArgumentException ex, WebRequest request) {
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(
+                new ExceptionResponse(
+                        HttpStatus.CONFLICT.value(),
+                        ex.getMessage(),
+                        ((ServletWebRequest) request).getRequest().getRequestURI()
+                )
         );
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
     }
+
 
     @ExceptionHandler
     public ResponseEntity<ExceptionResponse> handleInternalException(Exception ex, WebRequest request) {
