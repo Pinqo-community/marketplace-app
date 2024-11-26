@@ -150,6 +150,7 @@ const HomePage: React.FC = () => {
             slidesPerView={6}
             breakpoints={{
               320: { slidesPerView: 1 },
+              420: { slidesPerView: 2 },
               580: { slidesPerView: 3 },
               768: { slidesPerView: 4 },
               1024: { slidesPerView: 5 },
