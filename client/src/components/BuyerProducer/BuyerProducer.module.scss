@@ -1,0 +1,81 @@
+@use "../../scss/global";
+@use "../../scss/variables" as *;
+@use "../../scss/mixins" as *;
+
+.container {
+  width: 80%;
+  min-height: 405px;
+  border-radius: $border-radius-md;
+  padding: 30px;
+  position: relative;
+  overflow: hidden;
+  background: $secondary-color;
+  color: $text-color;
+
+  @include media-query($breakpoint-sm) {
+    min-height: 100%;
+  }
+
+  @include media-query($breakpoint-xs) {
+    width: 100%;
+    padding: 20px;
+  }
+
+  // Styles pour la version "producer"
+  &.producer {
+    background: $text-color;
+    color: $color-white;
+    .content {
+      button {
+        @include responsive-width(223px, $breakpoint-sm);
+      }
+    }
+  }
+
+  .image {
+    position: absolute;
+    left: 45%;
+    bottom: 0;
+
+    @include media-query($breakpoint-sm) {
+      opacity: 0.5;
+      bottom: -50px;
+    }
+  }
+
+  .content {
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    gap: $gap-sm;
+    z-index: 2;
+    position: relative;
+
+    @include media-query($breakpoint-sm) {
+      backdrop-filter: blur(1.5px);
+    }
+
+    .title {
+      line-height: 40px;
+      display: flex;
+      flex-direction: column;
+      @include responsive-width(350px, $breakpoint-sm);
+      color: inherit;
+
+      @include media-query($breakpoint-sm) {
+        font-size: $font-size-xl;
+        line-height: 30px;
+      }
+    }
+
+    .description {
+      @include font-style($size: $font-size-sm, $weight: $font-weight-normal);
+      @include responsive-width(288px, $breakpoint-sm);
+      color: inherit;
+    }
+
+    button {
+      @include responsive-width(208px, $breakpoint-sm);
+      padding: 12px 48px;
+    }
+  }
+}
