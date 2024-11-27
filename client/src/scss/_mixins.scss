@@ -28,6 +28,15 @@
   }
 }
 
+// Responsive Width
+@mixin responsive-width($width, $breakpoint) {
+  width: $width;
+
+  @include media-query($breakpoint) {
+    width: 100%;
+  }
+}
+
 // Icon filters
 @mixin icon-dark-filter() {
   filter: brightness(0) saturate(100%) invert(38%) sepia(100%) saturate(699%) hue-rotate(113deg) brightness(105%)
