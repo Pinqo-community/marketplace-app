@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { useGetProductsQuery } from "../../api/productsApi";
 import arrowIcon from "../../assets/icons/arrow.svg";
+import BuyerProducer from "../../components/BuyerProducer/BuyerProducer";
 import Hero from "../../components/Hero/Hero";
 import Map from "../../components/Map/Map";
 import ProductCard from "../../components/ProductCard/ProductCard";
@@ -64,6 +65,10 @@ const HomePage: React.FC = () => {
             ))}
           </motion.div>
         </div>
+      </section>
+
+      <section className={styles.buyerProducer}>
+        <BuyerProducer />
       </section>
 
       <section
