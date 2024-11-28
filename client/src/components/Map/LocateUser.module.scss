@@ -4,16 +4,16 @@
 
 .locateUser {
   position: absolute;
-  margin-right: 20px;
   top: 60vh;
   right: 0;
-  background-color: $color-white;
+  z-index: 9999;
+  cursor: pointer;
+  margin-right: 20px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
 
   border-radius: $border-radius-circle;
+  background-color: $color-white;
   padding: 10px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
-  cursor: pointer;
-  z-index: 9999;
   fill: #979797;
 }
 
@@ -27,11 +27,11 @@
 }
 
 .userLocationIcon {
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+  border: 2px solid $color-white;
+  border-radius: 50%;
   width: 15px !important;
   height: 15px !important;
-  border-radius: 50%;
-  border: 2px solid $color-white;
-  box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
 
   &.active {
     background-color: #007bff;
