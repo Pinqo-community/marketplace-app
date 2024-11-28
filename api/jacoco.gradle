@@ -34,6 +34,12 @@ jacocoTestCoverageVerification {
             excludes = jacocoExcludesForVerification
         }
     }
+
+    afterEvaluate {
+        classDirectories.setFrom(files(classDirectories.files.collect {
+            fileTree(dir: it, exclude: jacocoExcludes)
+        }))
+    }
 }
 
 /**
@@ -205,5 +211,6 @@ test {
 }
 
 jacocoTestReport.dependsOn test
-check.dependsOn jacocoTestReport
 jacocoTestReport.finalizedBy printCoverageReport
+jacocoTestCoverageVerification.dependsOn jacocoTestReport
+openJacocoReport.dependsOn jacocoTestReport
