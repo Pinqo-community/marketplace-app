@@ -44,7 +44,7 @@
 
     @include media-query($breakpoint-sm) {
       bottom: -50px;
-      opacity: 0.5;
+      opacity: 0.5 !important;
     }
   }
 
