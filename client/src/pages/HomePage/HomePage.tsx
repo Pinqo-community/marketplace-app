@@ -8,6 +8,7 @@ import { useGetCategoriesQuery } from "../../api/categoriesApi";
 import { useGetProductsQuery } from "../../api/productsApi";
 import arrowSlider from "../../assets/icons/arrow-slider.svg";
 import arrowIcon from "../../assets/icons/arrow.svg";
+import BuyerProducer from "../../components/BuyerProducer/BuyerProducer";
 import CategoryCard from "../../components/CategoryCard/CategoryCard";
 import Hero from "../../components/Hero/Hero";
 import Map from "../../components/Map/Map";
@@ -166,6 +167,10 @@ const HomePage: React.FC = () => {
           </Swiper>
         </div>
       </section>
+      <section className={styles.buyerProducer}>
+        <BuyerProducer />
+      </section>
+
       <section
         className={styles.localProducers}
         aria-labelledby="local-producers-title"

@@ -27,8 +27,10 @@ const BuyerProducerCard: React.FC<BuyerProducerCardProps> = ({
           <span>{title}</span>
           <span>{subtitle}</span>
         </h2>
-        <p className={styles.description}>{description}</p>
-        <PrimaryButton children={buttonText} />
+        <div className={styles.descriptionContainer}>
+          <p className={styles.description}>{description}</p>
+          <PrimaryButton children={buttonText} />
+        </div>
       </div>
     </div>
   );

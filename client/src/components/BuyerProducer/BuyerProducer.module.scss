@@ -3,12 +3,13 @@
 @use "../../scss/mixins" as *;
 
 .container {
+  display: flex;
   position: relative;
   border-radius: $border-radius-md;
   background: $secondary-color;
   padding: 30px;
   width: 80%;
-  min-height: 405px;
+  min-height: 411px;
   overflow: hidden;
   color: $text-color;
 
@@ -26,6 +27,10 @@
     background: $text-color;
     color: $color-white;
     .content {
+      .description {
+        @include responsive-width(346px, $breakpoint-sm);
+      }
+
       button {
         @include responsive-width(223px, $breakpoint-sm);
       }
@@ -46,8 +51,6 @@
   .content {
     display: grid;
     position: relative;
-    grid-template-rows: auto 1fr auto;
-    gap: $gap-sm;
     z-index: 2;
 
     @include media-query($breakpoint-sm) {
@@ -67,6 +70,12 @@
       }
     }
 
+    .descriptionContainer {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
     .description {
       @include font-style($size: $font-size-sm, $weight: $font-weight-normal);
       @include responsive-width(288px, $breakpoint-sm);
@@ -76,6 +85,10 @@
     button {
       @include responsive-width(208px, $breakpoint-sm);
       padding: 12px 48px;
+
+      @include media-query($breakpoint-sm) {
+        margin-top: 20px;
+      }
     }
   }
 }
