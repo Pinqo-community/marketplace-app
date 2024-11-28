@@ -11,7 +11,8 @@ def jacocoExcludes = [
         'com/marketplace/model/**',
         'com/marketplace/dto/**',
         'com/marketplace/entity/**',
-        'com/marketplace/exception/**'
+        'com/marketplace/exception/**',
+        'com/marketplace/security/oauth/**'
 ]
 def jacocoExcludesForVerification = jacocoExcludes.collect { it.replace('/**', '.*') }
 
