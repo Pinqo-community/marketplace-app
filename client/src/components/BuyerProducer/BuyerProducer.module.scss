@@ -3,13 +3,13 @@
 @use "../../scss/mixins" as *;
 
 .container {
+  position: relative;
+  border-radius: $border-radius-md;
+  background: $secondary-color;
+  padding: 30px;
   width: 80%;
   min-height: 405px;
-  border-radius: $border-radius-md;
-  padding: 30px;
-  position: relative;
   overflow: hidden;
-  background: $secondary-color;
   color: $text-color;
 
   @include media-query($breakpoint-sm) {
@@ -17,8 +17,8 @@
   }
 
   @include media-query($breakpoint-xs) {
-    width: 100%;
     padding: 20px;
+    width: 100%;
   }
 
   // Styles pour la version "producer"
@@ -34,30 +34,30 @@
 
   .image {
     position: absolute;
-    left: 45%;
     bottom: 0;
+    left: 45%;
 
     @include media-query($breakpoint-sm) {
-      opacity: 0.5;
       bottom: -50px;
+      opacity: 0.5;
     }
   }
 
   .content {
     display: grid;
+    position: relative;
     grid-template-rows: auto 1fr auto;
     gap: $gap-sm;
     z-index: 2;
-    position: relative;
 
     @include media-query($breakpoint-sm) {
       backdrop-filter: blur(1.5px);
     }
 
     .title {
-      line-height: 40px;
       display: flex;
       flex-direction: column;
+      line-height: 40px;
       @include responsive-width(350px, $breakpoint-sm);
       color: inherit;
 

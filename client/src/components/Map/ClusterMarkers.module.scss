@@ -13,13 +13,17 @@
     gap: $gap-sm;
 
     .name {
-      @include font-style($size: $font-size-xl, $weight: $font-weight-bold, $line-height: 32px);
+      @include font-style(
+        $size: $font-size-xl,
+        $weight: $font-weight-bold,
+        $line-height: 32px
+      );
     }
 
     .profilePhoto {
+      border-radius: $border-radius-circle;
       width: 30px;
       height: 30px;
-      border-radius: $border-radius-circle;
     }
   }
 
@@ -28,8 +32,8 @@
     justify-content: center;
     align-items: center;
     gap: 8px;
-    max-width: 140px;
     margin-left: 19px;
+    max-width: 140px;
 
     &.open {
       .dot {
@@ -50,14 +54,18 @@
     }
 
     .dot {
-      height: 8px;
-      width: 8px;
-      border-radius: $border-radius-circle;
       display: inline-block;
+      border-radius: $border-radius-circle;
+      width: 8px;
+      height: 8px;
     }
 
     .statusText {
-      @include font-style($size: $font-size-md, $weight: $font-weight-normal, $line-height: 16px);
+      @include font-style(
+        $size: $font-size-md,
+        $weight: $font-weight-normal,
+        $line-height: 16px
+      );
     }
   }
 }

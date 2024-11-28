@@ -10,28 +10,28 @@
     border-radius: $border-radius-md 0 0 $border-radius-md;
     padding: 10px 20px;
     @include font-style($size: $font-size-md, $weight: $font-weight-medium);
-    background-color: rgb(242, 242, 242);
-    outline: none;
-    max-width: 400px;
-    width: 400px;
     transition: all 0.3s ease;
+    outline: none;
+    background-color: rgb(242, 242, 242);
+    width: 400px;
+    max-width: 400px;
 
     @include media-query($breakpoint-md) {
-      background-color: #ffffff;
-      border-radius: $border-radius-md;
       outline: 1px solid $border-color;
+      border-radius: $border-radius-md;
+      background-color: #ffffff;
+      padding: 10px 20px;
       width: 94vw;
       max-width: none;
-      padding: 10px 20px;
     }
   }
 
   button {
-    background-color: $primary-color;
-    border-radius: $border-radius-md;
-    padding: 8px 9px 9px 8px;
-    margin-left: -8px;
     transition: all 0.2s ease;
+    margin-left: -8px;
+    border-radius: $border-radius-md;
+    background-color: $primary-color;
+    padding: 8px 9px 9px 8px;
 
     img {
       transition: all 0.2s ease;
