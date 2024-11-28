@@ -54,7 +54,7 @@
     z-index: 2;
 
     @include media-query($breakpoint-sm) {
-      backdrop-filter: blur(1.5px);
+      backdrop-filter: blur(1px);
     }
 
     .title {
