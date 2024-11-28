@@ -15,4 +15,4 @@ COPY . .
 
 EXPOSE 8080
 
-CMD ["./gradlew", "bootRun", "--continuous", "-Dspring-boot.run.profiles=dev", "-Dspring.devtools.restart.enabled=true", "-Dspring.devtools.livereload.enabled=true", "-Dspring.devtools.remote.secret=mysecret"]
+CMD ["./gradlew", "bootRun",--no-daemon, "--continuous", "-Dspring-boot.run.profiles=dev", "-Dspring.devtools.restart.enabled=true", "-Dspring.devtools.livereload.enabled=true", "-Dspring.devtools.remote.secret=mysecret"]
