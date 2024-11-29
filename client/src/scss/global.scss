@@ -81,7 +81,7 @@ h4,
 h5,
 h6 {
   font-weight: inherit;
-  color: inherit;
+  color: $text-color;
 }
 
 // Paragraph reset
@@ -131,4 +131,8 @@ h2 {
 
 h3 {
   @include font-style($size: $font-size-xl, $weight: $font-weight-bold);
+}
+
+h4 {
+  @include font-style($size: $font-size-md, $weight: $font-weight-medium);
 }
