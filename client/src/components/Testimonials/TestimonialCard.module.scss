@@ -1,0 +1,54 @@
+@use "../../scss/global";
+@use "../../scss/variables" as *;
+@use "../../scss/mixins" as *;
+
+.testimonial {
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
+  gap: 16px;
+  padding: 20px;
+  width: 413px;
+  height: 246px;
+  border-radius: $border-radius-md;
+  background-color: $color-white;
+
+  .content {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+
+    .icon {
+      width: 32px;
+      height: 26px;
+    }
+
+    .text {
+      @include font-style($size: $font-size-sm, $weight: $font-weight-normal, $color: $text-color);
+    }
+  }
+
+  .footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    .author {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+
+      .profile {
+        width: 56px;
+        height: 56px;
+        border-radius: $border-radius-circle;
+      }
+    }
+
+    .rating {
+      display: flex;
+      align-items: center;
+      gap: $gap-xs;
+    }
+  }
+}
