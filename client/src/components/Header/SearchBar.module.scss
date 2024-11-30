@@ -5,44 +5,60 @@
 .searchBar {
   display: flex;
   margin-right: auto;
-  .searchInput {
-    border: none;
-    border-radius: $border-radius-md 0 0 $border-radius-md;
-    padding: 10px 20px;
-    @include font-style($size: $font-size-md, $weight: $font-weight-medium);
-    background-color: rgb(242, 242, 242);
-    outline: none;
-    max-width: 400px;
-    width: 400px;
-    transition: all 0.3s ease;
-
-    @include media-query($breakpoint-md) {
-      background-color: #ffffff;
+  .searchInputContainer {
+    .searchInput {
+      border: none;
       border-radius: $border-radius-md;
-      outline: 1px solid $border-color;
-      width: 94vw;
-      max-width: none;
-      padding: 10px 20px;
-    }
-  }
+      padding: 0.5rem 1rem 0.5rem 1rem;
+      @include font-style($size: $font-size-md, $weight: $font-weight-medium);
+      border: 1px solid $border-color;
+      max-width: 400px;
+      width: 400px;
 
-  button {
-    background-color: $primary-color;
-    border-radius: $border-radius-md;
-    padding: 8px 9px 9px 8px;
-    margin-left: -8px;
-    transition: all 0.2s ease;
+      &::placeholder {
+        @include font-style($size: $font-size-sm, $weight: $font-weight-normal, $color: $placeholder-color);
+      }
 
-    img {
-      transition: all 0.2s ease;
-    }
+      &:focus {
+        outline: 2px solid $primary-color;
+      }
 
-    &:hover {
-      img {
-        transform: scale(1.1);
+      @include media-query($breakpoint-md) {
+        background-color: #ffffff;
+        border-radius: $border-radius-md;
+        outline: 1px solid $border-color;
+        width: 94vw;
+        max-width: none;
+        padding: 10px 20px;
       }
     }
 
-    @include hide-on-mobile($breakpoint-md);
+    button {
+      background-color: $primary-color;
+      border-radius: 0 $border-radius-md $border-radius-md 0;
+      padding: 11px 15px 11px 14px;
+      position: absolute;
+      right: 0;
+      top: 50%;
+      transform: translateY(-50%);
+
+      transition: all 0.3s ease;
+
+      .icon {
+        color: $color-white;
+        transition: all 0.3s ease;
+      }
+
+      &:hover {
+        background-color: #159258;
+        .icon {
+          transform: scale(1.2);
+        }
+      }
+
+      @include hide-on-mobile($breakpoint-md);
+    }
   }
+
+  position: relative;
 }
