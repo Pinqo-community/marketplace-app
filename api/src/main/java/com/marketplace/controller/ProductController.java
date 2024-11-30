@@ -1,6 +1,8 @@
 package com.marketplace.controller;
 
 
+import com.marketplace.exception.NotFoundException;
+import com.marketplace.exception.UnavailableProductException;
 import com.marketplace.validation.OnCreate;
 import com.marketplace.dto.ProductDto;
 import com.marketplace.entity.Product;
@@ -65,21 +67,22 @@ public class ProductController {
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Available products retrieved successfully."),
             @ApiResponse(responseCode = "204", description = "No products available."),
-            @ApiResponse(responseCode = "500", description = "Internal server error.")
+
     })
     public ResponseEntity<List<ProductDto>> getAvailableProducts() {
         try {
-            log.info("GET /products/available - START");
+            log.info("GET /products - START: Retrieving products");
             List<Product> availableProducts = productService.getAvailableProducts();
             List<ProductDto> productDtos = productMapper.toDtoList(availableProducts);
             log.info("GET /products/available - Retrieved {} available products", productDtos.size());
             return ResponseEntity.ok(productDtos);
+        } catch (NotFoundException ex) {
+            log.warn("No products found with stock > 0: {}", ex.getMessage());
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         } finally {
             log.info("GET /products/available - DONE");
         }
     }
-
-
 
     /**
      * Retrieves a product by its unique identifier.
@@ -91,8 +94,9 @@ public class ProductController {
     @Operation(summary = "Get a product by ID", description = "Retrieves a product based on its identifier.")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Product successfully recovered."),
-
-            @ApiResponse(responseCode = "404", description = "No product found.")
+            @ApiResponse(responseCode = "404", description = "No product found."),
+            @ApiResponse(responseCode = "410", description = "Product is no longer available."),
+            @ApiResponse(responseCode = "500", description = "Internal server error.")
     })
     public ResponseEntity<ProductDto> getProductById(
             @Parameter(description = "Unique product identifier", required = true) @PathVariable("id") Long id) {
@@ -100,6 +104,12 @@ public class ProductController {
             log.info("GET /products/{} - START: Retrieving product", id);
             Product product = productService.getProductById(id);
             return new ResponseEntity<>(productMapper.toDto(product), HttpStatus.OK);
+        } catch (UnavailableProductException ex) {
+            log.warn("GET /products/{} - Product inactive or unavailable: {}", id, ex.getMessage());
+            return ResponseEntity.status(HttpStatus.GONE).build();
+        } catch (NotFoundException ex) {
+            log.warn("GET /products/{} - Product not found: {}", id, ex.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         } finally {
             log.info("GET /products/{} - END: product recovered", id);
         }
@@ -111,18 +121,22 @@ public class ProductController {
             @ApiResponse(responseCode = "200", description = "Products retrieved successfully",
                     content = {@Content(mediaType = "application/json",
                             schema = @Schema(implementation = Product.class))}),
+                    @ApiResponse(responseCode = "204", description = "No products found for the given status."),
                     @ApiResponse(responseCode = "400", description = "Invalid input parameter"),
                     @ApiResponse(responseCode = "500", description = "Internal server error"),
-                    @ApiResponse(responseCode = "404", description = "No products found for the given status.")
+
             })
     @GetMapping("/status")
     public ResponseEntity<List<ProductDto>> getProductsByStatus(@RequestParam Boolean active) {
         try {
-            log.info("GET /products/status{} - START: Retrieving products", active);
+            log.info("GET /products/status?active={} - START: Retrieving products", active);
             List<ProductDto> products = productService.getProductsByStatus(active);
             return ResponseEntity.ok(products);
+        } catch (NotFoundException ex) {
+            log.warn("GET /products/status?active={} - No products found: {}", active, ex.getMessage());
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         } finally {
-            log.info("GET /products/status{} - END: products successfully retrieved", active);
+            log.info("GET /products/status?active={} - END: products successfully retrieved", active);
         }
     }
 
@@ -148,6 +162,9 @@ public class ProductController {
             productDto.setId(id);
             Product savedProduct = productService.updateProduct(id, productDto);
             return new ResponseEntity<>(productMapper.toDto(savedProduct), HttpStatus.OK);
+            } catch (NotFoundException ex) {
+            log.warn("PUT /products/{} - Product not found: {}", id, ex.getMessage());
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         } finally {
             log.info("PUT /products/{} - END: Product updated successfully", id);
         }
@@ -163,7 +180,7 @@ public class ProductController {
     @Operation(summary = "Delete a product", description = "Deletes a product based on its ID.")
     @ApiResponses({
             @ApiResponse(responseCode = "204", description = "Product successful deleted"),
-            @ApiResponse(responseCode = "404", description = "No product find")
+            @ApiResponse(responseCode = "404", description = "No product found")
     })
     public ResponseEntity<HttpStatus> deleteProduct(
             @Parameter(description = "Unique product identifier", required = true)
@@ -173,6 +190,9 @@ public class ProductController {
             productService.deleteProduct(id);
             log.info("DELETE /products/{} - Product deleted successfully", id);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } catch (NotFoundException ex) {
+            log.warn("DELETE /products/{} - Product not found: {}", id, ex.getMessage());
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         } finally {
             log.info("DELETE /products/{} - DONE", id);
         }
