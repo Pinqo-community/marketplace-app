@@ -55,13 +55,11 @@ public class ProductServiceImpl implements ProductService {
         List<Product> products = productRepository.findByActiveAndStockQuantityGreaterThan(true, 0);
 
         if (products.isEmpty()) {
-            log.warn("No products with stock > 0 found.");
+            log.warn("No products found with stock > 0 found.");
             throw new NotFoundException("Aucun produit disponible avec un stock supérieur à zéro.");
         }
             return products;
-
     }
-
 
 
     /**
@@ -75,7 +73,7 @@ public class ProductServiceImpl implements ProductService {
         return productRepository.findById(id)
                 .map(product -> {
                     if (!product.getActive()) {
-                        throw new UnavailableProductException("Le produit avec l'ID " + id + " est inactif ou non disponible.");
+                        throw new UnavailableProductException("Le produit avec l'ID " + id + " est inactif ou indisponible.");
                     }
                     return product;
                 })

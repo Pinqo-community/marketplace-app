@@ -38,22 +38,8 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ResponseEntity<ExceptionResponse> handleNotFoundException(NotFoundException ex, WebRequest request) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
-    @ExceptionHandler(UserAlreadyExistsException.class)
-    public ResponseEntity<ExceptionResponse> handleUserAlreadyExists(UserAlreadyExistsException ex, WebRequest request) {
-        return ResponseEntity.status(HttpStatus.CONFLICT).body(
                 new ExceptionResponse(
-                        HttpStatus.CONFLICT.value(),
-                        ex.getMessage(),
-                        ((ServletWebRequest) request).getRequest().getRequestURI()
-                )
-        );
-    }
-
-    @ExceptionHandler({WrongCredentialException.class, InvalidTokenException.class})
-    public ResponseEntity<ExceptionResponse> handleWrongCredentialException(Exception ex, WebRequest request) {
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(
-                new ExceptionResponse(
-                        HttpStatus.UNAUTHORIZED.value(),
+                        HttpStatus.NOT_FOUND.value(),
                         ex.getMessage(),
                         ((ServletWebRequest) request).getRequest().getRequestURI()
                 )
@@ -61,10 +47,11 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(UnavailableProductException.class)
+    @ResponseStatus(HttpStatus.GONE)
     public ResponseEntity<ExceptionResponse>handleUnavailableProductException(UnavailableProductException ex, WebRequest request) {
-        return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).body(
+        return ResponseEntity.status(HttpStatus.GONE).body(
                 new ExceptionResponse(
-                        HttpStatus.SERVICE_UNAVAILABLE.value(),
+                        HttpStatus.GONE.value(),
                         ex.getMessage(),
                         ((ServletWebRequest) request).getRequest().getRequestURI()
                 )
@@ -83,6 +70,7 @@ public class GlobalExceptionHandler {
         );
     }
 
+
     @ExceptionHandler
     public ResponseEntity<ExceptionResponse> handleInternalException(Exception ex, WebRequest request) {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
@@ -93,6 +81,4 @@ public class GlobalExceptionHandler {
                 )
         );
     }
-
-
 }
