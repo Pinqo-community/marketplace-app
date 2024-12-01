@@ -1,20 +1,18 @@
-import styles from "./Buttons.module.scss";
-import userIcon from "../../assets/icons/user.svg";
-import cartIcon from "../../assets/icons/cart.svg";
-import { PrimaryButtonProps } from "../../types/Button";
 import { motion } from "framer-motion";
+import { ShoppingCart, User } from "lucide-react";
+import { PrimaryButtonProps } from "../../types/Button";
+import styles from "./Buttons.module.scss";
 
 export const UserButton: React.FC = () => (
   <button className={styles.userButton}>
-    <img src={userIcon} alt="user" />
-    <p>Me connecter</p>
+    <User size={25} />
   </button>
 );
 
 export const CartButton: React.FC = () => (
   <button className={styles.cartButton}>
-    <img src={cartIcon} alt="cart" />
-    <p>Mon panier</p>
+    <ShoppingCart size={25} />
+    <span className={styles.quantity}>3</span>
   </button>
 );
 
