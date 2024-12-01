@@ -12,143 +12,152 @@
 
   .topBanner {
     display: flex;
-    justify-content: flex-end;
-    gap: 40px;
-    max-width: $screen-xl;
+    justify-content: space-between;
+    gap: $gap-xl;
     width: 100%;
-    padding: 5px 20px 5px 0;
+    padding: 6px 20px;
+    background: linear-gradient(to right, #f0fdf4, #dcfce7);
 
-    @include media-query($breakpoint-md) {
-      background-color: $color-dark;
-      color: $color-light;
-      padding: 5px 20px;
-      flex-direction: row-reverse;
+    @include media-query($screen-xs) {
+      gap: 0;
+      padding: 6px;
+    }
 
-      img {
-        @include icon-hover-filter;
+    .separator {
+      width: 1px;
+      height: 1rem;
+      background-color: $separator-color;
+
+      &.separatorMobileOnly {
+        display: none;
+
+        @include media-query($screen-xs) {
+          display: block;
+        }
       }
     }
 
-    .helpButton,
-    .locationButton {
+    .leftContainer,
+    .rightContainer {
+      display: flex;
+      align-items: center;
+      gap: $gap-md;
+
+      @include media-query($screen-xs) {
+        gap: 0;
+        justify-content: space-evenly;
+        width: 100%;
+      }
+    }
+
+    .button {
       display: flex;
       align-items: center;
       gap: 8px;
-      font-size: $font-size-md;
-      background: none;
-      border: none;
+      font-family: system-ui;
+      font-size: 0.75rem;
+      font-weight: 400;
+      color: $text-color;
       cursor: pointer;
-      transition:
-        color 0.2s ease-in-out,
-        filter 0.2s ease-in-out;
-
-      img {
-        transition: filter 0.2s ease-in-out;
-      }
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 
       &:hover {
         color: $primary-color;
-
-        img {
-          @include icon-dark-filter;
-        }
       }
 
-      @include media-query($breakpoint-md) {
-        font-size: $font-size-xs;
+      .icon {
+        color: $primary-color;
+      }
 
-        img {
-          @include icon-light-filter;
-          width: 15px;
-          height: 15px;
-        }
+      @include media-query($screen-xs) {
+        gap: $gap-xs;
       }
     }
   }
+}
 
-  .container {
+.container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 20px;
+  max-width: $screen-xl;
+  width: 100%;
+  margin: 0 auto;
+  gap: 20px;
+
+  @include media-query($breakpoint-md) {
+    flex-wrap: wrap;
+    padding: 10px 15px 0;
+    gap: 11px;
+  }
+
+  .leftContainer {
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    padding: 10px 20px;
-    max-width: $screen-xl;
-    width: 100%;
-    margin: 0 auto;
     gap: 20px;
 
+    .hamburger {
+      opacity: 0.9;
+
+      @include media-query($breakpoint-md) {
+        padding: 10px;
+
+        .hamburgerBox {
+          width: 30px;
+        }
+
+        .hamburgerInner,
+        .hamburgerInner::before,
+        .hamburgerInner::after {
+          width: 30px;
+          height: 3px;
+        }
+      }
+    }
+
     @include media-query($breakpoint-md) {
-      flex-wrap: wrap;
-      padding: 10px 15px 0;
-      gap: 11px;
+      gap: 10px;
+      justify-content: space-between;
+      width: 100%;
     }
 
-    .leftContainer {
-      display: flex;
-      align-items: center;
-      gap: 20px;
-
-      .hamburger {
-        opacity: 0.9;
-
-        @include media-query($breakpoint-md) {
-          padding: 10px;
-
-          .hamburgerBox {
-            width: 30px;
-          }
-
-          .hamburgerInner,
-          .hamburgerInner::before,
-          .hamburgerInner::after {
-            width: 30px;
-            height: 3px;
-          }
-        }
-      }
+    .mobileNav {
+      display: none;
 
       @include media-query($breakpoint-md) {
-        gap: 10px;
-        justify-content: space-between;
-        width: 100%;
-      }
-
-      .mobileNav {
-        display: none;
-
-        @include media-query($breakpoint-md) {
-          display: flex;
-        }
-      }
-
-      .leftContainerInner {
         display: flex;
-        gap: 10px;
       }
     }
 
-    .logo {
-      padding-right: 10px;
-      cursor: pointer;
-
-      @include media-query($breakpoint-md) {
-        width: 200px;
-      }
-    }
-
-    nav {
+    .leftContainerInner {
       display: flex;
-      align-items: center;
-      gap: 40px;
-      margin-left: 20px;
-      @include hide-on-mobile($breakpoint-md);
+      gap: 10px;
+    }
+  }
 
-      @include media-query($breakpoint-md) {
-        gap: 7px;
-        margin-left: 0;
+  .logo {
+    padding-right: 10px;
+    cursor: pointer;
 
-        img {
-          width: 25px;
-        }
+    @include media-query($breakpoint-md) {
+      width: 200px;
+    }
+  }
+
+  nav {
+    display: flex;
+    align-items: center;
+    gap: 40px;
+    margin-left: 20px;
+    @include hide-on-mobile($breakpoint-md);
+
+    @include media-query($breakpoint-md) {
+      gap: 7px;
+      margin-left: 0;
+
+      img {
+        width: 25px;
       }
     }
   }
