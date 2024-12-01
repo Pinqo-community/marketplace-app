@@ -42,15 +42,15 @@
       top: 50%;
       transform: translateY(-50%);
 
-      transition: all 0.3s ease;
+      transition: all 0.2s ease;
 
       .icon {
         color: $color-white;
-        transition: all 0.3s ease;
+        transition: all 0.2s ease;
       }
 
       &:hover {
-        background-color: #159258;
+        background-color: #049b52;
         .icon {
           transform: scale(1.2);
         }

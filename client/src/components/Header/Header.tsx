@@ -1,8 +1,7 @@
+import { Bell, ChevronDown, HelpCircle, MapPin } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "../../../node_modules/hamburgers/_sass/hamburgers/hamburgers.scss";
-import helpIcon from "../../assets/icons/help.svg";
-import locationIcon from "../../assets/icons/location.svg";
 import logo from "../../assets/images/logo.svg";
 import { CartButton, UserButton } from "../Button/Buttons";
 import styles from "./Header.module.scss";
@@ -31,24 +30,36 @@ const Header: React.FC = () => {
     <header className={styles.header}>
       {/* Top banner */}
       <div className={styles.topBanner}>
-        <button className={styles.helpButton}>
-          <img
-            src={helpIcon}
-            alt="Besoin d'aide ?"
-            aria-label="Besoin d'aide ?"
-            loading="lazy"
-          />
-          Besoin d’aide ?
-        </button>
-        <button className={styles.locationButton}>
-          <img
-            src={locationIcon}
-            alt="Ajouter ma localisation"
-            aria-label="Ajouter ma localisation"
-            loading="lazy"
-          />
-          Ajouter ma localisation
-        </button>
+        <div className={styles.leftContainer}>
+          <button type="button" className={styles.button}>
+            <MapPin size={16} className={styles.icon} />
+            <span>Paris 11e</span>
+          </button>
+
+          <div className={styles.separator}></div>
+
+          <button type="button" className={styles.button}>
+            <Bell size={16} className={styles.icon} />
+            <span>Nouveautés</span>
+          </button>
+        </div>
+        <div
+          className={`${styles.separator} ${styles.separatorMobileOnly}`}
+        ></div>
+
+        <div className={styles.rightContainer}>
+          <button type="button" className={styles.button}>
+            <HelpCircle size={16} className={styles.icon} />
+            <span>Centre d'aide</span>
+          </button>
+
+          <div className={styles.separator}></div>
+
+          <button type="button" className={styles.button}>
+            <span>FR</span>
+            <ChevronDown size={16} className={styles.icon} />
+          </button>
+        </div>
       </div>
 
       {/* Main part */}
@@ -94,3 +105,25 @@ const Header: React.FC = () => {
 };
 
 export default Header;
+
+//  {/* Top banner */}
+//  <div className={styles.topBanner}>
+//  <button className={styles.helpButton}>
+//    <img
+//      src={helpIcon}
+//      alt="Besoin d'aide ?"
+//      aria-label="Besoin d'aide ?"
+//      loading="lazy"
+//    />
+//    Besoin d’aide ?
+//  </button>
+//  <button className={styles.locationButton}>
+//    <img
+//      src={locationIcon}
+//      alt="Ajouter ma localisation"
+//      aria-label="Ajouter ma localisation"
+//      loading="lazy"
+//    />
+//    Ajouter ma localisation
+//  </button>
+// </div>
