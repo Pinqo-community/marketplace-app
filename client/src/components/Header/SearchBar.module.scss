@@ -56,7 +56,7 @@
         }
       }
 
-      @include hide-on-mobile($breakpoint-md);
+      @include hide-on-mobile($screen-md);
     }
   }
 

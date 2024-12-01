@@ -4,31 +4,32 @@
 
 .userButton,
 .cartButton {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  font-size: $font-size-md;
-  background: none;
-  border: none;
-  cursor: pointer;
-  gap: 3px;
   transition: all 0.2s ease-in-out;
-
-  p {
-    @include hide-on-mobile($breakpoint-md);
-  }
-
-  img {
-    transition: all 0.2s ease-in-out;
-  }
+  color: $primary-color;
+  padding: 10px;
+  border-radius: $border-radius-circle;
+  position: relative;
 
   &:hover {
-    color: $primary-color;
+    background-color: #d4fadd59;
+  }
 
-    img {
-      filter: brightness(0) saturate(100%) invert(38%) sepia(100%) saturate(699%) hue-rotate(113deg) brightness(105%)
-        contrast(98%);
-    }
+  .quantity {
+    position: absolute;
+    top: 3px;
+    right: 3px;
+    background-color: #e61616;
+    color: $color-light;
+    font-size: 0.75rem;
+    font-weight: bold;
+    width: 16px;
+    height: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: $border-radius-circle;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    pointer-events: none;
   }
 }
 

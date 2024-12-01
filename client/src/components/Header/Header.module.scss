@@ -7,8 +7,11 @@
   flex-direction: column;
   width: 100%;
   align-items: center;
-  padding: 0 0 10px;
   background-color: $color-white;
+
+  @include media-query($screen-md) {
+    padding-bottom: 10px;
+  }
 
   .topBanner {
     display: flex;
@@ -84,9 +87,9 @@
   max-width: $screen-xl;
   width: 100%;
   margin: 0 auto;
-  gap: 20px;
+  gap: $gap-md;
 
-  @include media-query($breakpoint-md) {
+  @include media-query($screen-md) {
     flex-wrap: wrap;
     padding: 10px 15px 0;
     gap: 11px;
@@ -95,12 +98,12 @@
   .leftContainer {
     display: flex;
     align-items: center;
-    gap: 20px;
+    gap: $gap-md;
 
     .hamburger {
       opacity: 0.9;
 
-      @include media-query($breakpoint-md) {
+      @include media-query($screen-md) {
         padding: 10px;
 
         .hamburgerBox {
@@ -116,8 +119,8 @@
       }
     }
 
-    @include media-query($breakpoint-md) {
-      gap: 10px;
+    @include media-query($screen-md) {
+      gap: $gap-sm;
       justify-content: space-between;
       width: 100%;
     }
@@ -125,14 +128,14 @@
     .mobileNav {
       display: none;
 
-      @include media-query($breakpoint-md) {
+      @include media-query($screen-md) {
         display: flex;
       }
     }
 
     .leftContainerInner {
       display: flex;
-      gap: 10px;
+      gap: $gap-sm;
     }
   }
 
@@ -140,7 +143,7 @@
     padding-right: 10px;
     cursor: pointer;
 
-    @include media-query($breakpoint-md) {
+    @include media-query($screen-md) {
       width: 200px;
     }
   }
@@ -148,11 +151,11 @@
   nav {
     display: flex;
     align-items: center;
-    gap: 40px;
+    gap: $gap-md;
     margin-left: 20px;
-    @include hide-on-mobile($breakpoint-md);
+    @include hide-on-mobile($screen-md);
 
-    @include media-query($breakpoint-md) {
+    @include media-query($screen-md) {
       gap: 7px;
       margin-left: 0;
 
@@ -162,4 +165,3 @@
     }
   }
 }
-//
