@@ -1,5 +1,6 @@
+import { motion } from "framer-motion";
 import { Bell, ChevronDown, HelpCircle, MapPin } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "../../../node_modules/hamburgers/_sass/hamburgers/hamburgers.scss";
 import logo from "../../assets/images/logo.svg";
@@ -15,6 +16,8 @@ const Header: React.FC = () => {
   const navigate = useNavigate();
 
   const [isActive, setIsActive] = useState(false);
+  const [scrollPosition, setScrollPosition] = useState(0);
+  const [isTopBarVisible, setIsTopBarVisible] = useState(true);
 
   /* -------------------------------------------------------------------------- */
   /*                                  Function                                  */
@@ -22,14 +25,37 @@ const Header: React.FC = () => {
 
   const toggleHamburger = () => setIsActive(!isActive);
 
+  // Handle scroll
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentPosition = window.scrollY;
+      setIsTopBarVisible(currentPosition < 50);
+      setScrollPosition(currentPosition);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
   /* -------------------------------------------------------------------------- */
   /*                                   Render                                   */
   /* -------------------------------------------------------------------------- */
 
   return (
-    <header className={styles.header}>
+    <header
+      className={`${styles.header} ${scrollPosition > 50 ? styles.fixed : ""} `}
+    >
       {/* Top banner */}
-      <div className={styles.topBanner}>
+      <motion.div
+        initial={{ opacity: 0, paddingTop: 0, paddingBottom: 0, maxHeight: 0 }}
+        animate={{
+          opacity: isTopBarVisible ? 1 : 0,
+          paddingTop: isTopBarVisible ? "6px" : "0",
+          paddingBottom: isTopBarVisible ? "6px" : "0",
+          maxHeight: isTopBarVisible ? "100px" : "0",
+        }}
+        className={styles.topBanner}
+      >
         <div className={styles.leftContainer}>
           <button type="button" className={styles.button}>
             <MapPin size={16} className={styles.icon} />
@@ -60,7 +86,7 @@ const Header: React.FC = () => {
             <ChevronDown size={16} className={styles.icon} />
           </button>
         </div>
-      </div>
+      </motion.div>
 
       {/* Main part */}
       <div className={styles.container}>
@@ -79,7 +105,8 @@ const Header: React.FC = () => {
                 ></span>
               </span>
             </button>
-            <img
+            <motion.img
+              whileHover={{ scale: 1.05 }}
               src={logo}
               alt="logo"
               className={styles.logo}
@@ -105,25 +132,3 @@ const Header: React.FC = () => {
 };
 
 export default Header;
-
-//  {/* Top banner */}
-//  <div className={styles.topBanner}>
-//  <button className={styles.helpButton}>
-//    <img
-//      src={helpIcon}
-//      alt="Besoin d'aide ?"
-//      aria-label="Besoin d'aide ?"
-//      loading="lazy"
-//    />
-//    Besoin d’aide ?
-//  </button>
-//  <button className={styles.locationButton}>
-//    <img
-//      src={locationIcon}
-//      alt="Ajouter ma localisation"
-//      aria-label="Ajouter ma localisation"
-//      loading="lazy"
-//    />
-//    Ajouter ma localisation
-//  </button>
-// </div>

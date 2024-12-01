@@ -2,12 +2,20 @@
 @use "../../scss/variables" as *;
 @use "../../scss/mixins" as *;
 
+.fixed {
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease-in-out;
+}
+
 .header {
   display: flex;
   flex-direction: column;
   width: 100%;
   align-items: center;
   background-color: $color-white;
+  z-index: $z-index-header;
+  position: fixed;
+  transition: all 0.3s ease-in-out;
 
   @include media-query($screen-md) {
     padding-bottom: 10px;

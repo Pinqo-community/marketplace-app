@@ -12,8 +12,8 @@
       padding: 0.5rem 1rem 0.5rem 1rem;
       @include font-style($size: $font-size-md, $weight: $font-weight-medium);
       border: 1px solid $border-color;
-      max-width: 400px;
       width: 400px;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 
       &::placeholder {
         @include font-style($size: $font-size-sm, $weight: $font-weight-normal, $color: $placeholder-color);
@@ -21,6 +21,7 @@
 
       &:focus {
         outline: 2px solid $primary-color;
+        width: 450px;
       }
 
       @include media-query($breakpoint-md) {
@@ -30,6 +31,10 @@
         width: 94vw;
         max-width: none;
         padding: 10px 20px;
+
+        &:focus {
+          width: 94vw;
+        }
       }
     }
 
