@@ -79,7 +79,7 @@ const products = [
 ];
 
 export const productsApi = createApi({
-  reducerPath: "api",
+  reducerPath: "productsApi",
   baseQuery: fetchBaseQuery({ baseUrl: "/" }),
   endpoints: (builder) => ({
     getProducts: builder.query({
