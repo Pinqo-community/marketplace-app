@@ -59,6 +59,18 @@ public class GlobalExceptionHandler {
     }
 
 
+    @ExceptionHandler(NotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ResponseEntity<ExceptionResponse> handleNotFoundException(NotFoundException ex, WebRequest request) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                new ExceptionResponse(
+                        HttpStatus.NOT_FOUND.value(),
+                        ex.getMessage(),
+                        ((ServletWebRequest) request).getRequest().getRequestURI()
+                )
+        );
+    }
+
     @ExceptionHandler
     public ResponseEntity<ExceptionResponse> handleInternalException(Exception ex, WebRequest request) {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(

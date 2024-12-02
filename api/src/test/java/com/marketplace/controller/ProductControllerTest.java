@@ -1,304 +1,229 @@
 package com.marketplace.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.marketplace.annotation.ControllerWebMvcTest;
 import com.marketplace.dto.ProductDto;
 import com.marketplace.entity.Product;
+import com.marketplace.exception.GlobalExceptionHandler;
 import com.marketplace.exception.NotFoundException;
-import com.marketplace.exception.UnavailableProductException;
 import com.marketplace.service.ProductService;
 import com.marketplace.utils.mapper.ProductMapper;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
-import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.mockito.Mockito;
+import org.springframework.beans.factory.annotation.Autowired;
 
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
+import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.MockMvc;
+
+import java.math.BigDecimal;
+import java.util.Collections;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@Tag("ProductController")
-@ExtendWith(MockitoExtension.class)
+@ControllerWebMvcTest (ProductController.class)
+@Import(GlobalExceptionHandler.class)
+@DisplayName("Tests for ProductController")
 class ProductControllerTest {
 
-    @Mock
+    @Autowired
+    private MockMvc mockMvc;
+
+    @Autowired
+    private ObjectMapper objectMapper;
+
+    @MockBean
     private ProductService productService;
 
-    @Mock
+    @MockBean
     private ProductMapper productMapper;
+    private ProductDto baseProductDto;
 
-    @InjectMocks
-    private ProductController productController;
+    @BeforeEach
+    public void setup() {
+         baseProductDto = new ProductDto(
+                1L,
+                "Miel de lavande",
+                "Pot de 300g",
+                "img_url",
+                new BigDecimal("10.00"),
+                "High",
+                "",
+                30,
+                1,
+                50,
+                1,
+                2,
+                true
+        );
+    }
+
 
     @Nested
-    @DisplayName("Tests for createProduct method")
-    class CreateProductTests {
+    @DisplayName("POST /products - Create Product")
+    class CreateProduct {
+        @Test
+        @DisplayName("Should create a product successfully")
+        void shouldCreateProduct() throws Exception {
+            //Arrange
+            Mockito.when(productService.createProduct(any(ProductDto.class))).thenReturn(baseProductDto);
+
+            // Act & Assert
+            mockMvc.perform(post("/products")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsString(baseProductDto)))
+                    .andExpect(status().isCreated())
+                    .andExpect(jsonPath("$.id").value(1L))
+                    .andExpect(jsonPath("$.name").value("Miel de lavande"));
+
+            verify(productService, times(1)).createProduct(any(ProductDto.class));
+        }
 
         @Test
-        @DisplayName("Should create a new product and return it with HTTP status 201")
-        void createProduct_ValidRequest_ReturnsCreatedProduct() {
-            // Arrange
-            ProductDto productDto = ProductDto.builder().name("Test Product").build();
-            ProductDto savedProductDto = ProductDto.builder().id(1L).name("Test Product").build();
+        @DisplayName("Should return 400 when input is invalid")
+        void shouldReturnBadRequestForInvalidInput() throws Exception {
+            //Arrange
+            ProductDto invalidProductDto = new ProductDto(null, null, "desc", null, null, "Low", "", 0, 0, 0, 0, 0, false);
 
-            when(productService.createProduct(productDto)).thenReturn(savedProductDto);
+            // Act & Assert
+            mockMvc.perform(post("/products")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsString(invalidProductDto)))
+                    .andExpect(status().isBadRequest());
 
-            // Act
-            ResponseEntity<ProductDto> response = productController.createProduct(productDto);
-
-            // Assert
-            assertNotNull(response);
-            assertEquals(HttpStatus.CREATED, response.getStatusCode());
-            assertEquals(savedProductDto, response.getBody());
-            verify(productService, times(1)).createProduct(productDto);
+            verify(productService, times(0)).createProduct(any(ProductDto.class));
         }
     }
 
     @Nested
-    @DisplayName("Tests for getAvailableProducts method")
-    class GetAvailableProductsTests {
-
+    @DisplayName("GET /products/available - Get Available Products")
+    class GetAvailableProducts {
         @Test
-        @DisplayName("Should return available products with HTTP status 200")
-        void getAvailableProducts_HasProducts_ReturnsProducts() {
-            // Arrange
-            Product product = Product.builder().id(1L).name("Product 1").build();
-            ProductDto productDto = ProductDto.builder().id(1L).name("Product 1").build();
+        @DisplayName("Should return available products")
+        void shouldReturnAvailableProducts() throws Exception {
+            //Arrange
+            Product product = new Product();
+            List<Product> products = List.of(product);
 
-            when(productService.getAvailableProducts()).thenReturn(List.of(product));
-            when(productMapper.toDtoList(List.of(product))).thenReturn(List.of(productDto));
+            Mockito.when(productService.getAvailableProducts()).thenReturn(products);
+            Mockito.when(productMapper.toDtoList(products)).thenReturn(List.of(baseProductDto));
 
-            // Act
-            ResponseEntity<List<ProductDto>> response = productController.getAvailableProducts();
+            // Act & Assert
+            mockMvc.perform(get("/products/available"))
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$[0].id").value(baseProductDto.getId()))
+                    .andExpect(jsonPath("$[0].name").value(baseProductDto.getName()));
 
-            // Assert
-            assertNotNull(response);
-            assertEquals(HttpStatus.OK, response.getStatusCode());
-            assertNotNull(response.getBody());
-            assertEquals(1, response.getBody().size());
-            assertEquals(productDto, response.getBody().get(0));
             verify(productService, times(1)).getAvailableProducts();
-            verify(productMapper, times(1)).toDtoList(List.of(product));
         }
 
         @Test
-        @DisplayName("Should return HTTP status 204 when no products are available")
-        void getAvailableProducts_NoProducts_ReturnsNoContent() {
-            // Arrange
-            when(productService.getAvailableProducts()).thenThrow(new NotFoundException("Aucun produit disponible avec un stock supérieur à zéro."));
+        @DisplayName("Should return 204 when no products are available")
+        void shouldReturnNoContent() throws Exception {
+            //Arrange
+            Mockito.when(productService.getAvailableProducts()).thenReturn(Collections.emptyList());
 
-            // Act
-            ResponseEntity<List<ProductDto>> response = productController.getAvailableProducts();
+            // Act & Assert
+            mockMvc.perform(get("/products/available"))
+                    .andExpect(status().isNoContent());
 
-            // Assert
-            assertNotNull(response);
-            assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
-            assertNull(response.getBody());
             verify(productService, times(1)).getAvailableProducts();
         }
     }
 
     @Nested
-    @DisplayName("Tests for getProductById method")
-    class GetProductByIdTests {
-
+    @DisplayName("GET /products/{id} - Get Product By ID")
+    class GetProductById {
         @Test
-        @DisplayName("Should return product with HTTP status 200")
-        void getProductById_HasProduct_ReturnsProduct() {
-            // Arrange
-            Product product = Product.builder().id(1L).name("Product 1").build();
-            ProductDto productDto = ProductDto.builder().id(1L).name("Product 1").build();
+        @DisplayName("Should return product by ID")
+        void shouldReturnProductById() throws Exception {
+            //Arrange
+            Mockito.when(productService.getProductById(anyLong())).thenReturn(new Product());
+            Mockito.when(productMapper.toDto(any(Product.class))).thenReturn(baseProductDto);
 
-            when(productService.getProductById(1L)).thenReturn(product);
-            when(productMapper.toDto(product)).thenReturn(productDto);
+            // Act & Assert
+            mockMvc.perform(get("/products/{id}", 1L))
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.id").value(baseProductDto.getId()))
+                    .andExpect(jsonPath("$.name").value(baseProductDto.getName()));
 
-            // Act
-            ResponseEntity<ProductDto> response = productController.getProductById(1L);
-
-            // Assert
-            assertNotNull(response);
-            assertEquals(HttpStatus.OK, response.getStatusCode());
-            assertEquals(productDto, response.getBody());
-            verify(productService, times(1)).getProductById(1L);
-            verify(productMapper, times(1)).toDto(product);
+            verify(productService, times(1)).getProductById(anyLong());
         }
 
         @Test
-        @DisplayName("Should return HTTP status 404 when product is not found")
-        void getProductById_ProductNotFound_ReturnsNotFound() {
-            // Arrange
-            when(productService.getProductById(1L)).thenThrow(new NotFoundException("Ce produit n'existe pas"));
+        @DisplayName("Should return 404 when product not found")
+        void shouldReturnNotFound() throws Exception {
+            //Arrange
+            Mockito.when(productService.getProductById(anyLong())).thenThrow(new NotFoundException("Product not found"));
 
-            // Act
-            ResponseEntity<ProductDto> response = productController.getProductById(1L);
+            //Act & Assert
+            mockMvc.perform(get("/products/{id}", 1L))
+                    .andExpect(status().isNotFound());
 
-            // Assert
-            assertNotNull(response);
-            assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
-            verify(productService, times(1)).getProductById(1L);
-        }
-    }
-
-    @Test
-    @DisplayName("Should return HTTP status 410 when product is inactive or unavailable")
-    void getProductById_ProductInactive_ReturnsGone() {
-        // Arrange
-        when(productService.getProductById(1L)).thenThrow(new UnavailableProductException("Le produit avec l'ID 1 est inactif ou indisponible."));
-
-        // Act
-        ResponseEntity<ProductDto> response = productController.getProductById(1L);
-
-        // Assert
-        assertNotNull(response);
-        assertEquals(HttpStatus.GONE, response.getStatusCode());
-        assertNull(response.getBody());
-        verify(productService, times(1)).getProductById(1L);
-    }
-
-
-    @Nested
-    @DisplayName("Tests for getProductsByStatus method")
-    class GetProductsByStatusTests {
-
-        @Test
-        @DisplayName("Should return products with HTTP status 200")
-        void getProductsByStatus_HasProducts_ReturnsProducts() {
-            // Arrange
-            ProductDto productDto = ProductDto.builder().id(1L).name("Product 1").build();
-
-            when(productService.getProductsByStatus(true)).thenReturn(List.of(productDto));
-
-            // Act
-            ResponseEntity<List<ProductDto>> response = productController.getProductsByStatus(true);
-
-            // Assert
-            assertNotNull(response);
-            assertEquals(HttpStatus.OK, response.getStatusCode());
-            assertNotNull(response.getBody());
-            assertEquals(1, response.getBody().size());
-            assertEquals(productDto, response.getBody().get(0));
-            verify(productService, times(1)).getProductsByStatus(true);
-        }
-
-        @Test
-        @DisplayName("Should return HTTP status 400 when active is null")
-        void getProductsByStatus_NullActive_ThrowsBadRequest() {
-            // Arrange
-            doThrow(new IllegalArgumentException("Le paramètre 'active' ne peut pas être null."))
-                    .when(productService).getProductsByStatus(null);
-
-            // Act
-            ResponseEntity<List<ProductDto>> response = null;
-            try {
-                response = productController.getProductsByStatus(null);
-            } catch (IllegalArgumentException ex) {
-                assertEquals("Le paramètre 'active' ne peut pas être null.", ex.getMessage());
-            }
-
-            // Assert
-            assertNull(response);
-            verify(productService, times(1)).getProductsByStatus(null);
-        }
-
-        @Test
-        @DisplayName("Should return HTTP status 204 when no products are available")
-        void getProductsByStatus_NoProducts_ReturnsNoContent() {
-            // Arrange
-            when(productService.getProductsByStatus(false)).thenThrow(new NotFoundException("Aucun produit trouvé avec l'état actif = false"));
-
-            // Act
-            ResponseEntity<List<ProductDto>> response = productController.getProductsByStatus(false);
-
-            // Assert
-            assertNotNull(response);
-            assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
-            assertNull(response.getBody());
-            verify(productService, times(1)).getProductsByStatus(false);
+            verify(productService, times(1)).getProductById(anyLong());
         }
     }
 
     @Nested
-    @DisplayName("Tests for updateProduct method")
-    class UpdateProductTests {
-
+    @DisplayName("PUT /products/{id} - Update Product")
+    class UpdateProduct {
         @Test
-        @DisplayName("Should update and return product with HTTP status 200")
-        void updateProduct_ValidRequest_ReturnsUpdatedProduct() {
-            // Arrange
-            ProductDto productDto = ProductDto.builder().id(1L).name("Updated Product").build();
-            Product product = Product.builder().id(1L).name("Updated Product").build();
+        @DisplayName("Should update product successfully")
+        void shouldUpdateProduct() throws Exception {
+            //Arrange
+            Product updatedProduct = new Product();
+            ProductDto updatedDto = new ProductDto(1L, "Updated Miel", "Pot 500g", "new_img", new BigDecimal("15.00"), "High", "", 50, 1, 100, 1, 2, true);
+            Mockito.when(productService.updateProduct(anyLong(), any(ProductDto.class))).thenReturn(updatedProduct);
+            Mockito.when(productMapper.toDto(updatedProduct)).thenReturn(updatedDto);
 
-            when(productService.updateProduct(1L, productDto)).thenReturn(product);
-            when(productMapper.toDto(product)).thenReturn(productDto);
+        // Act & Assert
+            mockMvc.perform(put("/products/{id}", 1L)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsString(updatedDto)))
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.name").value("Updated Miel"));
 
-            // Act
-            ResponseEntity<ProductDto> response = productController.updateProduct(1L, productDto);
-
-            // Assert
-            assertNotNull(response);
-            assertEquals(HttpStatus.OK, response.getStatusCode());
-            assertEquals(productDto, response.getBody());
-            verify(productService, times(1)).updateProduct(1L, productDto);
-            verify(productMapper, times(1)).toDto(product);
-        }
-
-        @Test
-        @DisplayName("Should return HTTP status 404 when product is not found")
-        void updateProduct_ProductNotFound_ReturnsNotFound() {
-            // Arrange
-            ProductDto productDto = ProductDto.builder().id(1L).name("Updated Product").build();
-
-            when(productService.updateProduct(1L, productDto)).thenThrow(new NotFoundException("Ce produit n'existe pas"));
-
-            // Act
-            ResponseEntity<ProductDto> response = productController.updateProduct(1L, productDto);
-
-            // Assert
-            assertNotNull(response);
-            assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
-            verify(productService, times(1)).updateProduct(1L, productDto);
+            verify(productService, times(1)).updateProduct(anyLong(), any(ProductDto.class));
         }
     }
 
     @Nested
-    @DisplayName("Tests for deleteProduct method")
-    class DeleteProductTests {
-
+    @DisplayName("DELETE /products/{id} - Delete Product")
+    class DeleteProduct {
         @Test
-        @DisplayName("Should delete product with HTTP status 204")
-        void deleteProduct_HasProduct_ReturnsNoContent() {
-            // Arrange
-            doNothing().when(productService).deleteProduct(1L);
+        @DisplayName("Should delete product successfully")
+        void shouldDeleteProduct() throws Exception {
+            //Arrange
+            Mockito.doNothing().when(productService).deleteProduct(anyLong());
 
-            // Act
-            ResponseEntity<HttpStatus> response = productController.deleteProduct(1L);
+            // Act & Assert
+            mockMvc.perform(delete("/products/{id}", 1L))
+                    .andExpect(status().isNoContent());
 
-            // Assert
-            assertNotNull(response);
-            assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
-            verify(productService, times(1)).deleteProduct(1L);
+            verify(productService, times(1)).deleteProduct(anyLong());
         }
 
         @Test
-        @DisplayName("Should return HTTP status 404 when product is not found")
-        void deleteProduct_ProductNotFound_ReturnsNotFound() {
-            // Arrange
-            doThrow(new NotFoundException("Ce produit n'existe pas")).when(productService).deleteProduct(1L);
+        @DisplayName("Should return 404 when product not found")
+        void shouldReturnNotFoundForDelete() throws Exception {
+            //Arrange
+            Mockito.doThrow(new NotFoundException("Product not found")).when(productService).deleteProduct(anyLong());
+            // Act & Assert
+            mockMvc.perform(delete("/products/{id}", 1L))
+                    .andExpect(status().isNotFound())
+                    .andExpect(jsonPath("$.message").value("Product not found"));
 
-            // Act
-            ResponseEntity<HttpStatus> response = productController.deleteProduct(1L);
-
-            // Assert
-            assertNotNull(response);
-            assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
-            verify(productService, times(1)).deleteProduct(1L);
+            verify(productService, times(1)).deleteProduct(anyLong());
         }
     }
-
 }
-

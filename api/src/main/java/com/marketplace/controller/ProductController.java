@@ -1,8 +1,5 @@
 package com.marketplace.controller;
 
-
-import com.marketplace.exception.NotFoundException;
-import com.marketplace.exception.UnavailableProductException;
 import com.marketplace.validation.OnCreate;
 import com.marketplace.dto.ProductDto;
 import com.marketplace.entity.Product;
@@ -62,7 +59,7 @@ public class ProductController {
     }
 
 
-    @GetMapping
+    @GetMapping("/available")
     @Operation(summary = "Get available products", description = "Retrieve products with stock > 0 for customers.")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Available products retrieved successfully."),
@@ -75,10 +72,12 @@ public class ProductController {
             List<Product> availableProducts = productService.getAvailableProducts();
             List<ProductDto> productDtos = productMapper.toDtoList(availableProducts);
             log.info("GET /products/available - Retrieved {} available products", productDtos.size());
+            if (productDtos.isEmpty()) {
+                log.info("GET /products/available - No products available");
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            }
+            log.info("GET /products - Retrieved {} products", productDtos.size());
             return ResponseEntity.ok(productDtos);
-        } catch (NotFoundException ex) {
-            log.warn("No products found with stock > 0: {}", ex.getMessage());
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         } finally {
             log.info("GET /products/available - DONE");
         }
@@ -104,12 +103,6 @@ public class ProductController {
             log.info("GET /products/{} - START: Retrieving product", id);
             Product product = productService.getProductById(id);
             return new ResponseEntity<>(productMapper.toDto(product), HttpStatus.OK);
-        } catch (UnavailableProductException ex) {
-            log.warn("GET /products/{} - Product inactive or unavailable: {}", id, ex.getMessage());
-            return ResponseEntity.status(HttpStatus.GONE).build();
-        } catch (NotFoundException ex) {
-            log.warn("GET /products/{} - Product not found: {}", id, ex.getMessage());
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         } finally {
             log.info("GET /products/{} - END: product recovered", id);
         }
@@ -132,9 +125,6 @@ public class ProductController {
             log.info("GET /products/status?active={} - START: Retrieving products", active);
             List<ProductDto> products = productService.getProductsByStatus(active);
             return ResponseEntity.ok(products);
-        } catch (NotFoundException ex) {
-            log.warn("GET /products/status?active={} - No products found: {}", active, ex.getMessage());
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         } finally {
             log.info("GET /products/status?active={} - END: products successfully retrieved", active);
         }
@@ -162,9 +152,6 @@ public class ProductController {
             productDto.setId(id);
             Product savedProduct = productService.updateProduct(id, productDto);
             return new ResponseEntity<>(productMapper.toDto(savedProduct), HttpStatus.OK);
-            } catch (NotFoundException ex) {
-            log.warn("PUT /products/{} - Product not found: {}", id, ex.getMessage());
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         } finally {
             log.info("PUT /products/{} - END: Product updated successfully", id);
         }
@@ -190,14 +177,10 @@ public class ProductController {
             productService.deleteProduct(id);
             log.info("DELETE /products/{} - Product deleted successfully", id);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        } catch (NotFoundException ex) {
-            log.warn("DELETE /products/{} - Product not found: {}", id, ex.getMessage());
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         } finally {
             log.info("DELETE /products/{} - DONE", id);
         }
 
     }
-
 }
 

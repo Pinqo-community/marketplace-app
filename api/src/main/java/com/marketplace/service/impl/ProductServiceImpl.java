@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -55,8 +56,8 @@ public class ProductServiceImpl implements ProductService {
         List<Product> products = productRepository.findByActiveAndStockQuantityGreaterThan(true, 0);
 
         if (products.isEmpty()) {
-            log.warn("No products found with stock > 0 found.");
-            throw new NotFoundException("Aucun produit disponible avec un stock supérieur à zéro.");
+            log.warn("No products found with stock > 0 found and active status.");
+            return Collections.emptyList();
         }
             return products;
     }
@@ -127,10 +128,10 @@ public class ProductServiceImpl implements ProductService {
      */
     @Override
     public void deleteProduct(Long id) {
-        if (!productRepository.existsById(id)) {
-            throw new NotFoundException("Ce produit n'existe pas");
-        }
-        productRepository.deleteById(id);
+        Product product = productRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Ce produit n'existe pas"));
+        productRepository.delete(product);
+
     }
 
 
