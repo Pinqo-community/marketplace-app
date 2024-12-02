@@ -4,52 +4,56 @@
 @use "../../scss/shared" as *;
 
 section {
-  padding: 20px;
+  padding: 40px 20px;
   max-width: $screen-xl;
   margin: 0 auto;
 
-  .title {
-    @include media-query($breakpoint-xs) {
-      font-size: 30px;
-    }
-  }
+  .sectionContainer {
+    .titleContainer {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 40px;
 
-  .mapContainer {
-    position: relative;
-    width: 100%;
-    height: 691px;
-    border-radius: $border-radius-md;
-    overflow: hidden;
-
-    .map {
-      width: 100%;
-      height: 100%;
+      .title {
+        @include media-query($breakpoint-xs) {
+          font-size: 30px;
+        }
+      }
     }
   }
 }
 
 /* -------------------------------------------------------------------------- */
-/*                              Popular Products                              */
+/*                              Products Section                              */
 /* -------------------------------------------------------------------------- */
 
 .popularProducts {
-  .sectionContainer {
-    .titleContainer {
-      display: flex;
-      justify-content: space-between;
-      margin-bottom: 30px;
-    }
+  .productsGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: $gap-lg;
+    justify-items: center;
 
-    .productsGrid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-      gap: $gap-lg;
-      justify-items: center;
-
-      @include media-query($breakpoint-md) {
-        justify-content: center;
-      }
+    @include media-query($breakpoint-md) {
+      justify-content: center;
     }
+  }
+}
+
+/* -------------------------------------------------------------------------- */
+/*                                 Map Section                                */
+/* -------------------------------------------------------------------------- */
+
+.mapContainer {
+  position: relative;
+  width: 100%;
+  height: 691px;
+  border-radius: $border-radius-md;
+  overflow: hidden;
+
+  .map {
+    width: 100%;
+    height: 100%;
   }
 }
 

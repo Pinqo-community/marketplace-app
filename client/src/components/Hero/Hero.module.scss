@@ -9,7 +9,10 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
+  align-items: center;
   color: $color-white;
+  max-width: none;
+  margin-bottom: 40px;
 
   &::before {
     content: "";
@@ -24,48 +27,36 @@
     z-index: 1;
   }
 
-  .content {
-    position: relative;
-    z-index: 2;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    text-align: start;
-    gap: $gap-lg;
-    max-width: 600px;
+  .container {
+    max-width: 1400px;
     width: 100%;
-    margin-left: 20%;
 
-    h1 {
+    .content {
+      position: relative;
+      z-index: 2;
       display: flex;
       flex-direction: column;
-      width: max-content;
-    }
+      gap: $gap-lg;
 
-    @include media-query($breakpoint-md) {
-      margin-left: 15%;
-    }
-
-    @include media-query($breakpoint-sm) {
-      margin-left: 4vw;
-      text-align: center;
-      align-items: center;
-    }
-
-    @include media-query($breakpoint-xs) {
-      margin-left: 0;
-    }
-
-    @include media-query($breakpoint-md) {
       h1 {
-        font-size: 38px;
-        line-height: normal;
+        display: flex;
+        flex-direction: column;
       }
-    }
 
-    @include media-query($breakpoint-xs) {
-      h1 {
-        font-size: 32px;
+      @include media-query($breakpoint-sm) {
+        text-align: center;
+        align-items: center;
+
+        h1 {
+          font-size: 38px;
+          line-height: normal;
+        }
+      }
+
+      @include media-query($breakpoint-xs) {
+        h1 {
+          font-size: 32px;
+        }
       }
     }
   }

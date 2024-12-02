@@ -15,6 +15,7 @@ import ProductCard from "../../components/ProductCard/ProductCard";
 import MainLayout from "../../layouts/MainLayout";
 import styles from "./HomePage.module.scss";
 
+
 const HomePage: React.FC = () => {
   /* -------------------------------------------------------------------------- */
   /*                                  References                                */
@@ -170,7 +171,9 @@ const HomePage: React.FC = () => {
         aria-labelledby="local-producers-title"
       >
         <div className={styles.sectionContainer}>
-          <h2 className={styles.title}>Les producteurs près de chez vous</h2>
+          <div className={styles.titleContainer}>
+            <h2 className={styles.title}>Les producteurs près de chez vous</h2>
+          </div>
           <div className={styles.mapWrapper}>
             <Map />
           </div>
