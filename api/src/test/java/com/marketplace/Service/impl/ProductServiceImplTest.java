@@ -16,6 +16,8 @@ import org.mockito.InjectMocks;
 import org.mockito.ArgumentMatcher;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 
 
 import java.util.Collections;
@@ -49,7 +51,6 @@ class ProductServiceImplTest {
             ProductDto productDto = new ProductDto();
             productDto.setMinQuantity(1);
             productDto.setMaxQuantity(5);
-            //Product product = ProductMapper.INSTANCE.toEntity(productDto);
             Product savedProduct = Product.builder()
                     .id(1L)
                     .minQuantity(1)
@@ -136,14 +137,20 @@ class ProductServiceImplTest {
         }
 
         @Test
-        @DisplayName("Should throw NotFoundException when no products found")
-        void getAvailableProducts_NoProducts_ThrowsNotFoundException() {
+        @DisplayName("Should return a empty list when no products are available")
+        void getAvailableProducts_NoProducts_ReturnsNoContent() {
             // Arrange
             when(productRepository.findByActiveAndStockQuantityGreaterThan(true, 0))
                     .thenReturn(Collections.emptyList());
 
-            // Act & Assert
-            assertThrows(NotFoundException.class, () -> productService.getAvailableProducts());
+            // Act
+            List<Product> result = productService.getAvailableProducts();
+
+            // Assert
+            assertNotNull(result);
+            assertTrue(result.isEmpty());
+            verify(productRepository, times(1))
+                    .findByActiveAndStockQuantityGreaterThan(true, 0);
         }
     }
 
@@ -280,24 +287,29 @@ class ProductServiceImplTest {
         @DisplayName("Should delete product when exists")
         void deleteProduct_DeletesProduct() {
             // Arrange
-            when(productRepository.existsById(1L)).thenReturn(true);
+            Long productId = 1L;
+            Product product = new Product();
+            product.setId(productId);
+            when(productRepository.findById(productId)).thenReturn(Optional.of(product));
 
             // Act
-            productService.deleteProduct(1L);
+            productService.deleteProduct(productId);
 
             // Assert
-            verify(productRepository, times(1)).existsById(1L);
-            verify(productRepository, times(1)).deleteById(1L);
+            verify(productRepository, times(1)).delete(product);
         }
 
         @Test
         @DisplayName("Should throw NotFoundException when product does not exist")
         void deleteProduct_ProductNotFound_ThrowsNotFoundException() {
             // Arrange
-            when(productRepository.existsById(1L)).thenReturn(false);
+            Long productId = 1L;
+            when(productRepository.findById(productId)).thenReturn(Optional.empty());
 
             // Act & Assert
-            assertThrows(NotFoundException.class, () -> productService.deleteProduct(1L));
+            assertThrows(NotFoundException.class, () -> productService.deleteProduct(productId));
+
+            verify(productRepository, never()).delete(any());
         }
     }
 }
