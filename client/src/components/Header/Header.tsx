@@ -1,9 +1,11 @@
+import classNames from "classnames";
 import { motion } from "framer-motion";
 import { Bell, ChevronDown, HelpCircle, MapPin } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "../../../node_modules/hamburgers/_sass/hamburgers/hamburgers.scss";
 import logo from "../../assets/images/logo.svg";
+import { useScroll } from "../../hooks/useScroll";
 import { CartButton, UserButton } from "../Button/Buttons";
 import styles from "./Header.module.scss";
 import SearchBar from "./SearchBar";
@@ -14,10 +16,12 @@ const Header: React.FC = () => {
   /* -------------------------------------------------------------------------- */
 
   const navigate = useNavigate();
-
+  const { scrollPosition, isScrolledUp } = useScroll();
   const [isActive, setIsActive] = useState(false);
-  const [scrollPosition, setScrollPosition] = useState(0);
-  const [isTopBarVisible, setIsTopBarVisible] = useState(true);
+  // * const [isHovered, setIsHovered] = useState(false);
+  const isTopBarVisible = scrollPosition < 50;
+  const shouldShowTopBar = isTopBarVisible || isScrolledUp;
+  // * const shouldShowTopBar = isTopBarVisible || isScrolledUp || isHovered;
 
   /* -------------------------------------------------------------------------- */
   /*                                  Function                                  */
@@ -25,17 +29,12 @@ const Header: React.FC = () => {
 
   const toggleHamburger = () => setIsActive(!isActive);
 
-  // Handle scroll
-  useEffect(() => {
-    const handleScroll = () => {
-      const currentPosition = window.scrollY;
-      setIsTopBarVisible(currentPosition < 50);
-      setScrollPosition(currentPosition);
-    };
+  // ? J'ai implémenté une fonctionnalité qui permet d'afficher la topbar au survol du header, mais je suis pas sûr que ce soit une bonne idée.
+  // ? Pour la tester, il vous suffit de décommenter les lignes commençant par "// *".
 
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+  // Handlers pour le survol
+  // * const handleMouseEnter = () => setIsHovered(true);
+  // * const handleMouseLeave = () => setIsHovered(false);
 
   /* -------------------------------------------------------------------------- */
   /*                                   Render                                   */
@@ -43,16 +42,20 @@ const Header: React.FC = () => {
 
   return (
     <header
-      className={`${styles.header} ${scrollPosition > 50 ? styles.fixed : ""} `}
+      className={classNames(styles.header, {
+        [styles.compactMode]: !shouldShowTopBar,
+      })}
+      // * onMouseEnter={handleMouseEnter}
+      // * onMouseLeave={handleMouseLeave}
     >
       {/* Top banner */}
       <motion.div
         initial={{ opacity: 0, paddingTop: 0, paddingBottom: 0, maxHeight: 0 }}
         animate={{
-          opacity: isTopBarVisible ? 1 : 0,
-          paddingTop: isTopBarVisible ? "6px" : "0",
-          paddingBottom: isTopBarVisible ? "6px" : "0",
-          maxHeight: isTopBarVisible ? "100px" : "0",
+          opacity: shouldShowTopBar ? 1 : 0,
+          paddingTop: shouldShowTopBar ? "6px" : "0",
+          paddingBottom: shouldShowTopBar ? "6px" : "0",
+          maxHeight: shouldShowTopBar ? "100px" : "0",
         }}
         className={styles.topBanner}
       >
@@ -105,8 +108,7 @@ const Header: React.FC = () => {
                 ></span>
               </span>
             </button>
-            <motion.img
-              whileHover={{ scale: 1.05 }}
+            <img
               src={logo}
               alt="logo"
               className={styles.logo}
@@ -120,7 +122,9 @@ const Header: React.FC = () => {
           </nav>
         </div>
 
-        <SearchBar />
+        <div className={styles.searchBar}>
+          <SearchBar />
+        </div>
 
         <nav>
           <UserButton />
