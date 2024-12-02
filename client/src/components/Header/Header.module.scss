@@ -2,11 +2,6 @@
 @use "../../scss/variables" as *;
 @use "../../scss/mixins" as *;
 
-.fixed {
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  transition: all 0.3s ease-in-out;
-}
-
 .header {
   display: flex;
   flex-direction: column;
@@ -16,9 +11,33 @@
   z-index: $z-index-header;
   position: fixed;
   transition: all 0.3s ease-in-out;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 
   @include media-query($screen-md) {
     padding-bottom: 10px;
+  }
+
+  &.compactMode {
+    @include media-query($screen-md) {
+      padding-bottom: 0;
+
+      .searchBar {
+        opacity: 0;
+        max-height: 0;
+        overflow: hidden;
+        transition:
+          opacity 0.2s ease-in-out,
+          max-height 0.2s ease-in-out;
+      }
+    }
+
+    .container {
+      padding: 5px 16px;
+
+      @include media-query($screen-md) {
+        gap: 0;
+      }
+    }
   }
 
   .topBanner {
@@ -91,11 +110,12 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 10px 20px;
+  padding: 8px 5px;
   max-width: $screen-xl;
   width: 100%;
   margin: 0 auto;
   gap: $gap-md;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 
   @include media-query($screen-md) {
     flex-wrap: wrap;
@@ -143,17 +163,28 @@
 
     .leftContainerInner {
       display: flex;
-      gap: $gap-sm;
     }
   }
 
   .logo {
     padding-right: 10px;
     cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    transform: scale(0.9);
 
     @include media-query($screen-md) {
       width: 200px;
     }
+  }
+
+  .searchBar {
+    opacity: 1;
+    max-height: 100px;
+    display: flex;
+    margin-right: auto;
+    transition:
+      opacity 0.2s ease-in-out,
+      max-height 0.2s ease-in-out;
   }
 
   nav {
