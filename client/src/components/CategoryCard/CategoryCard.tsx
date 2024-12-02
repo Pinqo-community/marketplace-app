@@ -19,10 +19,12 @@ const CategoryCard: React.FC<CategoryCardProps> = ({ title, image }) => {
   return (
     <motion.article
       whileHover={{
-        scale: 1.05,
+        scale: 1.03,
         boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.13)",
+        transition: {
+          duration: 0.1,
+        },
       }}
-      transition={{ type: "spring", stiffness: 300 }}
       className={styles.categoryCard}
       role="button"
       tabIndex={0}
