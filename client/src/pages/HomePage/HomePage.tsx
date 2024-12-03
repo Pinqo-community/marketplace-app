@@ -23,8 +23,11 @@ const HomePage: React.FC = () => {
   /*                                  References                                */
   /* -------------------------------------------------------------------------- */
 
-  const prevRef = useRef<HTMLButtonElement | null>(null);
-  const nextRef = useRef<HTMLButtonElement | null>(null);
+  const prevCategoryRef = useRef<HTMLButtonElement | null>(null);
+  const nextCategoryRef = useRef<HTMLButtonElement | null>(null);
+
+  const prevTestimonialRef = useRef<HTMLButtonElement | null>(null);
+  const nextTestimonialRef = useRef<HTMLButtonElement | null>(null);
 
   /* -------------------------------------------------------------------------- */
   /*                                 API Queries                                */
@@ -112,7 +115,7 @@ const HomePage: React.FC = () => {
           <h2>Catégories</h2>
           <div className={styles.arrowContainer}>
             <motion.button
-              ref={prevRef}
+              ref={prevCategoryRef}
               className={styles.arrow}
               variants={buttonVariants}
               initial="initial"
@@ -124,7 +127,7 @@ const HomePage: React.FC = () => {
             </motion.button>
 
             <motion.button
-              ref={nextRef}
+              ref={nextCategoryRef}
               className={styles.arrow}
               variants={buttonVariants}
               initial="initial"
@@ -140,13 +143,13 @@ const HomePage: React.FC = () => {
           <Swiper
             modules={[Navigation]}
             navigation={{
-              prevEl: prevRef.current,
-              nextEl: nextRef.current,
+              prevEl: prevCategoryRef.current,
+              nextEl: nextCategoryRef.current,
             }}
             onBeforeInit={(swiper) => {
               const navigation = swiper.params.navigation as NavigationOptions;
-              navigation.prevEl = prevRef.current;
-              navigation.nextEl = nextRef.current;
+              navigation.prevEl = prevCategoryRef.current;
+              navigation.nextEl = nextCategoryRef.current;
             }}
             spaceBetween={20}
             loop={true}
@@ -190,10 +193,45 @@ const HomePage: React.FC = () => {
           <div className={styles.sectionContainer}>
             <div className={styles.titleContainer}>
               <h2>Ce que disent nos clients</h2>
+              <div className={styles.arrowContainer}>
+                <motion.button
+                  ref={prevTestimonialRef}
+                  className={styles.arrow}
+                  variants={buttonVariants}
+                  initial="initial"
+                  whileHover="hover"
+                  whileTap="tap"
+                  aria-label="Précédent"
+                >
+                  <img src={arrowSlider} />
+                </motion.button>
+
+                <motion.button
+                  ref={nextTestimonialRef}
+                  className={styles.arrow}
+                  variants={buttonVariants}
+                  initial="initial"
+                  whileHover="hover"
+                  whileTap="tap"
+                  aria-label="Suivant"
+                >
+                  <img src={arrowSlider} />
+                </motion.button>
+              </div>
             </div>
             <Swiper
               className={styles.testimonialsSwiper}
-              modules={[Pagination]}
+              modules={[Pagination, Navigation]}
+              navigation={{
+                prevEl: prevTestimonialRef.current,
+                nextEl: nextTestimonialRef.current,
+              }}
+              onBeforeInit={(swiper) => {
+                const navigation = swiper.params
+                  .navigation as NavigationOptions;
+                navigation.prevEl = prevTestimonialRef.current;
+                navigation.nextEl = nextTestimonialRef.current;
+              }}
               spaceBetween={20}
               loop={true}
               slidesPerView={3}

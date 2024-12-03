@@ -82,26 +82,26 @@ section {
     justify-content: space-between;
     align-items: center;
     margin-bottom: 30px;
+  }
+}
 
-    .arrowContainer {
-      display: flex;
-      align-items: center;
-      gap: $gap-sm;
+.arrowContainer {
+  display: flex;
+  align-items: center;
+  gap: $gap-sm;
 
-      .arrow {
-        width: 40px;
-        height: 40px;
-        background-color: #f2f2f2;
-        border-radius: $border-radius-circle;
-        display: flex;
-        align-items: center;
-        justify-content: center;
+  .arrow {
+    width: 40px;
+    height: 40px;
+    background-color: #f2f2f2;
+    border-radius: $border-radius-circle;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
-        &:first-child {
-          img {
-            transform: rotate(180deg);
-          }
-        }
+    &:first-child {
+      img {
+        transform: rotate(180deg);
       }
     }
   }
@@ -125,6 +125,7 @@ section {
 
 .testimonials {
   background-color: $section-secondary;
+  margin-top: 40px;
 
   .testimonialsSwiper {
     padding-bottom: 50px !important;
