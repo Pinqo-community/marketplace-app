@@ -1,7 +1,8 @@
 import { motion } from "framer-motion";
 import { useRef } from "react";
 import "swiper/css";
-import { Navigation } from "swiper/modules";
+import "swiper/css/pagination";
+import { Navigation, Pagination } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { NavigationOptions } from "swiper/types";
 import { useGetCategoriesQuery } from "../../api/categoriesApi";
@@ -12,9 +13,9 @@ import CategoryCard from "../../components/CategoryCard/CategoryCard";
 import Hero from "../../components/Hero/Hero";
 import Map from "../../components/Map/Map";
 import ProductCard from "../../components/ProductCard/ProductCard";
+import TestimonialCard from "../../components/Testimonials/TestimonialCard";
 import MainLayout from "../../layouts/MainLayout";
 import styles from "./HomePage.module.scss";
-
 
 const HomePage: React.FC = () => {
   /* -------------------------------------------------------------------------- */
@@ -179,6 +180,38 @@ const HomePage: React.FC = () => {
           </div>
         </div>
       </section>
+      <div className={styles.testimonials}>
+        <section>
+          <div className={styles.sectionContainer}>
+            <div className={styles.titleContainer}>
+              <h2>Ce que disent nos clients</h2>
+            </div>
+            <Swiper
+              className={styles.testimonialsSwiper}
+              modules={[Pagination]}
+              spaceBetween={20}
+              loop={true}
+              slidesPerView={3}
+              pagination={{
+                clickable: true,
+              }}
+            >
+              <SwiperSlide>
+                <TestimonialCard />
+              </SwiperSlide>
+              <SwiperSlide>
+                <TestimonialCard />
+              </SwiperSlide>
+              <SwiperSlide>
+                <TestimonialCard />
+              </SwiperSlide>
+              <SwiperSlide>
+                <TestimonialCard />
+              </SwiperSlide>
+            </Swiper>
+          </div>
+        </section>
+      </div>
     </MainLayout>
   );
 };
