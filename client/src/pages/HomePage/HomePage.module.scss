@@ -118,3 +118,25 @@ section {
     margin: 0 auto;
   }
 }
+
+/* -------------------------------------------------------------------------- */
+/*                            Testimonials Section                            */
+/* -------------------------------------------------------------------------- */
+
+.testimonials {
+  background-color: $section-secondary;
+
+  .testimonialsSwiper {
+    padding-bottom: 50px !important;
+  }
+}
+
+* {
+  --swiper-pagination-color: #{$primary-color};
+  --swiper-pagination-bullet-inactive-color: #569d41;
+}
+
+:global(.swiper-pagination-bullet-active) {
+  width: 16px !important;
+  border-radius: $border-radius-md !important;
+}
