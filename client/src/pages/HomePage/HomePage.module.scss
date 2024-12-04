@@ -1,7 +1,7 @@
-@use "../../scss/global";
-@use "../../scss/variables" as *;
-@use "../../scss/mixins" as *;
-@use "../../scss/shared" as *;
+@use "@/scss/global";
+@use "@/scss/variables" as *;
+@use "@/scss/mixins" as *;
+@use "@/scss/shared" as *;
 
 section {
   padding: 40px 20px;

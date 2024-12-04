@@ -1,3 +1,15 @@
+import { buttonVariants, listVariants } from "@/animations/animations";
+import { useGetCategoriesQuery } from "@/api/categoriesApi";
+import { useGetProductsQuery } from "@/api/productsApi";
+import { useGetTestimonialsQuery } from "@/api/testimonialsApi";
+import arrowSlider from "@/assets/icons/arrow-slider.svg";
+import arrowIcon from "@/assets/icons/arrow.svg";
+import CategoryCard from "@/components/CategoryCard/CategoryCard";
+import Hero from "@/components/Hero/Hero";
+import Map from "@/components/Map/Map";
+import ProductCard from "@/components/ProductCard/ProductCard";
+import TestimonialCard from "@/components/Testimonials/TestimonialCard";
+import MainLayout from "@/layouts/MainLayout";
 import { motion } from "framer-motion";
 import { useRef } from "react";
 import "swiper/css";
@@ -5,16 +17,6 @@ import "swiper/css/pagination";
 import { Navigation, Pagination } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { NavigationOptions } from "swiper/types";
-import { useGetCategoriesQuery } from "../../api/categoriesApi";
-import { useGetProductsQuery } from "../../api/productsApi";
-import arrowSlider from "../../assets/icons/arrow-slider.svg";
-import arrowIcon from "../../assets/icons/arrow.svg";
-import CategoryCard from "../../components/CategoryCard/CategoryCard";
-import Hero from "../../components/Hero/Hero";
-import Map from "../../components/Map/Map";
-import ProductCard from "../../components/ProductCard/ProductCard";
-import TestimonialCard from "../../components/Testimonials/TestimonialCard";
-import MainLayout from "../../layouts/MainLayout";
 import styles from "./HomePage.module.scss";
 
 const HomePage: React.FC = () => {
@@ -46,37 +48,24 @@ const HomePage: React.FC = () => {
     error: errorProducts,
   } = useGetProductsQuery({});
 
+  // Testimonials
+  const {
+    data: testimonials,
+    isLoading: isLoadingTestimonials,
+    error: errorTestimonials,
+  } = useGetTestimonialsQuery({});
+
   /* -------------------------------------------------------------------------- */
   /*                               Loading & Errors                             */
   /* -------------------------------------------------------------------------- */
 
   // Loading / Error Handling
-  if (isLoadingCategories || isLoadingProducts) {
+  if (isLoadingCategories || isLoadingProducts || isLoadingTestimonials) {
     return <p>Chargement des données...</p>;
   }
-  if (errorCategories || errorProducts) {
+  if (errorCategories || errorProducts || errorTestimonials) {
     return <p>Une erreur est survenue lors du chargement des données.</p>;
   }
-
-  /* -------------------------------------------------------------------------- */
-  /*                                Animations                                  */
-  /* -------------------------------------------------------------------------- */
-
-  const listVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.1,
-      },
-    },
-  };
-
-  const buttonVariants = {
-    initial: { scale: 1, opacity: 0.5 },
-    hover: { scale: 1.1, opacity: 1, transition: { duration: 0.2 } },
-    tap: { scale: 0.95, transition: { duration: 0.1 } },
-  };
 
   /* -------------------------------------------------------------------------- */
   /*                                   Render                                   */
@@ -233,6 +222,7 @@ const HomePage: React.FC = () => {
               grabCursor={true}
               pagination={{
                 clickable: true,
+                dynamicBullets: true,
               }}
               breakpoints={{
                 320: { slidesPerView: 1 },
@@ -241,18 +231,16 @@ const HomePage: React.FC = () => {
                 1440: { slidesPerView: 3 },
               }}
             >
-              <SwiperSlide>
-                <TestimonialCard />
-              </SwiperSlide>
-              <SwiperSlide>
-                <TestimonialCard />
-              </SwiperSlide>
-              <SwiperSlide>
-                <TestimonialCard />
-              </SwiperSlide>
-              <SwiperSlide>
-                <TestimonialCard />
-              </SwiperSlide>
+              {testimonials?.map((testimonial) => (
+                <SwiperSlide key={testimonial.id}>
+                  <TestimonialCard
+                    text={testimonial.text}
+                    name={testimonial.name}
+                    avatar={testimonial.avatar}
+                    rating={testimonial.rating}
+                  />
+                </SwiperSlide>
+              ))}
             </Swiper>
           </div>
         </section>
