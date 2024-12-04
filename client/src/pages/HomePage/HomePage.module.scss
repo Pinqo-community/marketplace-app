@@ -73,16 +73,14 @@ section {
 }
 
 /* -------------------------------------------------------------------------- */
-/*                              Category Section                              */
+/*                               Swiper Section                               */
 /* -------------------------------------------------------------------------- */
 
-.categorySection {
-  .titleContainer {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 30px;
-  }
+.titleContainer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
 }
 
 :global {
@@ -94,28 +92,6 @@ section {
 
   .swiper-container {
     margin: 0 auto;
-  }
-}
-
-/* -------------------------------------------------------------------------- */
-/*                            Testimonials Section                            */
-/* -------------------------------------------------------------------------- */
-
-.testimonials {
-  background-color: $section-secondary;
-  margin-top: 40px;
-
-  @include media-query($screen-xs) {
-    .titleContainer {
-      text-align: center;
-    }
-    .arrowContainer {
-      display: none;
-    }
-  }
-
-  .testimonialsSwiper {
-    padding-bottom: 50px !important;
   }
 }
 

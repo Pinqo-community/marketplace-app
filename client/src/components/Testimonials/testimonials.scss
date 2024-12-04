@@ -1,0 +1,23 @@
+@use "@/scss/global";
+@use "@/scss/variables" as *;
+@use "@/scss/mixins" as *;
+@use "@/scss/shared" as *;
+
+.testimonials {
+  background-color: $section-secondary;
+  margin-top: 40px;
+
+  @include media-query($screen-xs) {
+    :nth-child(1) {
+      text-align: center;
+
+      #arrowContainer {
+        display: none;
+      }
+    }
+  }
+
+  .swiper {
+    padding-bottom: 50px !important;
+  }
+}

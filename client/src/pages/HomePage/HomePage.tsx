@@ -1,35 +1,25 @@
-import { buttonVariants, listVariants } from "@/animations/animations";
+import { listVariants } from "@/animations/animations";
 import { useGetCategoriesQuery } from "@/api/categoriesApi";
 import { useGetProductsQuery } from "@/api/productsApi";
 import { useGetTestimonialsQuery } from "@/api/testimonialsApi";
-import arrowSlider from "@/assets/icons/arrow-slider.svg";
 import arrowIcon from "@/assets/icons/arrow.svg";
 import BuyerProducer from "../../components/BuyerProducer/BuyerProducer";
 import CategoryCard from "@/components/CategoryCard/CategoryCard";
 import Hero from "@/components/Hero/Hero";
 import Map from "@/components/Map/Map";
 import ProductCard from "@/components/ProductCard/ProductCard";
+import Slider from "@/components/Slider/Slider";
 import TestimonialCard from "@/components/Testimonials/TestimonialCard";
 import MainLayout from "@/layouts/MainLayout";
 import { motion } from "framer-motion";
-import { useRef } from "react";
 import "swiper/css";
 import "swiper/css/pagination";
-import { Navigation, Pagination } from "swiper/modules";
-import { Swiper, SwiperSlide } from "swiper/react";
-import { NavigationOptions } from "swiper/types";
 import styles from "./HomePage.module.scss";
 
 const HomePage: React.FC = () => {
   /* -------------------------------------------------------------------------- */
   /*                                  References                                */
   /* -------------------------------------------------------------------------- */
-
-  const prevCategoryRef = useRef<HTMLButtonElement | null>(null);
-  const nextCategoryRef = useRef<HTMLButtonElement | null>(null);
-
-  const prevTestimonialRef = useRef<HTMLButtonElement | null>(null);
-  const nextTestimonialRef = useRef<HTMLButtonElement | null>(null);
 
   /* -------------------------------------------------------------------------- */
   /*                                 API Queries                                */
@@ -94,71 +84,28 @@ const HomePage: React.FC = () => {
             className={styles.productsGrid}
           >
             {products?.map((product) => (
-              <ProductCard key={product.name} product={product} />
+              <ProductCard key={product.id} product={product} />
             ))}
           </motion.div>
         </div>
       </section>
       <section className={styles.categorySection}>
-        <div className={styles.titleContainer}>
-          <h2>Catégories</h2>
-          <div className={styles.arrowContainer}>
-            <motion.button
-              ref={prevCategoryRef}
-              className={styles.arrow}
-              variants={buttonVariants}
-              initial="initial"
-              whileHover="hover"
-              whileTap="tap"
-              aria-label="Précédent"
-            >
-              <img src={arrowSlider} />
-            </motion.button>
-
-            <motion.button
-              ref={nextCategoryRef}
-              className={styles.arrow}
-              variants={buttonVariants}
-              initial="initial"
-              whileHover="hover"
-              whileTap="tap"
-              aria-label="Suivant"
-            >
-              <img src={arrowSlider} />
-            </motion.button>
-          </div>
-        </div>
-        <div className={styles.categoryContainer}>
-          <Swiper
-            modules={[Navigation]}
-            navigation={{
-              prevEl: prevCategoryRef.current,
-              nextEl: nextCategoryRef.current,
-            }}
-            onBeforeInit={(swiper) => {
-              const navigation = swiper.params.navigation as NavigationOptions;
-              navigation.prevEl = prevCategoryRef.current;
-              navigation.nextEl = nextCategoryRef.current;
-            }}
-            spaceBetween={20}
-            loop={true}
-            slidesPerView={6}
-            breakpoints={{
-              320: { slidesPerView: 1 },
-              420: { slidesPerView: 2 },
-              580: { slidesPerView: 3 },
-              768: { slidesPerView: 4 },
-              1024: { slidesPerView: 5 },
-              1440: { slidesPerView: 6 },
-            }}
-          >
-            {categories?.map((item) => (
-              <SwiperSlide key={item.id}>
-                <CategoryCard title={item.name} image={item.image} />
-              </SwiperSlide>
-            ))}
-          </Swiper>
-        </div>
+        <Slider
+          title="Catégories"
+          items={categories || []}
+          renderItem={(category) => (
+            <CategoryCard title={category.name} image={category.image} />
+          )}
+          slidesPerViewDefault={6}
+          breakpoints={{
+            320: { slidesPerView: 1 },
+            420: { slidesPerView: 2 },
+            580: { slidesPerView: 3 },
+            768: { slidesPerView: 4 },
+            1024: { slidesPerView: 5 },
+            1440: { slidesPerView: 6 },
+          }}
+        />
       </section>
       <section className={styles.buyerProducer}>
         <BuyerProducer />
@@ -178,77 +125,27 @@ const HomePage: React.FC = () => {
         </div>
       </section>
       <div className={styles.testimonials}>
-        <section>
-          <div className={styles.sectionContainer}>
-            <div className={styles.titleContainer}>
-              <h2>Ce que disent nos clients</h2>
-              <div className={styles.arrowContainer}>
-                <motion.button
-                  ref={prevTestimonialRef}
-                  className={styles.arrow}
-                  variants={buttonVariants}
-                  initial="initial"
-                  whileHover="hover"
-                  whileTap="tap"
-                  aria-label="Précédent"
-                >
-                  <img src={arrowSlider} />
-                </motion.button>
-
-                <motion.button
-                  ref={nextTestimonialRef}
-                  className={styles.arrow}
-                  variants={buttonVariants}
-                  initial="initial"
-                  whileHover="hover"
-                  whileTap="tap"
-                  aria-label="Suivant"
-                >
-                  <img src={arrowSlider} />
-                </motion.button>
-              </div>
-            </div>
-            <Swiper
-              className={styles.testimonialsSwiper}
-              modules={[Pagination, Navigation]}
-              navigation={{
-                prevEl: prevTestimonialRef.current,
-                nextEl: nextTestimonialRef.current,
-              }}
-              onBeforeInit={(swiper) => {
-                const navigation = swiper.params
-                  .navigation as NavigationOptions;
-                navigation.prevEl = prevTestimonialRef.current;
-                navigation.nextEl = nextTestimonialRef.current;
-              }}
-              spaceBetween={20}
-              loop={true}
-              slidesPerView={3}
-              grabCursor={true}
-              pagination={{
-                clickable: true,
-                dynamicBullets: true,
-              }}
-              breakpoints={{
-                320: { slidesPerView: 1 },
-                768: { slidesPerView: 1 },
-                1024: { slidesPerView: 2 },
-                1440: { slidesPerView: 3 },
-              }}
-            >
-              {testimonials?.map((testimonial) => (
-                <SwiperSlide key={testimonial.id}>
-                  <TestimonialCard
-                    text={testimonial.text}
-                    name={testimonial.name}
-                    avatar={testimonial.avatar}
-                    rating={testimonial.rating}
-                  />
-                </SwiperSlide>
-              ))}
-            </Swiper>
-          </div>
-        </section>
+        <Slider
+          title="Ce que disent nos clients"
+          items={testimonials || []}
+          customClassName="testimonials"
+          renderItem={(testimonial) => (
+            <TestimonialCard
+              text={testimonial.text}
+              name={testimonial.name}
+              avatar={testimonial.avatar}
+              rating={testimonial.rating}
+            />
+          )}
+          slidesPerViewDefault={3}
+          pagination={true}
+          breakpoints={{
+            320: { slidesPerView: 1 },
+            768: { slidesPerView: 1 },
+            1024: { slidesPerView: 2 },
+            1440: { slidesPerView: 3 },
+          }}
+        />
       </div>
     </MainLayout>
   );
