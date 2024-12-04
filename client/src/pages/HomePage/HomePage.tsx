@@ -230,8 +230,15 @@ const HomePage: React.FC = () => {
               spaceBetween={20}
               loop={true}
               slidesPerView={3}
+              grabCursor={true}
               pagination={{
                 clickable: true,
+              }}
+              breakpoints={{
+                320: { slidesPerView: 1 },
+                768: { slidesPerView: 1 },
+                1024: { slidesPerView: 2 },
+                1440: { slidesPerView: 3 },
               }}
             >
               <SwiperSlide>
