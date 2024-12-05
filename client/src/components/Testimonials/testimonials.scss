@@ -4,9 +4,6 @@
 @use "@/scss/shared" as *;
 
 .testimonials {
-  background-color: $section-secondary;
-  margin-top: 40px;
-
   @include media-query($screen-xs) {
     :nth-child(1) {
       text-align: center;

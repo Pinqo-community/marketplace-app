@@ -59,7 +59,7 @@ export const SliderButton: React.FC<SliderButtonProps> = ({
     <>
       <motion.button
         ref={prevRef}
-        className={styles.arrow}
+        className={styles.sliderButton}
         aria-label="Précédent"
         variants={buttonVariants}
         initial="initial"
@@ -71,7 +71,7 @@ export const SliderButton: React.FC<SliderButtonProps> = ({
 
       <motion.button
         ref={nextRef}
-        className={styles.arrow}
+        className={styles.sliderButton}
         aria-label="Suivant"
         variants={buttonVariants}
         initial="initial"
