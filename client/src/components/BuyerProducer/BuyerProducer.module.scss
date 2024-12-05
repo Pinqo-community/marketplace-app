@@ -61,8 +61,8 @@
       display: flex;
       flex-direction: column;
       line-height: 40px;
-      @include responsive-width(350px, $breakpoint-sm);
       color: inherit;
+      @include responsive-width(350px, $breakpoint-sm);
 
       @include media-query($breakpoint-sm) {
         font-size: $font-size-xl;
@@ -78,13 +78,13 @@
 
     .description {
       @include font-style($size: $font-size-sm, $weight: $font-weight-normal);
-      @include responsive-width(288px, $breakpoint-sm);
       color: inherit;
+      @include responsive-width(288px, $breakpoint-sm);
     }
 
     button {
-      @include responsive-width(208px, $breakpoint-sm);
       padding: 12px 48px;
+      @include responsive-width(208px, $breakpoint-sm);
 
       @include media-query($breakpoint-sm) {
         margin-top: 20px;
