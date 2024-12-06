@@ -5,6 +5,8 @@
 .searchBar {
   display: flex;
   margin-right: auto;
+  position: relative;
+
   .searchInputContainer {
     .searchInput {
       border: none;
@@ -64,6 +66,4 @@
       @include hide-on-mobile($screen-md);
     }
   }
-
-  position: relative;
 }
