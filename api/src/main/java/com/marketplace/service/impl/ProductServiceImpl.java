@@ -3,16 +3,16 @@ package com.marketplace.service.impl;
 import com.marketplace.dto.ProductDto;
 import com.marketplace.entity.Product;
 import com.marketplace.exception.NotFoundException;
-import com.marketplace.exception.UnavailableProductException;
 import com.marketplace.exception.IllegalArgumentException;
 import com.marketplace.repository.ProductRepository;
 import com.marketplace.service.ProductService;
 import com.marketplace.utils.mapper.ProductMapper;
+
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
-
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -21,6 +21,7 @@ import java.util.List;
  */
 @Slf4j
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class ProductServiceImpl implements ProductService {
 
@@ -55,10 +56,6 @@ public class ProductServiceImpl implements ProductService {
 
         List<Product> products = productRepository.findByActiveAndStockQuantityGreaterThan(true, 0);
 
-        if (products.isEmpty()) {
-            log.warn("No products found with stock > 0 found and active status.");
-            return Collections.emptyList();
-        }
             return products;
     }
 
@@ -71,15 +68,9 @@ public class ProductServiceImpl implements ProductService {
      */
     @Override
     public Product getProductById(Long id) {
-        return productRepository.findById(id)
-                .map(product -> {
-                    if (!product.getActive()) {
-                        throw new UnavailableProductException("Le produit avec l'ID " + id + " est inactif ou indisponible.");
-                    }
-                    return product;
-                })
-                .orElseThrow(() -> new NotFoundException("Ce produit n'existe pas"));
-    }
+          return productRepository.findByIdAndActive(id)
+                .orElseThrow(() -> new NotFoundException("Le produit avec l'ID " + id + " est inactif ou n'existe pas."));
+}
 
     /**
      * Retrieves product entities from the database by status.
@@ -94,9 +85,6 @@ public class ProductServiceImpl implements ProductService {
 
         List<Product> products = productRepository.findByActive(active);
 
-        if (products.isEmpty()) {
-            throw new NotFoundException("Aucun produit trouvé avec l'état actif = " + active);
-        }
         return ProductMapper.INSTANCE.toDtoList(products);
     }
 
@@ -128,13 +116,16 @@ public class ProductServiceImpl implements ProductService {
      */
     @Override
     public void deleteProduct(Long id) {
-        Product product = productRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("Ce produit n'existe pas"));
-        productRepository.delete(product);
+        log.info("Attempting to delete product with ID {}", id);
+        try {
+            productRepository.deleteById(id);
+            log.info("Product with ID {} deleted successfully", id);
+        } catch (EmptyResultDataAccessException e) {
+            log.error("Product with ID {} not found", id);
+            throw new NotFoundException("Le produit avec l'ID " + id + " n'existe pas.");
+        }
 
     }
-
-
 }
 
 

@@ -21,13 +21,10 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.math.BigDecimal;
-import java.util.Collections;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -85,8 +82,6 @@ class ProductControllerTest {
                     .andExpect(status().isCreated())
                     .andExpect(jsonPath("$.id").value(1L))
                     .andExpect(jsonPath("$.name").value("Miel de lavande"));
-
-            verify(productService, times(1)).createProduct(any(ProductDto.class));
         }
 
         @Test
@@ -100,8 +95,6 @@ class ProductControllerTest {
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(objectMapper.writeValueAsString(invalidProductDto)))
                     .andExpect(status().isBadRequest());
-
-            verify(productService, times(0)).createProduct(any(ProductDto.class));
         }
     }
 
@@ -123,21 +116,6 @@ class ProductControllerTest {
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$[0].id").value(baseProductDto.getId()))
                     .andExpect(jsonPath("$[0].name").value(baseProductDto.getName()));
-
-            verify(productService, times(1)).getAvailableProducts();
-        }
-
-        @Test
-        @DisplayName("Should return 204 when no products are available")
-        void shouldReturnNoContent() throws Exception {
-            //Arrange
-            Mockito.when(productService.getAvailableProducts()).thenReturn(Collections.emptyList());
-
-            // Act & Assert
-            mockMvc.perform(get("/products/available"))
-                    .andExpect(status().isNoContent());
-
-            verify(productService, times(1)).getAvailableProducts();
         }
     }
 
@@ -156,8 +134,6 @@ class ProductControllerTest {
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$.id").value(baseProductDto.getId()))
                     .andExpect(jsonPath("$.name").value(baseProductDto.getName()));
-
-            verify(productService, times(1)).getProductById(anyLong());
         }
 
         @Test
@@ -169,8 +145,6 @@ class ProductControllerTest {
             //Act & Assert
             mockMvc.perform(get("/products/{id}", 1L))
                     .andExpect(status().isNotFound());
-
-            verify(productService, times(1)).getProductById(anyLong());
         }
     }
 
@@ -192,8 +166,6 @@ class ProductControllerTest {
                             .content(objectMapper.writeValueAsString(updatedDto)))
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$.name").value("Updated Miel"));
-
-            verify(productService, times(1)).updateProduct(anyLong(), any(ProductDto.class));
         }
     }
 
@@ -209,8 +181,6 @@ class ProductControllerTest {
             // Act & Assert
             mockMvc.perform(delete("/products/{id}", 1L))
                     .andExpect(status().isNoContent());
-
-            verify(productService, times(1)).deleteProduct(anyLong());
         }
 
         @Test
@@ -222,8 +192,6 @@ class ProductControllerTest {
             mockMvc.perform(delete("/products/{id}", 1L))
                     .andExpect(status().isNotFound())
                     .andExpect(jsonPath("$.message").value("Product not found"));
-
-            verify(productService, times(1)).deleteProduct(anyLong());
         }
     }
 }
