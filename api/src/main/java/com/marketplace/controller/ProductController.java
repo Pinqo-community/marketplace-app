@@ -32,7 +32,6 @@ import java.util.List;
 @Slf4j
 public class ProductController {
 
-
     private final ProductService productService;
     private final ProductMapper productMapper;
 
@@ -55,27 +54,19 @@ public class ProductController {
         } finally {
             log.info("POST /products - END: new product created");
         }
-
     }
 
 
     @GetMapping("/available")
-    @Operation(summary = "Get available products", description = "Retrieve products with stock > 0 for customers.")
-    @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "Available products retrieved successfully."),
-            @ApiResponse(responseCode = "204", description = "No products available."),
-
-    })
+    @Operation(summary = "Get available products", description = "Retrieve products with stock > 0 and active = true for customers.")
+    @ApiResponse(responseCode = "200", description = "Available products retrieved successfully.")
     public ResponseEntity<List<ProductDto>> getAvailableProducts() {
         try {
             log.info("GET /products - START: Retrieving products");
             List<Product> availableProducts = productService.getAvailableProducts();
             List<ProductDto> productDtos = productMapper.toDtoList(availableProducts);
             log.info("GET /products/available - Retrieved {} available products", productDtos.size());
-            if (productDtos.isEmpty()) {
-                log.info("GET /products/available - No products available");
-                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-            }
+
             log.info("GET /products - Retrieved {} products", productDtos.size());
             return ResponseEntity.ok(productDtos);
         } finally {
@@ -108,13 +99,11 @@ public class ProductController {
         }
     }
 
-
     @Operation(summary = "Retrieve products by status", description = "Retrieve products filtered by their active/inactive status for producers.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Products retrieved successfully",
                     content = {@Content(mediaType = "application/json",
                             schema = @Schema(implementation = Product.class))}),
-                    @ApiResponse(responseCode = "204", description = "No products found for the given status."),
                     @ApiResponse(responseCode = "400", description = "Invalid input parameter"),
                     @ApiResponse(responseCode = "500", description = "Internal server error"),
 
@@ -166,7 +155,7 @@ public class ProductController {
     @DeleteMapping("/{id}")
     @Operation(summary = "Delete a product", description = "Deletes a product based on its ID.")
     @ApiResponses({
-            @ApiResponse(responseCode = "204", description = "Product successful deleted"),
+            @ApiResponse(responseCode = "204", description = "Product successfully deleted"),
             @ApiResponse(responseCode = "404", description = "No product found")
     })
     public ResponseEntity<HttpStatus> deleteProduct(
@@ -174,6 +163,7 @@ public class ProductController {
             @PathVariable("id") Long id) {
         try {
             log.info("DELETE /products/{} - Deleting product", id);
+            log.info("Controller: Attempting to delete product with ID {}", id);
             productService.deleteProduct(id);
             log.info("DELETE /products/{} - Product deleted successfully", id);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);

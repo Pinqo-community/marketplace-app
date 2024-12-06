@@ -4,7 +4,6 @@ import com.marketplace.dto.ProductDto;
 import com.marketplace.entity.Product;
 import com.marketplace.exception.IllegalArgumentException;
 import com.marketplace.exception.NotFoundException;
-import com.marketplace.exception.UnavailableProductException;
 import com.marketplace.repository.ProductRepository;
 import com.marketplace.service.impl.ProductServiceImpl;
 import org.junit.jupiter.api.DisplayName;
@@ -16,6 +15,7 @@ import org.mockito.InjectMocks;
 import org.mockito.ArgumentMatcher;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.dao.EmptyResultDataAccessException;
 
 import java.util.Collections;
 import java.util.List;
@@ -39,7 +39,6 @@ class ProductServiceImplTest {
     @DisplayName("createProduct")
     @Tag("Tests for createProduct method")
     class CreateProductTest {
-
 
         @Test
         @DisplayName("Should create and save a valid product" )
@@ -91,7 +90,6 @@ class ProductServiceImplTest {
                 return String.format("Product with minQuantity=%d and maxQuantity=%d", expectedMinQuantity, expectedMaxQuantity);
             }
         }
-
 
         @Test
         @DisplayName("Should throwException when the minimum quantity is greater than the maximum quantity")
@@ -162,7 +160,7 @@ class ProductServiceImplTest {
         void getProductById_ReturnsProduct() {
             // Arrange
             Product product = Product.builder().id(1L).active(true).build();
-            when(productRepository.findById(1L)).thenReturn(Optional.of(product));
+            when(productRepository.findByIdAndActive(1L)).thenReturn(Optional.of(product));
 
             // Act
             Product result = productService.getProductById(1L);
@@ -170,28 +168,18 @@ class ProductServiceImplTest {
             // Assert
             assertNotNull(result);
             assertEquals(1L, result.getId());
-            verify(productRepository, times(1)).findById(1L);
+            verify(productRepository, times(1)).findByIdAndActive(1L);
         }
 
         @Test
-        @DisplayName("Should throw UnavailableProductException when product is inactive")
-        void getProductById_InactiveProduct_ThrowsUnavailableProductException() {
+        @DisplayName("Should throw NotFoundException when product is inactive or does not exist")
+        void getProductById_InactiveProductOrNotFound_ThrowsNotFoundException() {
             // Arrange
-            Product product = Product.builder().id(1L).active(false).build();
-            when(productRepository.findById(1L)).thenReturn(Optional.of(product));
-
-            // Act & Assert
-            assertThrows(UnavailableProductException.class, () -> productService.getProductById(1L));
-        }
-
-        @Test
-        @DisplayName("Should throw NotFoundException when product is not found")
-        void getProductById_ProductNotFound_ThrowsNotFoundException() {
-            // Arrange
-            when(productRepository.findById(1L)).thenReturn(Optional.empty());
+            when(productRepository.findByIdAndActive(1L)).thenReturn(Optional.empty());
 
             // Act & Assert
             assertThrows(NotFoundException.class, () -> productService.getProductById(1L));
+            verify(productRepository, times(1)).findByIdAndActive(1L);
         }
     }
 
@@ -225,13 +213,38 @@ class ProductServiceImplTest {
         }
 
         @Test
+        @DisplayName("Should return product list when products are found")
+        void getProductsByStatus_ProductsFound_ReturnsProductList() {
+            // Arrange
+            Product product = new Product(1L, "Test Product",null,null,null,null,null,1,1,10,1,1,true);
+            List<Product> productList = List.of(product);
+
+            when(productRepository.findByActive(true)).thenReturn(productList);
+
+            // Act
+            List<ProductDto> result = productService.getProductsByStatus(true);
+
+            // Assert
+            assertNotNull(result);
+            assertEquals(1, result.size());
+            assertEquals("Test Product", result.get(0).getName());
+            verify(productRepository, times(1)).findByActive(true);
+        }
+
+
+        @Test
         @DisplayName("Should throw NotFoundException when no products found")
-        void getProductsByStatus_NoProducts_ThrowsNotFoundException() {
+        void getProductsByStatus_NoProducts_ReturnsEmptyList() {
             // Arrange
             when(productRepository.findByActive(false)).thenReturn(Collections.emptyList());
 
-            // Act & Assert
-            assertThrows(NotFoundException.class, () -> productService.getProductsByStatus(false));
+            // Act
+            List<ProductDto> result = productService.getProductsByStatus(false);
+
+            //  Assert
+            assertNotNull(result);
+            assertTrue(result.isEmpty());
+            verify(productRepository, times(1)).findByActive(false);
         }
     }
 
@@ -285,15 +298,13 @@ class ProductServiceImplTest {
         void deleteProduct_DeletesProduct() {
             // Arrange
             Long productId = 1L;
-            Product product = new Product();
-            product.setId(productId);
-            when(productRepository.findById(productId)).thenReturn(Optional.of(product));
+            doNothing().when(productRepository).deleteById(productId);
 
             // Act
             productService.deleteProduct(productId);
 
             // Assert
-            verify(productRepository, times(1)).delete(product);
+            verify(productRepository, times(1)).deleteById(productId);
         }
 
         @Test
@@ -301,12 +312,12 @@ class ProductServiceImplTest {
         void deleteProduct_ProductNotFound_ThrowsNotFoundException() {
             // Arrange
             Long productId = 1L;
-            when(productRepository.findById(productId)).thenReturn(Optional.empty());
+            doThrow(new EmptyResultDataAccessException(1)).when(productRepository).deleteById(productId);
 
             // Act & Assert
             assertThrows(NotFoundException.class, () -> productService.deleteProduct(productId));
 
-            verify(productRepository, never()).delete(any());
+            verify(productRepository, times(1)).deleteById(productId);
         }
     }
 }
