@@ -3,7 +3,6 @@ import { motion } from "framer-motion";
 import { Bell, ChevronDown, HelpCircle, MapPin } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import "../../../node_modules/hamburgers/_sass/hamburgers/hamburgers.scss";
 import logo from "../../assets/images/logo.svg";
 import { useScroll } from "../../hooks/useScroll";
 import { CartButton, MenuButton, UserButton } from "../Button/Buttons";
