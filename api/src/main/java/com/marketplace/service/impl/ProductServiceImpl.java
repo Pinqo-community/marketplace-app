@@ -11,7 +11,6 @@ import com.marketplace.utils.mapper.ProductMapper;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 import java.util.List;
 
@@ -117,14 +116,13 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public void deleteProduct(Long id) {
         log.info("Attempting to delete product with ID {}", id);
-        try {
-            productRepository.deleteById(id);
-            log.info("Product with ID {} deleted successfully", id);
-        } catch (EmptyResultDataAccessException e) {
+
+        if (productRepository.findById(id).isEmpty()) {
             log.error("Product with ID {} not found", id);
             throw new NotFoundException("Le produit avec l'ID " + id + " n'existe pas.");
         }
-
+            productRepository.deleteById(id);
+            log.info("Product with ID {} deleted successfully", id);
     }
 }
 

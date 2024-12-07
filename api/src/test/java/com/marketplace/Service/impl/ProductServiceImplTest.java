@@ -15,7 +15,6 @@ import org.mockito.InjectMocks;
 import org.mockito.ArgumentMatcher;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.dao.EmptyResultDataAccessException;
 
 import java.util.Collections;
 import java.util.List;
@@ -298,12 +297,14 @@ class ProductServiceImplTest {
         void deleteProduct_DeletesProduct() {
             // Arrange
             Long productId = 1L;
+            when(productRepository.findById(productId)).thenReturn(Optional.of(new Product()));
             doNothing().when(productRepository).deleteById(productId);
 
             // Act
             productService.deleteProduct(productId);
 
             // Assert
+            verify(productRepository, times(1)).findById(productId);
             verify(productRepository, times(1)).deleteById(productId);
         }
 
@@ -312,12 +313,16 @@ class ProductServiceImplTest {
         void deleteProduct_ProductNotFound_ThrowsNotFoundException() {
             // Arrange
             Long productId = 1L;
-            doThrow(new EmptyResultDataAccessException(1)).when(productRepository).deleteById(productId);
+            when(productRepository.findById(productId)).thenReturn(Optional.empty());
 
             // Act & Assert
-            assertThrows(NotFoundException.class, () -> productService.deleteProduct(productId));
+            NotFoundException exception = assertThrows(NotFoundException.class, () -> {
+                productService.deleteProduct(productId);
+            });
 
-            verify(productRepository, times(1)).deleteById(productId);
+            assertEquals("Le produit avec l'ID " + productId + " n'existe pas.", exception.getMessage());
+            verify(productRepository, never()).deleteById(productId);
+            verify(productRepository, times(1)).findById(productId);
         }
     }
 }
