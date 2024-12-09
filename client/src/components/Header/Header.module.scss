@@ -7,150 +7,200 @@
   flex-direction: column;
   align-items: center;
   background-color: $color-white;
-  padding: 0 0 10px;
-  width: 100%;
+  z-index: $z-index-header;
+  position: fixed;
+  transition: all 0.3s ease-in-out;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 
-  .topBanner {
-    display: flex;
-    justify-content: flex-end;
-    gap: 40px;
-    padding: 5px 20px 5px 0;
-    width: 100%;
-    max-width: $screen-xl;
+  @include media-query($screen-md) {
+    padding-bottom: 10px;
+  }
 
-    @include media-query($breakpoint-md) {
-      flex-direction: row-reverse;
-      background-color: $color-dark;
-      padding: 5px 20px;
-      color: $color-light;
+  &.compactMode {
+    @include media-query($screen-md) {
+      padding-bottom: 0;
 
-      img {
-        @include icon-hover-filter;
+      .searchBar {
+        opacity: 0;
+        max-height: 0;
+        overflow: hidden;
+        transition:
+          opacity 0.2s ease-in-out,
+          max-height 0.2s ease-in-out;
       }
     }
 
-    .helpButton,
-    .locationButton {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      transition:
-        color 0.2s ease-in-out,
-        filter 0.2s ease-in-out;
-      cursor: pointer;
-      border: none;
-      background: none;
-      font-size: $font-size-md;
+    .container {
+      padding: 5px 16px;
 
-      img {
-        transition: filter 0.2s ease-in-out;
-      }
-
-      &:hover {
-        color: $primary-color;
-
-        img {
-          @include icon-dark-filter;
-        }
-      }
-
-      @include media-query($breakpoint-md) {
-        font-size: $font-size-xs;
-
-        img {
-          @include icon-light-filter;
-          width: 15px;
-          height: 15px;
-        }
+      @include media-query($screen-md) {
+        gap: 0;
       }
     }
   }
 
-  .container {
+  .topBanner {
     display: flex;
     justify-content: space-between;
-    align-items: center;
-    gap: 20px;
-    margin: 0 auto;
-    padding: 10px 20px;
+    gap: $gap-xl;
     width: 100%;
-    max-width: $screen-xl;
+    padding: 6px 20px;
+    background: linear-gradient(to right, #f0fdf4, #dcfce7);
 
-    @include media-query($breakpoint-md) {
-      flex-wrap: wrap;
-      gap: 11px;
-      padding: 10px 15px 0;
+    @include media-query($screen-xs) {
+      gap: 0;
+      padding: 6px;
     }
 
-    .leftContainer {
-      display: flex;
-      align-items: center;
-      gap: 20px;
+    .separator {
+      width: 1px;
+      height: 1rem;
+      background-color: $separator-color;
 
-      .hamburger {
-        opacity: 0.9;
-
-        @include media-query($breakpoint-md) {
-          padding: 10px;
-
-          .hamburgerBox {
-            width: 30px;
-          }
-
-          .hamburgerInner,
-          .hamburgerInner::before,
-          .hamburgerInner::after {
-            width: 30px;
-            height: 3px;
-          }
-        }
-      }
-
-      @include media-query($breakpoint-md) {
-        justify-content: space-between;
-        gap: 10px;
-        width: 100%;
-      }
-
-      .mobileNav {
+      &.separatorMobileOnly {
         display: none;
 
-        @include media-query($breakpoint-md) {
-          display: flex;
+        @include media-query($screen-xs) {
+          display: block;
         }
       }
-
-      .leftContainerInner {
-        display: flex;
-        gap: 10px;
-      }
     }
 
-    .logo {
-      cursor: pointer;
-      padding-right: 10px;
-
-      @include media-query($breakpoint-md) {
-        width: 200px;
-      }
-    }
-
-    nav {
+    .leftContainer,
+    .rightContainer {
       display: flex;
       align-items: center;
-      gap: 40px;
-      margin-left: 20px;
-      @include hide-on-mobile($breakpoint-md);
+      gap: $gap-md;
 
-      @include media-query($breakpoint-md) {
-        gap: 7px;
-        margin-left: 0;
 
-        img {
-          width: 25px;
-        }
+      @include media-query($screen-xs) {
+        gap: 0;
+        justify-content: space-evenly;
+        width: 100%;
+      }
+    }
+
+    .button {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-family: system-ui;
+      font-size: 0.75rem;
+      font-weight: 400;
+      color: $text-color;
+      cursor: pointer;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+
+      &:hover {
+        color: $primary-color;
+      }
+
+      .icon {
+        color: $primary-color;
+      }
+
+      @include media-query($screen-xs) {
+        gap: $gap-xs;
       }
     }
   }
 }
-//
+
+.container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 5px;
+  max-width: $screen-xl;
+  width: 100%;
+  margin: 0 auto;
+  gap: $gap-md;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+
+  @include media-query($screen-md) {
+    flex-wrap: wrap;
+    padding: 10px 15px 0;
+    gap: 11px;
+  }
+
+  .leftContainer {
+    display: flex;
+    align-items: center;
+    gap: $gap-md;
+
+    .hamburger {
+      opacity: 0.9;
+
+      @include media-query($screen-md) {
+        padding: 10px;
+
+        .hamburgerBox {
+          width: 30px;
+        }
+
+        .hamburgerInner,
+        .hamburgerInner::before,
+        .hamburgerInner::after {
+          width: 30px;
+          height: 3px;
+        }
+      }
+    }
+
+    @include media-query($screen-md) {
+      gap: $gap-sm;
+      justify-content: space-between;
+      width: 100%;
+    }
+
+    .mobileNav {
+      display: none;
+
+      @include media-query($screen-md) {
+        display: flex;
+      }
+    }
+
+    .leftContainerInner {
+      display: flex;
+    }
+  }
+
+  .logo {
+    padding-right: 10px;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    transform: scale(0.9);
+
+    @include media-query($screen-md) {
+      width: 200px;
+    }
+  }
+
+  .searchBar {
+    opacity: 1;
+    max-height: 100px;
+    display: flex;
+    margin-right: auto;
+    transition:
+      opacity 0.2s ease-in-out,
+      max-height 0.2s ease-in-out;
+  }
+
+  nav {
+    display: flex;
+    align-items: center;
+    gap: $gap-md;
+    margin-left: 20px;
+    @include hide-on-mobile($screen-md);
+
+    @include media-query($screen-md) {
+      gap: 7px;
+      margin-left: 0;
+
+      img {
+        width: 25px;
+      }
+    }
+  }
+}

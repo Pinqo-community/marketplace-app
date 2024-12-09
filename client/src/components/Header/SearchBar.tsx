@@ -1,18 +1,20 @@
-import searchIcon from "../../assets/icons/search.svg";
+import { Search } from "lucide-react";
 import styles from "./SearchBar.module.scss";
 
 const SearchBar: React.FC = () => {
   return (
     <div className={styles.searchBar}>
-      <input
-        className={styles.searchInput}
-        type="text"
-        placeholder="Rechercher un produit..."
-        aria-label="Champ de recherche de produits"
-      />
-      <button>
-        <img src={searchIcon} alt="search" />
-      </button>
+      <div className={styles.searchInputContainer}>
+        <input
+          className={styles.searchInput}
+          type="text"
+          placeholder="Rechercher un produit..."
+          aria-label="Champ de recherche de produits"
+        />
+        <button>
+          <Search size={20} className={styles.icon} />
+        </button>
+      </div>
     </div>
   );
 };

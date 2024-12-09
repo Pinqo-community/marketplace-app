@@ -3,8 +3,9 @@
 @use "../../scss/mixins" as *;
 
 .hero {
-  display: flex;
   position: relative;
+  overflow: hidden;
+  height: 100vh;
   flex-direction: column;
   justify-content: center;
   align-items: center;
