@@ -1,0 +1,94 @@
+@use "../../scss/global";
+@use "../../scss/variables" as *;
+@use "../../scss/mixins" as *;
+
+.container {
+  display: flex;
+  position: relative;
+  border-radius: $border-radius-md;
+  background: $secondary-color;
+  padding: 30px;
+  width: 100%;
+  min-height: 411px;
+  overflow: hidden;
+  color: $text-color;
+
+  @include media-query($breakpoint-sm) {
+    min-height: 100%;
+  }
+
+  @include media-query($breakpoint-xs) {
+    padding: 20px;
+    width: 100%;
+  }
+
+  // Styles pour la version "producer"
+  &.producer {
+    background: $text-color;
+    color: $color-white;
+    .content {
+      .description {
+        @include responsive-width(346px, $breakpoint-sm);
+      }
+
+      button {
+        @include responsive-width(223px, $breakpoint-sm);
+      }
+    }
+  }
+
+  .image {
+    position: absolute;
+    bottom: 0;
+    left: 45%;
+
+    @include media-query($breakpoint-sm) {
+      bottom: -50px;
+      opacity: 0.5 !important;
+    }
+  }
+
+  .content {
+    display: grid;
+    position: relative;
+    z-index: 2;
+
+    @include media-query($breakpoint-sm) {
+      backdrop-filter: blur(1px);
+    }
+
+    .title {
+      display: flex;
+      flex-direction: column;
+      line-height: 40px;
+      color: inherit;
+      @include responsive-width(350px, $breakpoint-sm);
+
+      @include media-query($breakpoint-sm) {
+        font-size: $font-size-xl;
+        line-height: 30px;
+      }
+    }
+
+    .descriptionContainer {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .description {
+      @include font-style($size: $font-size-sm, $weight: $font-weight-normal);
+      color: inherit;
+      @include responsive-width(288px, $breakpoint-sm);
+    }
+
+    button {
+      padding: 12px 48px;
+      @include responsive-width(208px, $breakpoint-sm);
+
+      @include media-query($breakpoint-sm) {
+        margin-top: 20px;
+      }
+    }
+  }
+}

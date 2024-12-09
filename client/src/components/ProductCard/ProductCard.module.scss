@@ -3,33 +3,33 @@
 @use "../../scss/mixins" as *;
 
 .productCard {
-  border-radius: $border-radius-md;
-  box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.1);
-  border: 1.5px solid rgb(240, 240, 240);
   display: flex;
   flex-direction: column;
   gap: $gap-sm;
-  padding: 20px;
   cursor: pointer;
+  box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.1);
+  border: 1.5px solid rgb(240, 240, 240);
+  border-radius: $border-radius-md;
+  padding: 20px;
 
   .imageContainer {
-    aspect-ratio: 1/1;
     border-radius: $border-radius-md;
+    aspect-ratio: 1/1;
 
     img {
+      border-radius: $border-radius-md;
+      aspect-ratio: 1/1;
       width: 100%;
       height: 100%;
-      border-radius: $border-radius-md;
       object-fit: cover;
-      aspect-ratio: 1/1;
     }
   }
 
   .content {
     display: flex;
     flex-direction: column;
-    gap: $gap-sm;
     justify-content: space-between;
+    gap: $gap-sm;
     height: 100%;
 
     .header {
@@ -43,7 +43,11 @@
         gap: $gap-xs;
 
         .ratingValue {
-          @include font-style($size: $font-size-sm, $weight: $font-weight-normal, $color: $primary-color);
+          @include font-style(
+            $size: $font-size-sm,
+            $weight: $font-weight-normal,
+            $color: $primary-color
+          );
         }
       }
     }
@@ -51,15 +55,26 @@
     .prices {
       display: flex;
       gap: $gap-xs;
-      @include font-style($size: $font-size-base, $weight: $font-weight-semibold);
+      @include font-style(
+        $size: $font-size-base,
+        $weight: $font-weight-semibold
+      );
       .originalPrice {
         text-decoration: line-through;
-        @include font-style($size: $font-size-base, $weight: $font-weight-medium, $color: #c9c9c9);
+        @include font-style(
+          $size: $font-size-base,
+          $weight: $font-weight-medium,
+          $color: #c9c9c9
+        );
       }
     }
 
     .stock {
-      @include font-style($size: $font-size-xs, $weight: $font-weight-normal, $color: $primary-color);
+      @include font-style(
+        $size: $font-size-xs,
+        $weight: $font-weight-normal,
+        $color: $primary-color
+      );
     }
 
     .low {
@@ -79,11 +94,14 @@
           display: flex;
           justify-content: center;
           align-items: center;
-          @include font-style($size: $font-size-base, $weight: $font-weight-semibold);
-          cursor: pointer;
-          width: 27px;
+          @include font-style(
+            $size: $font-size-base,
+            $weight: $font-weight-semibold
+          );
           transition: background-color 0.3s ease;
+          cursor: pointer;
           border: 1px solid $border-color;
+          width: 27px;
 
           &:first-child {
             border-radius: $border-radius-sm 0 0 $border-radius-sm;
@@ -99,10 +117,10 @@
         }
 
         .quantityInput {
-          text-align: center;
-          width: 27px;
           border-top: 1px solid $border-color;
           border-bottom: 1px solid $border-color;
+          width: 27px;
+          text-align: center;
 
           .inputField {
             width: 100%;
@@ -112,10 +130,10 @@
       }
 
       .addToCart {
-        background-color: #eee;
-        padding: 8px;
         transition: background-color 0.3s ease;
         border-radius: 100px;
+        background-color: #eee;
+        padding: 8px;
 
         &:hover {
           background-color: $primary-color;

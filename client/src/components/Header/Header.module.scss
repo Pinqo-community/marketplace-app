@@ -5,7 +5,6 @@
 .header {
   display: flex;
   flex-direction: column;
-  width: 100%;
   align-items: center;
   background-color: $color-white;
   z-index: $z-index-header;
@@ -72,6 +71,7 @@
       display: flex;
       align-items: center;
       gap: $gap-md;
+
 
       @include media-query($screen-xs) {
         gap: 0;
