@@ -6,38 +6,37 @@
   position: relative;
   overflow: hidden;
   height: 100vh;
+  display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  margin-bottom: 40px;
-  max-width: none;
-  height: 90vh;
-  overflow: hidden;
   color: $color-white;
+  max-width: none;
+  margin-bottom: 40px;
 
   &::before {
+    content: "";
     position: absolute;
     top: 0;
+    left: -5px;
     right: -5px;
     bottom: 0;
-    left: -5px;
-    z-index: 1;
     background-image: url("../../assets/images/hero-banner.png");
-    background-position: center;
     background-size: cover;
-    content: "";
+    background-position: center;
+    z-index: 1;
   }
 
   .container {
-    width: 100%;
     max-width: 1400px;
+    width: 100%;
 
     .content {
-      display: flex;
       position: relative;
+      z-index: 2;
+      display: flex;
       flex-direction: column;
       gap: $gap-lg;
-      z-index: 2;
 
       h1 {
         display: flex;
@@ -45,8 +44,8 @@
       }
 
       @include media-query($breakpoint-sm) {
-        align-items: center;
         text-align: center;
+        align-items: center;
 
         h1 {
           font-size: 38px;
@@ -75,9 +74,9 @@
 .overlay {
   position: absolute;
   top: 0;
-  bottom: 0;
   left: 0;
-  z-index: 1;
+  bottom: 0;
   animation: blurAnimation 3s ease-in-out forwards;
   width: 65rem;
+  z-index: 1;
 }
