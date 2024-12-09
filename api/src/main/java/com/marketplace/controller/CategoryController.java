@@ -4,7 +4,7 @@ import com.marketplace.dto.ExceptionResponse;
 import com.marketplace.dto.category.CategoryCreateDto;
 import com.marketplace.dto.category.CategoryResponseDto;
 import com.marketplace.dto.category.CategoryUpdateDto;
-import com.marketplace.service.impl.CategoryService;
+import com.marketplace.service.impl.CategoryServiceImpl;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -13,6 +13,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -26,7 +27,7 @@ import java.util.List;
 @Tag(name = "Categories", description = "API for categories")
 @Slf4j
 public class CategoryController {
-    private final CategoryService categoryService;
+    private final CategoryServiceImpl categoryService;
 
     @GetMapping
     @Operation(summary = "Get all categories", description = "Find a list of all categories")
@@ -83,7 +84,7 @@ public class CategoryController {
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = ExceptionResponse.class)))
     })
-    public ResponseEntity<CategoryResponseDto> createCategory(@RequestBody CategoryCreateDto categoryCreateDto) {
+    public ResponseEntity<CategoryResponseDto> createCategory(@Valid @RequestBody CategoryCreateDto categoryCreateDto) {
         try {
             log.info("POST /categories - START");
             return ResponseEntity.status(HttpStatus.CREATED).body(categoryService.create(categoryCreateDto));

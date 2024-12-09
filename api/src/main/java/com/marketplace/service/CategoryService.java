@@ -1,11 +1,11 @@
-package com.marketplace.service.impl;
+package com.marketplace.service;
 
 import com.marketplace.dto.category.CategoryCreateDto;
 import com.marketplace.dto.category.CategoryResponseDto;
 import com.marketplace.dto.category.CategoryUpdateDto;
 import java.util.List;
 
-public interface CategoryServiceInterface {
+public interface CategoryService {
     List<CategoryResponseDto> findAll();
     CategoryResponseDto findById(Long id);
     CategoryResponseDto create(CategoryCreateDto categoryCreateDto);

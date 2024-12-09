@@ -7,6 +7,7 @@ import com.marketplace.entity.Category;
 import com.marketplace.exception.AlreadyExistsException;
 import com.marketplace.exception.NotFoundException;
 import com.marketplace.repository.CategoryRepository;
+import com.marketplace.service.CategoryService;
 import com.marketplace.utils.mapper.CategoryMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -15,7 +16,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class CategoryService implements CategoryServiceInterface {
+public class CategoryServiceImpl implements CategoryService {
     private final CategoryRepository categoryRepository;
     private final CategoryMapper categoryMapper;
 
@@ -30,8 +31,8 @@ public class CategoryService implements CategoryServiceInterface {
     }
 
     public CategoryResponseDto create(CategoryCreateDto categoryCreateDto) {
-        if (categoryRepository.existsByName(categoryCreateDto.getName())) {
-                throw new AlreadyExistsException("Il existe déja une catégorie avec ce nom : " + categoryCreateDto.getName());
+        if (categoryRepository.existsByName(categoryCreateDto.name())) {
+                throw new AlreadyExistsException("Il existe déja une catégorie avec ce nom : " + categoryCreateDto.name());
         }
         Category category = categoryMapper.toEntity(categoryCreateDto);
         Category createdCategory = categoryRepository.save(category);
