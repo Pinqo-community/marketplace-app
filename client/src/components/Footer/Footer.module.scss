@@ -3,13 +3,13 @@
 @use "../../scss/mixins" as *;
 
 .footer {
-  background: rgb(16, 16, 16);
-  color: $color-light;
-  padding: 40px 80px;
   display: flex;
-  gap: $gap-lg;
   flex-direction: column;
   align-items: center;
+  gap: $gap-lg;
+  background: rgb(16, 16, 16);
+  padding: 40px 80px;
+  color: $color-light;
 
   @include media-query($breakpoint-md) {
     padding: 40px 40px;
@@ -26,8 +26,8 @@
       display: flex;
       justify-content: space-between;
       gap: $gap-lg;
-      width: 100%;
       margin: 0 auto;
+      width: 100%;
 
       @include media-query($breakpoint-sm) {
         flex-direction: column;
@@ -41,10 +41,10 @@
         width: 24%;
 
         @include media-query($breakpoint-sm) {
-          width: 100%;
           display: flex;
-          align-items: center;
           justify-content: center;
+          align-items: center;
+          width: 100%;
         }
 
         .brandInfo {
@@ -61,7 +61,11 @@
           }
 
           .description {
-            @include font-style($size: $font-size-sm, $weight: $font-weight-normal, $color: $color-light);
+            @include font-style(
+              $size: $font-size-sm,
+              $weight: $font-weight-normal,
+              $color: $color-light
+            );
 
             @include media-query($breakpoint-sm) {
               text-align: center;
@@ -106,7 +110,11 @@
           }
 
           .columnTitle {
-            @include font-style($size: $font-size-md, $weight: $font-weight-semibold, $color: $color-white);
+            @include font-style(
+              $size: $font-size-md,
+              $weight: $font-weight-semibold,
+              $color: $color-white
+            );
           }
 
           .linksList {
@@ -119,7 +127,11 @@
             }
 
             .linkItem {
-              @include font-style($size: $font-size-sm, $weight: $font-weight-normal, $color: $color-light);
+              @include font-style(
+                $size: $font-size-sm,
+                $weight: $font-weight-normal,
+                $color: $color-light
+              );
               transition: all 0.2s ease-in-out;
               &:hover {
                 cursor: pointer;
@@ -134,12 +146,12 @@
 
   .footerBottom {
     display: flex;
-    align-items: center;
     justify-content: space-between;
+    align-items: center;
     border-top: 1px solid $color-light;
-    max-width: $screen-xl;
-    width: 100%;
     padding-top: 15px;
+    width: 100%;
+    max-width: $screen-xl;
 
     @include media-query($breakpoint-sm) {
       flex-direction: column-reverse;
@@ -147,7 +159,11 @@
     }
 
     .copyright {
-      @include font-style($size: $font-size-sm, $weight: $font-weight-normal, $color: $color-light);
+      @include font-style(
+        $size: $font-size-sm,
+        $weight: $font-weight-normal,
+        $color: $color-light
+      );
     }
 
     .paymentMethods {
@@ -163,10 +179,10 @@
         display: flex;
         justify-content: center;
         align-items: center;
+        border-radius: 6px;
         background-color: $color-white;
         width: 50px;
         height: 34px;
-        border-radius: 6px;
       }
     }
   }

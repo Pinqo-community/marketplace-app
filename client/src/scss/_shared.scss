@@ -6,15 +6,15 @@
   justify-content: end;
   align-items: center;
   gap: 15px;
-
-  cursor: pointer;
   transition: all 0.1s ease-in-out;
 
+  cursor: pointer;
+
   .moreInfoText {
-    font-family: Inter;
-    font-size: 14px;
-    font-weight: 400;
     color: $primary-color;
+    font-weight: 400;
+    font-size: 14px;
+    font-family: Inter;
   }
 
   &:hover {

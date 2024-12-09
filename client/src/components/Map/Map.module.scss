@@ -7,8 +7,8 @@ MapContainer {
 }
 
 .map {
-  height: 691px;
   width: 100%;
+  height: 691px;
 
   @include media-query($breakpoint-sm) {
     height: 600px;
@@ -22,29 +22,29 @@ MapContainer {
 }
 
 :global(.leaflet-popup-content) {
-  min-width: 270px;
-  padding: 12px;
   margin: 0;
+  padding: 12px;
+  min-width: 270px;
 }
 
 :global(.leaflet-touch) :global(.leaflet-control-layers),
 :global(.leaflet-touch) :global(.leaflet-bar) {
+  margin: 20px 0 0 20px;
+  box-shadow: 0 0px 15px rgba(0, 0, 0, 0.27);
   border: none;
   border-radius: 8px;
-  box-shadow: 0 0px 15px rgba(0, 0, 0, 0.27);
-  margin: 20px 0 0 20px;
 }
 :global(.leaflet-touch) :global(.leaflet-bar) a {
-  background: #ffffffad;
+  display: flex;
+  align-content: center;
+  justify-content: center;
+  align-items: center;
   backdrop-filter: blur(10px);
+  transition: all 0.2s ease-in-out;
+  background: #ffffffad;
   width: 35px;
   height: 35px;
   line-height: 30px;
-  display: flex;
-  justify-content: center;
-  align-content: center;
-  align-items: center;
-  transition: all 0.2s ease-in-out;
 
   &:hover {
     background: $color-white;

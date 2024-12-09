@@ -14,12 +14,12 @@
 body,
 html {
   margin: 0;
-  padding: 0;
-  font-family: $font-family;
-  font-weight: $font-weight-normal;
-  color: $text-color;
   background-color: $background-color;
+  padding: 0;
+  color: $text-color;
+  font-weight: $font-weight-normal;
   line-height: 1.5;
+  font-family: $font-family;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   overflow-x: hidden;
@@ -42,30 +42,30 @@ button,
 input,
 textarea,
 select {
-  font: inherit;
-  color: inherit;
-  background: none;
-  border: none;
   margin: 0;
-  padding: 0;
   outline: none;
+  border: none;
+  background: none;
+  padding: 0;
+  color: inherit;
+  font: inherit;
 }
 
 // Basic reset for form elements
 input,
 textarea {
-  padding: 0;
   margin: 0;
-  border: none;
   outline: none;
+  border: none;
   background: none;
+  padding: 0;
   resize: none;
 }
 
 ul,
 ol {
-  list-style: none;
   padding: 0;
+  list-style: none;
 }
 
 a {
@@ -80,8 +80,8 @@ h3,
 h4,
 h5,
 h6 {
-  font-weight: inherit;
   color: inherit;
+  font-weight: inherit;
 }
 
 // Paragraph reset
@@ -111,15 +111,20 @@ input[type="number"] {
 
 // Button
 button {
-  background: none;
-  border: none;
-  padding: 0;
-  margin: 0;
   cursor: pointer;
+  margin: 0;
+  border: none;
+  background: none;
+  padding: 0;
 }
 
 h1 {
-  @include font-style($size: 64px, $weight: $font-weight-extrabold, $color: $color-white, $line-height: 72px);
+  @include font-style(
+    $size: 64px,
+    $weight: $font-weight-extrabold,
+    $color: $color-white,
+    $line-height: 72px
+  );
 }
 
 h2 {

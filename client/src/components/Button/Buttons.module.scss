@@ -7,12 +7,12 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  font-size: $font-size-md;
-  background: none;
-  border: none;
-  cursor: pointer;
   gap: 3px;
   transition: all 0.2s ease-in-out;
+  cursor: pointer;
+  border: none;
+  background: none;
+  font-size: $font-size-md;
 
   p {
     @include hide-on-mobile($breakpoint-md);
@@ -26,8 +26,8 @@
     color: $primary-color;
 
     img {
-      filter: brightness(0) saturate(100%) invert(38%) sepia(100%) saturate(699%) hue-rotate(113deg) brightness(105%)
-        contrast(98%);
+      filter: brightness(0) saturate(100%) invert(38%) sepia(100%)
+        saturate(699%) hue-rotate(113deg) brightness(105%) contrast(98%);
     }
   }
 }
@@ -37,24 +37,27 @@
 /* -------------------------------------------------------------------------- */
 
 .primaryButton {
-  color: $color-white;
+  transition: background-color 0.2s ease-in-out;
+  border-radius: $border-radius-md;
   background-color: $primary-color;
   padding: 14px 48px 14px 48px;
-  border-radius: $border-radius-md;
-  transition: background-color 0.2s ease-in-out;
-  @include font-style($size: $font-size-sm, $weight: $font-weight-semibold);
+  @include font-style(
+    $size: $font-size-sm,
+    $weight: $font-weight-semibold,
+    $color: $color-white
+  );
 
   &:hover {
     background-color: #029751;
   }
 
   &.light {
-    color: $primary-color;
     background-color: $color-white;
+    color: $primary-color;
 
     &:hover {
-      color: $color-white;
       background-color: $primary-color;
+      color: $color-white;
     }
   }
 }
