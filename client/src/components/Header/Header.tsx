@@ -3,10 +3,9 @@ import { motion } from "framer-motion";
 import { Bell, ChevronDown, HelpCircle, MapPin } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import "../../../node_modules/hamburgers/_sass/hamburgers/hamburgers.scss";
 import logo from "../../assets/images/logo.svg";
 import { useScroll } from "../../hooks/useScroll";
-import { CartButton, UserButton } from "../Button/Buttons";
+import { CartButton, MenuButton, UserButton } from "../Button/Buttons";
 import styles from "./Header.module.scss";
 import SearchBar from "./SearchBar";
 
@@ -17,24 +16,15 @@ const Header: React.FC = () => {
 
   const navigate = useNavigate();
   const { scrollPosition, isScrolledUp } = useScroll();
-  const [isActive, setIsActive] = useState(false);
-  // * const [isHovered, setIsHovered] = useState(false);
+  const [isOpened, setIsOpened] = useState(false);
   const isTopBarVisible = scrollPosition < 50;
   const shouldShowTopBar = isTopBarVisible || isScrolledUp;
-  // * const shouldShowTopBar = isTopBarVisible || isScrolledUp || isHovered;
 
   /* -------------------------------------------------------------------------- */
   /*                                  Function                                  */
   /* -------------------------------------------------------------------------- */
 
-  const toggleHamburger = () => setIsActive(!isActive);
-
-  // ? J'ai implémenté une fonctionnalité qui permet d'afficher la topbar au survol du header, mais je suis pas sûr que ce soit une bonne idée.
-  // ? Pour la tester, il vous suffit de décommenter les lignes commençant par "// *".
-
-  // Handlers pour le survol
-  // * const handleMouseEnter = () => setIsHovered(true);
-  // * const handleMouseLeave = () => setIsHovered(false);
+  const toggleMenu = () => setIsOpened((prev) => !prev);
 
   /* -------------------------------------------------------------------------- */
   /*                                   Render                                   */
@@ -45,8 +35,6 @@ const Header: React.FC = () => {
       className={classNames(styles.header, {
         [styles.compactMode]: !shouldShowTopBar,
       })}
-      // * onMouseEnter={handleMouseEnter}
-      // * onMouseLeave={handleMouseLeave}
     >
       {/* Top banner */}
       <motion.div
@@ -95,19 +83,7 @@ const Header: React.FC = () => {
       <div className={styles.container}>
         <div className={styles.leftContainer}>
           <div className={styles.leftContainerInner}>
-            <button
-              className={`${styles.hamburger} hamburger hamburger--collapse ${
-                isActive ? "is-active" : ""
-              }`}
-              type="button"
-              onClick={toggleHamburger}
-            >
-              <span className={`${styles.hamburgerBox} hamburger-box`}>
-                <span
-                  className={`${styles.hamburgerInner} hamburger-inner`}
-                ></span>
-              </span>
-            </button>
+            <MenuButton isOpened={isOpened} toggleMenu={toggleMenu} />
             <img
               src={logo}
               alt="logo"
