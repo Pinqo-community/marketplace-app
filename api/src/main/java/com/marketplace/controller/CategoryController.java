@@ -4,7 +4,8 @@ import com.marketplace.dto.ExceptionResponse;
 import com.marketplace.dto.category.CategoryCreateDto;
 import com.marketplace.dto.category.CategoryResponseDto;
 import com.marketplace.dto.category.CategoryUpdateDto;
-import com.marketplace.service.impl.CategoryServiceImpl;
+import com.marketplace.service.CategoryService;
+import com.marketplace.utils.mapper.CategoryMapper;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -18,6 +19,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
@@ -27,7 +29,8 @@ import java.util.List;
 @Tag(name = "Categories", description = "API for categories")
 @Slf4j
 public class CategoryController {
-    private final CategoryServiceImpl categoryService;
+    private final CategoryService categoryService;
+    private final CategoryMapper categoryMapper;
 
     @GetMapping
     @Operation(summary = "Get all categories", description = "Find a list of all categories")
@@ -42,7 +45,7 @@ public class CategoryController {
     public ResponseEntity<List<CategoryResponseDto>> getAllCategories() {
         try {
             log.info("GET /categories - START");
-            return ResponseEntity.ok(categoryService.findAll());
+            return ResponseEntity.ok(categoryMapper.toResponseList(categoryService.findAll()));
         } finally {
             log.info("GET /categories - DONE");
         }
@@ -65,7 +68,7 @@ public class CategoryController {
     public ResponseEntity<CategoryResponseDto> getCategoryById(@PathVariable("id") Long id) {
         try {
             log.info("GET /categories/{id} - START");
-            return ResponseEntity.ok(categoryService.findById(id));
+            return ResponseEntity.ok(categoryMapper.toResponse(categoryService.findById(id)));
         } finally {
             log.info("GET /categories/{id} - DONE");
         }
@@ -87,7 +90,7 @@ public class CategoryController {
     public ResponseEntity<CategoryResponseDto> createCategory(@Valid @RequestBody CategoryCreateDto categoryCreateDto) {
         try {
             log.info("POST /categories - START");
-            return ResponseEntity.status(HttpStatus.CREATED).body(categoryService.create(categoryCreateDto));
+            return ResponseEntity.status(HttpStatus.CREATED).body(categoryMapper.toResponse(categoryService.create(categoryCreateDto)));
         } finally {
             log.info("POST /categories - DONE");
         }
@@ -110,7 +113,7 @@ public class CategoryController {
     public ResponseEntity<CategoryResponseDto> updateCategory(@PathVariable("id") Long id, @RequestBody CategoryUpdateDto categoryUpdateDto) {
         try {
             log.info("PUT /categories/{id} - START");
-            return ResponseEntity.ok(categoryService.update(categoryUpdateDto, id));
+            return ResponseEntity.ok(categoryMapper.toResponse(categoryService.update(categoryUpdateDto, id)));
         } finally {
             log.info("PUT /categories/{id} - DONE");
         }
