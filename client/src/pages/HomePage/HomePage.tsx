@@ -1,29 +1,25 @@
+import { listVariants } from "@/animations/animations";
+import { useGetCategoriesQuery } from "@/api/categoriesApi";
+import { useGetProductsQuery } from "@/api/productsApi";
+import { useGetTestimonialsQuery } from "@/api/testimonialsApi";
+import arrowIcon from "@/assets/icons/arrow.svg";
+import CategoryCard from "@/components/CategoryCard/CategoryCard";
+import Hero from "@/components/Hero/Hero";
+import Map from "@/components/Map/Map";
+import ProductCard from "@/components/ProductCard/ProductCard";
+import Slider from "@/components/Slider/Slider";
+import TestimonialCard from "@/components/Testimonials/TestimonialCard";
+import MainLayout from "@/layouts/MainLayout";
 import { motion } from "framer-motion";
-import { useRef } from "react";
 import "swiper/css";
-import { Navigation } from "swiper/modules";
-import { Swiper, SwiperSlide } from "swiper/react";
-import { NavigationOptions } from "swiper/types";
-import { useGetCategoriesQuery } from "../../api/categoriesApi";
-import { useGetProductsQuery } from "../../api/productsApi";
-import arrowSlider from "../../assets/icons/arrow-slider.svg";
-import arrowIcon from "../../assets/icons/arrow.svg";
+import "swiper/css/pagination";
 import BuyerProducer from "../../components/BuyerProducer/BuyerProducer";
-import CategoryCard from "../../components/CategoryCard/CategoryCard";
-import Hero from "../../components/Hero/Hero";
-import Map from "../../components/Map/Map";
-import ProductCard from "../../components/ProductCard/ProductCard";
-import MainLayout from "../../layouts/MainLayout";
 import styles from "./HomePage.module.scss";
-
 
 const HomePage: React.FC = () => {
   /* -------------------------------------------------------------------------- */
   /*                                  References                                */
   /* -------------------------------------------------------------------------- */
-
-  const prevRef = useRef<HTMLButtonElement | null>(null);
-  const nextRef = useRef<HTMLButtonElement | null>(null);
 
   /* -------------------------------------------------------------------------- */
   /*                                 API Queries                                */
@@ -43,37 +39,24 @@ const HomePage: React.FC = () => {
     error: errorProducts,
   } = useGetProductsQuery({});
 
+  // Testimonials
+  const {
+    data: testimonials,
+    isLoading: isLoadingTestimonials,
+    error: errorTestimonials,
+  } = useGetTestimonialsQuery({});
+
   /* -------------------------------------------------------------------------- */
   /*                               Loading & Errors                             */
   /* -------------------------------------------------------------------------- */
 
   // Loading / Error Handling
-  if (isLoadingCategories || isLoadingProducts) {
+  if (isLoadingCategories || isLoadingProducts || isLoadingTestimonials) {
     return <p>Chargement des données...</p>;
   }
-  if (errorCategories || errorProducts) {
+  if (errorCategories || errorProducts || errorTestimonials) {
     return <p>Une erreur est survenue lors du chargement des données.</p>;
   }
-
-  /* -------------------------------------------------------------------------- */
-  /*                                Animations                                  */
-  /* -------------------------------------------------------------------------- */
-
-  const listVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.1,
-      },
-    },
-  };
-
-  const buttonVariants = {
-    initial: { scale: 1, opacity: 0.5 },
-    hover: { scale: 1.1, opacity: 1, transition: { duration: 0.2 } },
-    tap: { scale: 0.95, transition: { duration: 0.1 } },
-  };
 
   /* -------------------------------------------------------------------------- */
   /*                                   Render                                   */
@@ -101,75 +84,33 @@ const HomePage: React.FC = () => {
             className={styles.productsGrid}
           >
             {products?.map((product) => (
-              <ProductCard key={product.name} product={product} />
+              <ProductCard key={product.id} product={product} />
             ))}
           </motion.div>
         </div>
       </section>
       <section className={styles.categorySection}>
-        <div className={styles.titleContainer}>
-          <h2>Catégories</h2>
-          <div className={styles.arrowContainer}>
-            <motion.button
-              ref={prevRef}
-              className={styles.arrow}
-              variants={buttonVariants}
-              initial="initial"
-              whileHover="hover"
-              whileTap="tap"
-              aria-label="Précédent"
-            >
-              <img src={arrowSlider} />
-            </motion.button>
-
-            <motion.button
-              ref={nextRef}
-              className={styles.arrow}
-              variants={buttonVariants}
-              initial="initial"
-              whileHover="hover"
-              whileTap="tap"
-              aria-label="Suivant"
-            >
-              <img src={arrowSlider} />
-            </motion.button>
-          </div>
-        </div>
-        <div className={styles.categoryContainer}>
-          <Swiper
-            modules={[Navigation]}
-            navigation={{
-              prevEl: prevRef.current,
-              nextEl: nextRef.current,
-            }}
-            onBeforeInit={(swiper) => {
-              const navigation = swiper.params.navigation as NavigationOptions;
-              navigation.prevEl = prevRef.current;
-              navigation.nextEl = nextRef.current;
-            }}
-            spaceBetween={20}
-            loop={true}
-            slidesPerView={6}
-            breakpoints={{
-              320: { slidesPerView: 1 },
-              420: { slidesPerView: 2 },
-              580: { slidesPerView: 3 },
-              768: { slidesPerView: 4 },
-              1024: { slidesPerView: 5 },
-              1440: { slidesPerView: 6 },
-            }}
-          >
-            {categories?.map((item) => (
-              <SwiperSlide key={item.id}>
-                <CategoryCard title={item.name} image={item.image} />
-              </SwiperSlide>
-            ))}
-          </Swiper>
-        </div>
+        <Slider
+          title="Catégories"
+          items={categories || []}
+          renderItem={(category) => (
+            <CategoryCard title={category.name} image={category.image} />
+          )}
+          slidesPerViewDefault={6}
+          breakpoints={{
+            320: { slidesPerView: 1 },
+            420: { slidesPerView: 2 },
+            580: { slidesPerView: 3 },
+            768: { slidesPerView: 4 },
+            1024: { slidesPerView: 5 },
+            1440: { slidesPerView: 6 },
+          }}
+        />
       </section>
       <section className={styles.buyerProducer}>
         <BuyerProducer />
       </section>
+
 
       <section
         className={styles.localProducers}
@@ -184,6 +125,29 @@ const HomePage: React.FC = () => {
           </div>
         </div>
       </section>
+      <div className={styles.testimonials}>
+        <Slider
+          title="Ce que disent nos clients"
+          items={testimonials || []}
+          customClassName="testimonials"
+          renderItem={(testimonial) => (
+            <TestimonialCard
+              text={testimonial.text}
+              name={testimonial.name}
+              avatar={testimonial.avatar}
+              rating={testimonial.rating}
+            />
+          )}
+          slidesPerViewDefault={3}
+          pagination={true}
+          breakpoints={{
+            320: { slidesPerView: 1 },
+            768: { slidesPerView: 1 },
+            1024: { slidesPerView: 2 },
+            1440: { slidesPerView: 3 },
+          }}
+        />
+      </div>
     </MainLayout>
   );
 };

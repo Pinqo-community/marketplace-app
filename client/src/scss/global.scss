@@ -82,6 +82,7 @@ h5,
 h6 {
   color: inherit;
   font-weight: inherit;
+  color: $text-color;
 }
 
 // Paragraph reset
@@ -119,12 +120,7 @@ button {
 }
 
 h1 {
-  @include font-style(
-    $size: 64px,
-    $weight: $font-weight-extrabold,
-    $color: $color-white,
-    $line-height: 72px
-  );
+  @include font-style($size: 64px, $weight: $font-weight-extrabold, $color: $color-white, $line-height: 72px);
 }
 
 h2 {
@@ -136,4 +132,8 @@ h2 {
 
 h3 {
   @include font-style($size: $font-size-xl, $weight: $font-weight-bold);
+}
+
+h4 {
+  @include font-style($size: $font-size-md, $weight: $font-weight-medium);
 }

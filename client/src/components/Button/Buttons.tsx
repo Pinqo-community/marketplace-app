@@ -1,6 +1,8 @@
+import { buttonVariants } from "@/animations/animations";
+import arrowSlider from "@/assets/icons/arrow-slider.svg";
 import { motion } from "framer-motion";
 import { ShoppingCart, User } from "lucide-react";
-import { MenuButtonProps, PrimaryButtonProps } from "../../types/Button";
+import { MenuButtonProps, PrimaryButtonProps, SliderButtonProps } from "../../types/Button";
 import styles from "./Buttons.module.scss";
 
 /* -------------------------------------------------------------------------- */
@@ -44,6 +46,43 @@ export const PrimaryButton: React.FC<PrimaryButtonProps> = ({
     {children}
   </motion.button>
 );
+
+/* -------------------------------------------------------------------------- */
+/*                                SliderButton                                */
+/* -------------------------------------------------------------------------- */
+
+export const SliderButton: React.FC<SliderButtonProps> = ({
+  prevRef,
+  nextRef,
+}) => {
+  return (
+    <>
+      <motion.button
+        ref={prevRef}
+        className={styles.sliderButton}
+        aria-label="Précédent"
+        variants={buttonVariants}
+        initial="initial"
+        whileHover="hover"
+        whileTap="tap"
+      >
+        <img alt="précédent" src={arrowSlider} />
+      </motion.button>
+
+      <motion.button
+        ref={nextRef}
+        className={styles.sliderButton}
+        aria-label="Suivant"
+        variants={buttonVariants}
+        initial="initial"
+        whileHover="hover"
+        whileTap="tap"
+      >
+        <img alt="suivant" src={arrowSlider} />
+      </motion.button>
+    </>
+  );
+};
 
 /* -------------------------------------------------------------------------- */
 /*                                 MenuButton                                 */

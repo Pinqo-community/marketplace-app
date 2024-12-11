@@ -1,0 +1,11 @@
+@use "@/scss/global";
+@use "@/scss/variables" as *;
+@use "@/scss/mixins" as *;
+@use "@/scss/shared" as *;
+@use "@/pages/HomePage/HomePage.module.scss";
+
+.arrowContainer {
+  display: flex;
+  align-items: center;
+  gap: $gap-sm;
+}
