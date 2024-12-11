@@ -6,14 +6,13 @@
   position: absolute;
   top: 60vh;
   right: 0;
+  padding: 10px;
+  box-shadow: 0 2px 5px rgb(0 0 0 / 30%);
   z-index: 9999;
   cursor: pointer;
   margin-right: 20px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
-
   border-radius: $border-radius-circle;
   background-color: $color-white;
-  padding: 10px;
   fill: #979797;
 }
 
@@ -27,11 +26,11 @@
 }
 
 .userLocationIcon {
-  box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
-  border: 2px solid $color-white;
-  border-radius: 50%;
   width: 15px !important;
   height: 15px !important;
+  border: 2px solid $color-white;
+  box-shadow: 0 0 5px rgb(0 0 0 / 50%);
+  border-radius: 50%;
 
   &.active {
     background-color: #007bff;

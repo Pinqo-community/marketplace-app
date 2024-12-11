@@ -9,13 +9,14 @@
 
   .searchInputContainer {
     .searchInput {
-      border: none;
-      border-radius: $border-radius-md;
-      padding: 0.5rem 1rem 0.5rem 1rem;
-      @include font-style($size: $font-size-md, $weight: $font-weight-medium);
-      border: 1px solid $border-color;
       width: 400px;
+      padding: 0.5rem 1rem;
+      border: none;
+      border: 1px solid $border-color;
       transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      border-radius: $border-radius-md;
+
+      @include font-style($size: $font-size-md, $weight: $font-weight-medium);
 
       &::placeholder {
         @include font-style($size: $font-size-sm, $weight: $font-weight-normal, $color: $placeholder-color);
@@ -27,7 +28,7 @@
       }
 
       @include media-query($breakpoint-md) {
-        background-color: #ffffff;
+        background-color: #fff;
         border-radius: $border-radius-md;
         outline: 1px solid $border-color;
         width: 94vw;
@@ -41,14 +42,14 @@
     }
 
     button {
+      position: absolute;
+      top: 50%;
+      right: 0;
+      padding: 11px 15px 11px 14px;
+      transition: all 0.2s ease;
+      transform: translateY(-50%);
       background-color: $primary-color;
       border-radius: 0 $border-radius-md $border-radius-md 0;
-      padding: 11px 15px 11px 14px;
-      position: absolute;
-      right: 0;
-      top: 50%;
-      transform: translateY(-50%);
-      transition: all 0.2s ease;
 
       .icon {
         color: $color-white;
@@ -57,6 +58,7 @@
 
       &:hover {
         background-color: #049b52;
+
         .icon {
           transform: scale(1.2);
         }

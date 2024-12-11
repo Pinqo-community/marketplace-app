@@ -5,27 +5,28 @@
 .container {
   display: flex;
   position: relative;
-  border-radius: $border-radius-md;
-  background: $secondary-color;
-  padding: 30px;
   width: 100%;
+  padding: 30px;
+  background: $secondary-color;
+  color: $text-color;
+  border-radius: $border-radius-md;
   min-height: 411px;
   overflow: hidden;
-  color: $text-color;
 
   @include media-query($breakpoint-sm) {
     min-height: 100%;
   }
 
   @include media-query($breakpoint-xs) {
-    padding: 20px;
     width: 100%;
+    padding: 20px;
   }
 
   // Styles pour la version "producer"
   &.producer {
     background: $text-color;
     color: $color-white;
+
     .content {
       .description {
         @include responsive-width(346px, $breakpoint-sm);
@@ -59,9 +60,10 @@
 
     .title {
       display: flex;
-      flex-direction: column;
-      line-height: 40px;
       color: inherit;
+      line-height: 40px;
+      flex-direction: column;
+
       @include responsive-width(350px, $breakpoint-sm);
 
       @include media-query($breakpoint-sm) {
@@ -78,12 +80,15 @@
 
     .description {
       @include font-style($size: $font-size-sm, $weight: $font-weight-normal);
+
       color: inherit;
+
       @include responsive-width(288px, $breakpoint-sm);
     }
 
     button {
       padding: 12px 48px;
+
       @include responsive-width(208px, $breakpoint-sm);
 
       @include media-query($breakpoint-sm) {

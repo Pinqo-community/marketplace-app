@@ -23,7 +23,7 @@ const Slider = <T,>({
     <section className={`${styles.sectionContainer} ${customClassName}`}>
       <div className={styles.titleContainer}>
         <h2>{title}</h2>
-        <div className={styles.arrowContainer} id="arrowContainer">
+        <div className={styles.arrowContainer} id="arrow-container">
           <SliderButton prevRef={prevRef} nextRef={nextRef} />
         </div>
       </div>

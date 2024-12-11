@@ -4,15 +4,15 @@
 
 .footer {
   display: flex;
-  flex-direction: column;
   align-items: center;
-  gap: $gap-lg;
-  background: rgb(16, 16, 16);
   padding: 40px 80px;
+  background: rgb(16 16 16);
   color: $color-light;
+  flex-direction: column;
+  gap: $gap-lg;
 
   @include media-query($breakpoint-md) {
-    padding: 40px 40px;
+    padding: 40px;
   }
 
   @include media-query($breakpoint-sm) {
@@ -25,9 +25,9 @@
     .footerContent {
       display: flex;
       justify-content: space-between;
-      gap: $gap-lg;
-      margin: 0 auto;
       width: 100%;
+      margin: 0 auto;
+      gap: $gap-lg;
 
       @include media-query($breakpoint-sm) {
         flex-direction: column;
@@ -42,8 +42,8 @@
 
         @include media-query($breakpoint-sm) {
           display: flex;
-          justify-content: center;
           align-items: center;
+          justify-content: center;
           width: 100%;
         }
 
@@ -61,11 +61,7 @@
           }
 
           .description {
-            @include font-style(
-              $size: $font-size-sm,
-              $weight: $font-weight-normal,
-              $color: $color-light
-            );
+            @include font-style($size: $font-size-sm, $weight: $font-weight-normal, $color: $color-light);
 
             @include media-query($breakpoint-sm) {
               text-align: center;
@@ -79,8 +75,10 @@
 
           .socialIcon {
             transition: all 0.2s ease-in-out;
+
             &:hover {
               cursor: pointer;
+
               @include icon-light-filter;
             }
           }
@@ -110,11 +108,7 @@
           }
 
           .columnTitle {
-            @include font-style(
-              $size: $font-size-md,
-              $weight: $font-weight-semibold,
-              $color: $color-white
-            );
+            @include font-style($size: $font-size-md, $weight: $font-weight-semibold, $color: $color-white);
           }
 
           .linksList {
@@ -127,12 +121,10 @@
             }
 
             .linkItem {
-              @include font-style(
-                $size: $font-size-sm,
-                $weight: $font-weight-normal,
-                $color: $color-light
-              );
+              @include font-style($size: $font-size-sm, $weight: $font-weight-normal, $color: $color-light);
+
               transition: all 0.2s ease-in-out;
+
               &:hover {
                 cursor: pointer;
                 color: $primary-color;
@@ -146,11 +138,11 @@
 
   .footerBottom {
     display: flex;
-    justify-content: space-between;
     align-items: center;
+    justify-content: space-between;
+    width: 100%;
     border-top: 1px solid $color-light;
     padding-top: 15px;
-    width: 100%;
     max-width: $screen-xl;
 
     @include media-query($breakpoint-sm) {
@@ -159,11 +151,7 @@
     }
 
     .copyright {
-      @include font-style(
-        $size: $font-size-sm,
-        $weight: $font-weight-normal,
-        $color: $color-light
-      );
+      @include font-style($size: $font-size-sm, $weight: $font-weight-normal, $color: $color-light);
     }
 
     .paymentMethods {
@@ -177,12 +165,12 @@
 
       .paymentIcon {
         display: flex;
-        justify-content: center;
         align-items: center;
-        border-radius: 6px;
-        background-color: $color-white;
+        justify-content: center;
         width: 50px;
         height: 34px;
+        border-radius: 6px;
+        background-color: $color-white;
       }
     }
   }

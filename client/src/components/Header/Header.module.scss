@@ -4,14 +4,14 @@
 
 .header {
   display: flex;
-  width: 100%;
-  flex-direction: column;
   align-items: center;
+  position: fixed;
+  width: 100%;
+  transition: all 0.3s ease-in-out;
+  box-shadow: 0 2px 5px rgb(0 0 0 / 10%);
+  flex-direction: column;
   background-color: $color-white;
   z-index: $z-index-header;
-  position: fixed;
-  transition: all 0.3s ease-in-out;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 
   @include media-query($screen-md) {
     padding-bottom: 10px;
@@ -22,12 +22,12 @@
       padding-bottom: 0;
 
       .searchBar {
-        opacity: 0;
-        max-height: 0;
-        overflow: hidden;
         transition:
           opacity 0.2s ease-in-out,
           max-height 0.2s ease-in-out;
+        opacity: 0;
+        max-height: 0;
+        overflow: hidden;
       }
     }
 
@@ -83,13 +83,13 @@
     .button {
       display: flex;
       align-items: center;
-      gap: 8px;
-      font-family: system-ui;
-      font-size: 0.75rem;
-      font-weight: 400;
       color: $text-color;
-      cursor: pointer;
+      font-family: system-ui;
+      font-weight: 400;
+      font-size: 0.75rem;
       transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      gap: 8px;
+      cursor: pointer;
 
       &:hover {
         color: $primary-color;
@@ -104,85 +104,84 @@
       }
     }
   }
-}
 
-.container {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 8px 5px;
-  max-width: $screen-xl;
-  width: 100%;
-  margin: 0 auto;
-  gap: $gap-md;
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-
-  @include media-query($screen-md) {
-    flex-wrap: wrap;
-    padding: 10px 15px 0;
-    gap: 11px;
-  }
-
-  .leftContainer {
+  .container {
     display: flex;
     align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    margin: 0 auto;
+    padding: 8px 5px;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    max-width: $screen-xl;
     gap: $gap-md;
 
-    // X
-
     @include media-query($screen-md) {
-      gap: $gap-sm;
-      justify-content: space-between;
-      width: 100%;
+      flex-wrap: wrap;
+      padding: 10px 15px 0;
+      gap: 11px;
     }
 
-    .mobileNav {
-      display: none;
+    .leftContainer {
+      display: flex;
+      align-items: center;
+      gap: $gap-md;
 
       @include media-query($screen-md) {
+        gap: $gap-sm;
+        justify-content: space-between;
+        width: 100%;
+      }
+
+      .mobileNav {
+        display: none;
+
+        @include media-query($screen-md) {
+          display: flex;
+        }
+      }
+
+      .leftContainerInner {
         display: flex;
       }
     }
 
-    .leftContainerInner {
+    .logo {
+      padding-right: 10px;
+      cursor: pointer;
+      transition: all 0.2s ease-in-out;
+      transform: scale(0.9);
+
+      @include media-query($screen-md) {
+        width: 200px;
+      }
+    }
+
+    .searchBar {
       display: flex;
+      transition:
+        opacity 0.2s ease-in-out,
+        max-height 0.2s ease-in-out;
+      opacity: 1;
+      max-height: 100px;
+      margin-right: auto;
     }
-  }
 
-  .logo {
-    padding-right: 10px;
-    cursor: pointer;
-    transition: all 0.2s ease-in-out;
-    transform: scale(0.9);
+    nav {
+      display: flex;
+      align-items: center;
+      gap: $gap-md;
+      margin-left: 20px;
 
-    @include media-query($screen-md) {
-      width: 200px;
-    }
-  }
+      @include hide-on-mobile($screen-md);
 
-  .searchBar {
-    opacity: 1;
-    max-height: 100px;
-    display: flex;
-    margin-right: auto;
-    transition:
-      opacity 0.2s ease-in-out,
-      max-height 0.2s ease-in-out;
-  }
+      @include media-query($screen-md) {
+        gap: 7px;
+        margin-left: 0;
 
-  nav {
-    display: flex;
-    align-items: center;
-    gap: $gap-md;
-    margin-left: 20px;
-    @include hide-on-mobile($screen-md);
-
-    @include media-query($screen-md) {
-      gap: 7px;
-      margin-left: 0;
-
-      img {
-        width: 25px;
+        img {
+          width: 25px;
+        }
       }
     }
   }

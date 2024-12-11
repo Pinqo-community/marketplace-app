@@ -5,11 +5,11 @@
 .testimonial {
   display: flex;
   justify-content: space-between;
-  flex-direction: column;
-  gap: 16px;
-  padding: 20px;
   width: 413px;
   height: 246px;
+  padding: 20px;
+  flex-direction: column;
+  gap: 16px;
   border-radius: $border-radius-md;
   background-color: $color-white;
 

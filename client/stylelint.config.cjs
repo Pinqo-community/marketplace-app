@@ -2,16 +2,21 @@ module.exports = {
   extends: ["stylelint-config-standard-scss"],
   plugins: ["stylelint-order"],
   rules: {
+    "selector-max-id": 1,
     "block-no-empty": true,
     "color-no-invalid-hex": true,
     "value-keyword-case": "lower",
     "unit-no-unknown": true,
-    "at-rule-no-unknown": null,
     "scss/at-rule-no-unknown": true,
     "scss/selector-no-redundant-nesting-selector": true,
-    "selector-max-id": 0,
     "comment-empty-line-before": "never",
     "scss/no-global-function-names": null,
+    "selector-class-pattern": null,
+    "no-descending-specificity": null,
+    "keyframes-name-pattern": null,
+    "selector-type-no-unknown": null,
+    "at-rule-no-unknown": null,
+    "selector-pseudo-class-no-unknown": null,
     "order/properties-order": [
       {
         properties: [

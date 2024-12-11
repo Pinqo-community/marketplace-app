@@ -13,11 +13,7 @@
     gap: $gap-sm;
 
     .name {
-      @include font-style(
-        $size: $font-size-xl,
-        $weight: $font-weight-bold,
-        $line-height: 32px
-      );
+      @include font-style($size: $font-size-xl, $weight: $font-weight-bold, $line-height: 32px);
     }
 
     .profilePhoto {
@@ -29,8 +25,8 @@
 
   .producerStatus {
     display: flex;
-    justify-content: center;
     align-items: center;
+    justify-content: center;
     gap: 8px;
     margin-left: 19px;
     max-width: 140px;
@@ -39,6 +35,7 @@
       .dot {
         background-color: $success-color;
       }
+
       .statusText {
         color: $success-color;
       }
@@ -48,6 +45,7 @@
       .dot {
         background-color: $error-color;
       }
+
       .statusText {
         color: $error-color;
       }
@@ -61,11 +59,7 @@
     }
 
     .statusText {
-      @include font-style(
-        $size: $font-size-md,
-        $weight: $font-weight-normal,
-        $line-height: 16px
-      );
+      @include font-style($size: $font-size-md, $weight: $font-weight-normal, $line-height: 16px);
     }
   }
 }

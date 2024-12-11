@@ -9,10 +9,10 @@
   $line-height: 1.5
 ) {
   color: $color;
+  font-family: $family;
   font-weight: $weight;
   font-size: $size;
   line-height: $line-height;
-  font-family: $family;
 }
 
 // Media Query
@@ -21,6 +21,7 @@
     @content;
   }
 }
+
 // Hide Elements Responsively
 @mixin hide-on-mobile($breakpoint: $breakpoint-xs) {
   @include media-query($breakpoint) {
@@ -39,16 +40,16 @@
 
 // Icon filters
 @mixin icon-dark-filter() {
-  filter: brightness(0) saturate(100%) invert(38%) sepia(100%) saturate(699%)
-    hue-rotate(113deg) brightness(105%) contrast(98%);
+  filter: brightness(0) saturate(100%) invert(38%) sepia(100%) saturate(699%) hue-rotate(113deg) brightness(105%)
+    contrast(98%);
 }
 
 @mixin icon-light-filter() {
-  filter: brightness(0) saturate(100%) invert(99%) sepia(4%) saturate(7%)
-    hue-rotate(205deg) brightness(115%) contrast(92%);
+  filter: brightness(0) saturate(100%) invert(99%) sepia(4%) saturate(7%) hue-rotate(205deg) brightness(115%)
+    contrast(92%);
 }
 
 @mixin icon-hover-filter() {
-  filter: brightness(0) saturate(100%) invert(38%) sepia(100%) saturate(699%)
-    hue-rotate(113deg) brightness(105%) contrast(98%);
+  filter: brightness(0) saturate(100%) invert(38%) sepia(100%) saturate(699%) hue-rotate(113deg) brightness(105%)
+    contrast(98%);
 }

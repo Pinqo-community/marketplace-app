@@ -4,13 +4,13 @@
 
 .productCard {
   display: flex;
+  padding: 20px;
+  border: 1.5px solid rgb(240 240 240);
+  box-shadow: 0 4px 4px 0 rgb(0 0 0 / 10%);
   flex-direction: column;
   gap: $gap-sm;
   cursor: pointer;
-  box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.1);
-  border: 1.5px solid rgb(240, 240, 240);
   border-radius: $border-radius-md;
-  padding: 20px;
 
   .imageContainer {
     border-radius: $border-radius-md;
@@ -43,11 +43,7 @@
         gap: $gap-xs;
 
         .ratingValue {
-          @include font-style(
-            $size: $font-size-sm,
-            $weight: $font-weight-normal,
-            $color: $primary-color
-          );
+          @include font-style($size: $font-size-sm, $weight: $font-weight-normal, $color: $primary-color);
         }
       }
     }
@@ -55,26 +51,18 @@
     .prices {
       display: flex;
       gap: $gap-xs;
-      @include font-style(
-        $size: $font-size-base,
-        $weight: $font-weight-semibold
-      );
+
+      @include font-style($size: $font-size-base, $weight: $font-weight-semibold);
+
       .originalPrice {
         text-decoration: line-through;
-        @include font-style(
-          $size: $font-size-base,
-          $weight: $font-weight-medium,
-          $color: #c9c9c9
-        );
+
+        @include font-style($size: $font-size-base, $weight: $font-weight-medium, $color: #c9c9c9);
       }
     }
 
     .stock {
-      @include font-style(
-        $size: $font-size-xs,
-        $weight: $font-weight-normal,
-        $color: $primary-color
-      );
+      @include font-style($size: $font-size-xs, $weight: $font-weight-normal, $color: $primary-color);
     }
 
     .low {
@@ -83,8 +71,8 @@
 
     .actions {
       display: flex;
-      justify-content: space-between;
       align-items: center;
+      justify-content: space-between;
 
       .quantity {
         display: flex;
@@ -92,16 +80,14 @@
 
         .quantityBtn {
           display: flex;
-          justify-content: center;
           align-items: center;
-          @include font-style(
-            $size: $font-size-base,
-            $weight: $font-weight-semibold
-          );
+          justify-content: center;
+          width: 27px;
+          border: 1px solid $border-color;
           transition: background-color 0.3s ease;
           cursor: pointer;
-          border: 1px solid $border-color;
-          width: 27px;
+
+          @include font-style($size: $font-size-base, $weight: $font-weight-semibold);
 
           &:first-child {
             border-radius: $border-radius-sm 0 0 $border-radius-sm;
@@ -130,10 +116,10 @@
       }
 
       .addToCart {
+        padding: 8px;
         transition: background-color 0.3s ease;
         border-radius: 100px;
         background-color: #eee;
-        padding: 8px;
 
         &:hover {
           background-color: $primary-color;
