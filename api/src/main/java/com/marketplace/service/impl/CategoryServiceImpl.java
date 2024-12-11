@@ -1,7 +1,6 @@
 package com.marketplace.service.impl;
 
 import com.marketplace.dto.category.CategoryCreateDto;
-import com.marketplace.dto.category.CategoryResponseDto;
 import com.marketplace.dto.category.CategoryUpdateDto;
 import com.marketplace.entity.Category;
 import com.marketplace.exception.AlreadyExistsException;
@@ -31,6 +30,7 @@ public class CategoryServiceImpl implements CategoryService {
         if (categoryRepository.existsByName(categoryCreateDto.name())) {
                 throw new AlreadyExistsException("Il existe déja une catégorie avec ce nom : " + categoryCreateDto.name());
         }
+
         Category category = Category.builder()
                 .name(categoryCreateDto.name())
                 .build();
@@ -52,6 +52,7 @@ public class CategoryServiceImpl implements CategoryService {
     public void deleteById(Long id) {
         categoryRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Il n'existe pas de catégorie avec cet ID : " + id));
+
         categoryRepository.deleteById(id);
     }
 }

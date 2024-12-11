@@ -24,7 +24,7 @@ public class CustomAccessDeniedHandler implements AccessDeniedHandler {
                 HttpServletResponse.SC_FORBIDDEN,
                 LocalDateTime.now(),
                 "Access denied : You don't have the required permissions for this action",
-                request.getRequestURI(),
+                request.getAttribute("originalUrl") != null ? (String) request.getAttribute("originalUrl") : request.getRequestURI(),
                 null
         );
 
