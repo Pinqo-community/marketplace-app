@@ -1,5 +1,5 @@
+import { CategoryCardProps } from "@/types/Category";
 import { motion } from "framer-motion";
-import { CategoryCardProps } from "../../types/Category";
 import styles from "./CategoryCard.module.scss";
 
 const CategoryCard: React.FC<CategoryCardProps> = ({ title, image }) => {

@@ -1,6 +1,6 @@
-@use "../../scss/global";
-@use "../../scss/variables" as *;
-@use "../../scss/mixins" as *;
+@use "@/scss/global";
+@use "@/scss/variables" as *;
+@use "@/scss/mixins" as *;
 
 .productCard {
   display: flex;

@@ -1,8 +1,12 @@
 import { buttonVariants } from "@/animations/animations";
 import arrowSlider from "@/assets/icons/arrow-slider.svg";
+import {
+  MenuButtonProps,
+  PrimaryButtonProps,
+  SliderButtonProps,
+} from "@/types/Button";
 import { motion } from "framer-motion";
 import { ShoppingCart, User } from "lucide-react";
-import { MenuButtonProps, PrimaryButtonProps, SliderButtonProps } from "../../types/Button";
 import styles from "./Buttons.module.scss";
 
 /* -------------------------------------------------------------------------- */

@@ -1,12 +1,12 @@
-import facebook from "../../assets/icons/facebook.svg";
-import instagram from "../../assets/icons/instagram.svg";
-import linkedin from "../../assets/icons/linkedin.svg";
-import maestro from "../../assets/icons/maestro.svg";
-import mastercard from "../../assets/icons/mastercard.svg";
-import paypal from "../../assets/icons/paypal.svg";
-import visa from "../../assets/icons/visa.svg";
-import x from "../../assets/icons/x.svg";
-import logo from "../../assets/images/logo-light.svg";
+import facebook from "@/assets/icons/facebook.svg";
+import instagram from "@/assets/icons/instagram.svg";
+import linkedin from "@/assets/icons/linkedin.svg";
+import maestro from "@/assets/icons/maestro.svg";
+import mastercard from "@/assets/icons/mastercard.svg";
+import paypal from "@/assets/icons/paypal.svg";
+import visa from "@/assets/icons/visa.svg";
+import x from "@/assets/icons/x.svg";
+import logo from "@/assets/images/logo-light.svg";
 import styles from "./Footer.module.scss";
 
 const Footer: React.FC = () => {

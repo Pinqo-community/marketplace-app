@@ -1,6 +1,6 @@
+import { BuyerProducerCardProps } from "@/types/Card";
 import { motion, useInView } from "framer-motion";
 import { useRef } from "react";
-import { BuyerProducerCardProps } from "../../types/Card";
 import { PrimaryButton } from "../Button/Buttons";
 import styles from "./BuyerProducer.module.scss";
 

@@ -3,6 +3,7 @@ import { useGetCategoriesQuery } from "@/api/categoriesApi";
 import { useGetProductsQuery } from "@/api/productsApi";
 import { useGetTestimonialsQuery } from "@/api/testimonialsApi";
 import arrowIcon from "@/assets/icons/arrow.svg";
+import BuyerProducer from "@/components/BuyerProducer/BuyerProducer";
 import CategoryCard from "@/components/CategoryCard/CategoryCard";
 import Hero from "@/components/Hero/Hero";
 import Map from "@/components/Map/Map";
@@ -13,7 +14,6 @@ import MainLayout from "@/layouts/MainLayout";
 import { motion } from "framer-motion";
 import "swiper/css";
 import "swiper/css/pagination";
-import BuyerProducer from "../../components/BuyerProducer/BuyerProducer";
 import styles from "./HomePage.module.scss";
 
 const HomePage: React.FC = () => {
@@ -110,7 +110,6 @@ const HomePage: React.FC = () => {
       <section className={styles.buyerProducer}>
         <BuyerProducer />
       </section>
-
 
       <section
         className={styles.localProducers}

@@ -1,5 +1,5 @@
+import tomate from "@/assets/images/tomate.png";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import tomate from "../assets/images/tomate.png";
 
 const products = [
   {

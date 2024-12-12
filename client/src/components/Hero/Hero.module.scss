@@ -1,6 +1,6 @@
-@use "../../scss/global" as *;
-@use "../../scss/variables" as *;
-@use "../../scss/mixins" as *;
+@use "@/scss/global";
+@use "@/scss/variables" as *;
+@use "@/scss/mixins" as *;
 
 .hero {
   display: flex;
@@ -18,7 +18,7 @@
     position: absolute;
     inset: 0 -5px;
     content: "";
-    background-image: url("../../assets/images/hero-banner.png");
+    background-image: url("@/assets/images/hero-banner.png");
     background-size: cover;
     background-position: center;
     z-index: 1;
