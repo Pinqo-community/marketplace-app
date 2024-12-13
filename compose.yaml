@@ -49,7 +49,7 @@ services:
     image: postgres:15
     container_name: marketplace-database
     ports:
-      - "5433:5432"
+      - "15433:5432"
     environment:
       POSTGRES_DB: ${DB_NAME}
       POSTGRES_USER: ${DB_USER}
