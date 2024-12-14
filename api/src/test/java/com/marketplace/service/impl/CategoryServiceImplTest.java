@@ -91,7 +91,7 @@ class CategoryServiceImplTest {
 
             Category resultRequest = mock(Category.class);
 
-            when(categoryRepository.existsByName(any())).thenReturn(false);
+            when(categoryRepository.existsByNameIgnoreCase(any())).thenReturn(false);
             when(categoryRepository.save(any())).thenReturn(resultRequest);
 
             // When
@@ -109,7 +109,7 @@ class CategoryServiceImplTest {
                     "Name category"
             );
 
-            when(categoryRepository.existsByName(any())).thenReturn(true);
+            when(categoryRepository.existsByNameIgnoreCase(any())).thenReturn(true);
 
             // When
             AlreadyExistsException result = assertThrows(AlreadyExistsException.class, () -> categoryService.create(request));
