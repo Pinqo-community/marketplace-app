@@ -45,10 +45,3 @@ app:
       secret-key: ${JWT_SECRET}
       access-token-expiration: 900000 #15mins
       refresh-token-expiration: 86400000 #1day
-
-springdoc:
-  api-docs:
-    default-property-example: false
-    default-response-example: false
-  model-converters:
-    enabled: false
