@@ -6,6 +6,8 @@ WORKDIR /app
 COPY gradle gradle
 COPY --chmod=0750 gradlew ./
 COPY build.gradle settings.gradle ./
+COPY jacoco.gradle ./
+
 
 RUN chmod +x gradlew
 

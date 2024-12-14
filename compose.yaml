@@ -20,8 +20,11 @@ services:
       - "8080:8080"
     container_name: marketplace-backend
     volumes:
-      - ./api:/app:rw,cached
-      - gradle-cache-backend:/home/gradle/.gradle:rw
+      - ./api:/app:rw,cached, rshared
+      - type: bind
+        source: ./api/gradlew
+        target: /app/gradlew
+        read_only: false
     depends_on:
       - db
     networks:

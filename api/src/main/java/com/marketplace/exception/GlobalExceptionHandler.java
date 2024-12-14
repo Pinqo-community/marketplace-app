@@ -34,12 +34,22 @@ public class GlobalExceptionHandler {
         );
     }
 
-    @ExceptionHandler(NotFoundException.class)
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ResponseEntity<ExceptionResponse> handleNotFoundException(NotFoundException ex, WebRequest request) {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+    @ExceptionHandler(UserAlreadyExistsException.class)
+    public ResponseEntity<ExceptionResponse> handleUserAlreadyExists(UserAlreadyExistsException ex, WebRequest request) {
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(
                 new ExceptionResponse(
-                        HttpStatus.NOT_FOUND.value(),
+                        HttpStatus.CONFLICT.value(),
+                        ex.getMessage(),
+                        ((ServletWebRequest) request).getRequest().getRequestURI()
+                )
+        );
+    }
+
+    @ExceptionHandler({WrongCredentialException.class, InvalidTokenException.class})
+    public ResponseEntity<ExceptionResponse> handleWrongCredentialException(Exception ex, WebRequest request) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(
+                new ExceptionResponse(
+                        HttpStatus.UNAUTHORIZED.value(),
                         ex.getMessage(),
                         ((ServletWebRequest) request).getRequest().getRequestURI()
                 )
