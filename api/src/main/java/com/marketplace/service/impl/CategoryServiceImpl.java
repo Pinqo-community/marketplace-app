@@ -27,7 +27,7 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     public Category create(CategoryCreateDto categoryCreateDto) {
-        if (categoryRepository.existsByName(categoryCreateDto.name())) {
+        if (categoryRepository.existsByNameIgnoreCase(categoryCreateDto.name())) {
                 throw new AlreadyExistsException("Il existe déja une catégorie avec ce nom : " + categoryCreateDto.name());
         }
 
