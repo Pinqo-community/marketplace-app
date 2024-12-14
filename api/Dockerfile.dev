@@ -1,5 +1,6 @@
-
-FROM gradle:8.5-jdk21 AS builder
+FROM gradle:8.5-jdk21
+COPY build.gradle settings.gradle .
+RUN gradle build --no-daemon || return 0
 
 WORKDIR /app
 
