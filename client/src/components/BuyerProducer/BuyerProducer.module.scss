@@ -1,40 +1,39 @@
 @use "@/scss/global";
-@use "@/scss/variables" as *;
 @use "@/scss/mixins" as *;
+@use "@/scss/variables" as *;
 @use "@/scss/shared" as *;
 
 .container {
   display: flex;
   position: relative;
   width: 100%;
-  padding: 30px;
-  background: $secondary-color;
-  color: $text-color;
-  border-radius: $border-radius-md;
+  padding: space(lg);
+  background: color(primary, light);
+  border-radius: radius(md);
   min-height: 411px;
   overflow: hidden;
 
-  @include media-query($breakpoint-sm) {
+  @include media-under(sm) {
     min-height: 100%;
   }
 
-  @include media-query($breakpoint-xs) {
+  @include media-under(xs) {
     width: 100%;
-    padding: 20px;
+    padding: space(md);
   }
 
   // Styles pour la version "producer"
   &.producer {
-    background: $text-color;
-    color: $color-white;
+    background: color(neutral, text);
+    color: color(neutral, white);
 
     .content {
       .description {
-        @include responsive-width(346px, $breakpoint-sm);
+        @include responsive-width(346px, sm);
       }
 
       button {
-        @include responsive-width(223px, $breakpoint-sm);
+        @include responsive-width(223px, sm);
       }
     }
   }
@@ -44,7 +43,7 @@
     bottom: 0;
     left: 45%;
 
-    @include media-query($breakpoint-sm) {
+    @include media-under(sm) {
       bottom: -50px;
       opacity: 0.5 !important;
     }
@@ -53,9 +52,8 @@
   .content {
     display: grid;
     position: relative;
-    z-index: 2;
 
-    @include media-query($breakpoint-sm) {
+    @include media-under(sm) {
       backdrop-filter: blur(1px);
     }
 
@@ -65,10 +63,10 @@
       line-height: 40px;
       flex-direction: column;
 
-      @include responsive-width(350px, $breakpoint-sm);
+      @include responsive-width(350px, sm);
 
-      @include media-query($breakpoint-sm) {
-        font-size: $font-size-xl;
+      @include media-under(sm) {
+        font-size: font-size(xl);
         line-height: 30px;
       }
     }
@@ -80,20 +78,20 @@
     }
 
     .description {
-      @include font-style($size: $font-size-sm, $weight: $font-weight-normal);
-
       color: inherit;
+      font-weight: font-weight(normal);
+      font-size: font-size(sm);
 
-      @include responsive-width(288px, $breakpoint-sm);
+      @include responsive-width(288px, sm);
     }
 
     button {
       padding: 12px 48px;
 
-      @include responsive-width(208px, $breakpoint-sm);
+      @include responsive-width(208px, sm);
 
-      @include media-query($breakpoint-sm) {
-        margin-top: 20px;
+      @include media-under(sm) {
+        margin-top: space(md);
       }
     }
   }

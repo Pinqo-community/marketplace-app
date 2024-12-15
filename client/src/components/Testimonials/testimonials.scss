@@ -4,7 +4,7 @@
 @use "@/scss/shared" as *;
 
 .testimonials {
-  @include media-query($screen-xs) {
+  @include media-under(xs) {
     :nth-child(1) {
       text-align: center;
 
@@ -15,6 +15,6 @@
   }
 
   .swiper {
-    padding-bottom: 50px !important;
+    padding-bottom: space(xl) !important;
   }
 }

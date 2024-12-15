@@ -12,28 +12,31 @@
       width: 400px;
       padding: 0.5rem 1rem;
       border: none;
-      border: 1px solid $border-color;
-      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-      border-radius: $border-radius-md;
+      border: 1px solid color(neutral, border);
+      transition: all transition(fast) ease-in-out;
+      border-radius: radius(md);
 
-      @include font-style($size: $font-size-md, $weight: $font-weight-medium);
+      @include font-style($size: font-size(md), $weight: font-weight(medium));
 
       &::placeholder {
-        @include font-style($size: $font-size-sm, $weight: $font-weight-normal, $color: $placeholder-color);
+        @include font-style(
+          $size: font-size(sm),
+          $weight: font-weight(normal),
+          $color: color(neutral, placeholder-color)
+        );
       }
 
       &:focus {
-        outline: 2px solid $primary-color;
+        outline: 2px solid color(primary, base);
         width: 450px;
       }
 
-      @include media-query($breakpoint-md) {
-        background-color: #fff;
-        border-radius: $border-radius-md;
-        outline: 1px solid $border-color;
+      @include media-under(md) {
+        background-color: color(neutral, white);
+        border-radius: radius(md);
+        outline: 1px solid color(neutral, border);
         width: 94vw;
         max-width: none;
-        padding: 10px 20px;
 
         &:focus {
           width: 94vw;
@@ -46,25 +49,27 @@
       top: 50%;
       right: 0;
       padding: 11px 15px 11px 14px;
-      transition: all 0.2s ease;
+      transition: all transition(fast) ease-in-out;
       transform: translateY(-50%);
-      background-color: $primary-color;
-      border-radius: 0 $border-radius-md $border-radius-md 0;
+      background-color: color(primary, base);
+      border-radius: 0 radius(md) radius(md) 0;
 
       .icon {
-        color: $color-white;
-        transition: all 0.2s ease;
+        color: color(neutral, white);
+        transition: all transition(fast);
       }
 
       &:hover {
-        background-color: #049b52;
+        background-color: color(primary, dark);
 
         .icon {
           transform: scale(1.2);
         }
       }
 
-      @include hide-on-mobile($screen-md);
+      @include media-under(md) {
+        display: none;
+      }
     }
   }
 }

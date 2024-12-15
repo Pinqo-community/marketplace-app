@@ -9,8 +9,9 @@ mapcontainer {
 .map {
   width: 100%;
   height: 691px;
+  border-radius: radius(md);
 
-  @include media-query($breakpoint-sm) {
+  @include media-under(sm) {
     height: 600px;
   }
 }
@@ -22,16 +23,16 @@ mapcontainer {
 
 :global(.leaflet-popup-content) {
   margin: 0;
-  padding: 12px;
+  padding: space(sm);
   min-width: 270px;
 }
 
 :global(.leaflet-touch) :global(.leaflet-control-layers),
 :global(.leaflet-touch) :global(.leaflet-bar) {
-  margin: 20px 0 0 20px;
+  margin: space(sm) 0 0 space(sm);
   border: none;
-  box-shadow: 0 0 15px rgb(0 0 0 / 27%);
-  border-radius: 8px;
+  box-shadow: shadow(light);
+  border-radius: radius(md);
 }
 
 :global(.leaflet-touch) :global(.leaflet-bar) a {
@@ -42,11 +43,11 @@ mapcontainer {
   height: 35px;
   background: #ffffffad;
   line-height: 30px;
-  transition: all 0.2s ease-in-out;
+  transition: all transition(fast) ease-in-out;
   backdrop-filter: blur(10px);
 
   &:hover {
-    background: $color-white;
+    background: color(neutral, white);
   }
 }
 

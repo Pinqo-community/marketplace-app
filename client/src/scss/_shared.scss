@@ -10,10 +10,9 @@
   cursor: pointer;
 
   .moreInfoText {
-    color: $primary-color;
-    font-family: Inter, sans-serif;
-    font-weight: 400;
-    font-size: 14px;
+    color: color(primary, base);
+    font-weight: font-weight(normal);
+    font-size: font-size(sm);
   }
 
   &:hover {

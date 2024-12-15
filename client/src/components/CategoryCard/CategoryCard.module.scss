@@ -6,19 +6,19 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  margin: 10px 0 20px;
-  padding: 10px;
+  margin: space(sm) 0 space(md);
+  padding: space(sm);
   flex-direction: column;
-  gap: $gap-sm;
+  gap: space(sm);
   cursor: pointer;
-  background-color: #f2f2f2;
-  border-radius: $border-radius-md;
+  background-color: color(secondary, light);
+  border-radius: radius(md);
 
   .image {
-    aspect-ratio: 1/1;
+    aspect-ratio: 1 / 1;
     width: fit-content;
     object-fit: cover;
-    border-radius: $border-radius-md;
+    border-radius: radius(md);
   }
 
   .title {

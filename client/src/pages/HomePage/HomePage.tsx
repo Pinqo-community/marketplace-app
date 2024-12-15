@@ -89,26 +89,50 @@ const HomePage: React.FC = () => {
           </motion.div>
         </div>
       </section>
-      <section className={styles.categorySection}>
-        <Slider
-          title="Catégories"
-          items={categories || []}
-          renderItem={(category) => (
-            <CategoryCard title={category.name} image={category.image} />
-          )}
-          slidesPerViewDefault={6}
-          breakpoints={{
-            320: { slidesPerView: 1 },
-            420: { slidesPerView: 2 },
-            580: { slidesPerView: 3 },
-            768: { slidesPerView: 4 },
-            1024: { slidesPerView: 5 },
-            1440: { slidesPerView: 6 },
-          }}
-        />
-      </section>
+      <Slider
+        title="Catégories"
+        items={categories || []}
+        renderItem={(category) => (
+          <CategoryCard title={category.name} image={category.image} />
+        )}
+        slidesPerViewDefault={6}
+        breakpoints={{
+          320: { slidesPerView: 1 },
+          420: { slidesPerView: 2 },
+          580: { slidesPerView: 3 },
+          768: { slidesPerView: 4 },
+          1024: { slidesPerView: 5 },
+          1440: { slidesPerView: 6 },
+        }}
+      />
       <section className={styles.buyerProducer}>
         <BuyerProducer />
+      </section>
+
+      <section
+        className={styles.popularProducts}
+        aria-labelledby="popular-products-title"
+      >
+        <div className={styles.sectionContainer}>
+          <div className={styles.titleContainer}>
+            <h2 className={styles.title}>Les bonnes affaires</h2>
+            <div className={styles.moreInfo}>
+              <div className={styles.moreInfoText}>Voir tout</div>
+              <img src={arrowIcon} alt="arrow" />
+            </div>
+          </div>
+
+          <motion.div
+            initial="hidden"
+            animate="visible"
+            variants={listVariants}
+            className={styles.productsGrid}
+          >
+            {products?.map((product) => (
+              <ProductCard key={product.id} product={product} />
+            ))}
+          </motion.div>
+        </div>
       </section>
 
       <section

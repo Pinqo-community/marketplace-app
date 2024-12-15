@@ -2,20 +2,21 @@
 @use "@/scss/variables" as *;
 @use "@/scss/mixins" as *;
 @use "@/scss/shared" as *;
+@use "sass:map";
 
 section {
   margin: 0 auto;
-  padding: 40px 20px;
-  max-width: $screen-xl;
+  padding: space(xl) space(md);
+  max-width: map.get($breakpoints, xl);
 
   .sectionContainer {
     .titleContainer {
       display: flex;
       justify-content: space-between;
-      margin-bottom: 40px;
+      margin-bottom: space(xl);
 
       .title {
-        @include media-query($breakpoint-xs) {
+        @include media-under(xs) {
           font-size: 30px;
         }
       }
@@ -31,9 +32,9 @@ section {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
     justify-items: center;
-    gap: $gap-lg;
+    gap: space(lg);
 
-    @include media-query($breakpoint-md) {
+    @include media-under(md) {
       justify-content: center;
     }
   }
@@ -46,9 +47,9 @@ section {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: $gap-md;
+  gap: space(md);
 
-  @include media-query($breakpoint-lg) {
+  @include media-under(lg) {
     flex-direction: column;
   }
 }
@@ -58,7 +59,7 @@ section {
 
 .mapContainer {
   position: relative;
-  border-radius: $border-radius-md;
+  border-radius: radius(md);
   width: 100%;
   height: 691px;
   overflow: hidden;
@@ -76,7 +77,7 @@ section {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 30px;
+  margin-bottom: space(lg);
 }
 
 :global {
@@ -92,19 +93,19 @@ section {
 }
 
 * {
-  --swiper-pagination-color: #{$primary-color};
+  --swiper-pagination-color: #{color(primary, base)};
   --swiper-pagination-bullet-inactive-color: #569d41;
 }
 
 :global(.swiper-pagination-bullet-active) {
   width: 16px !important;
-  border-radius: $border-radius-md !important;
+  border-radius: radius(md) !important;
 }
 /* -------------------------------------------------------------------------- */
 /*                            Testimonials Section                            */
 /* -------------------------------------------------------------------------- */
 
 .testimonials {
-  background-color: $section-secondary;
-  margin-top: 40px;
+  background-color: color(secondary, light);
+  margin-top: space(xl);
 }

@@ -1,12 +1,13 @@
 @use "variables" as *;
+@use "sass:map";
 
 // Font style mixin
 @mixin font-style(
-  $family: $font-family,
-  $size: $font-size-md,
+  $family: font-family(primary),
+  $size: font-size(md),
   $weight: normal,
-  $color: $text-color,
-  $line-height: 1.5
+  $color: color(neutral, text),
+  $line-height: line-height(normal)
 ) {
   color: $color;
   font-family: $family;
@@ -15,16 +16,9 @@
   line-height: $line-height;
 }
 
-// Media Query
-@mixin media-query($breakpoint) {
-  @media (max-width: $breakpoint) {
-    @content;
-  }
-}
-
 // Hide Elements Responsively
-@mixin hide-on-mobile($breakpoint: $breakpoint-xs) {
-  @include media-query($breakpoint) {
+@mixin hide-on-mobile($breakpoint: xs) {
+  @include media-under($breakpoint) {
     display: none;
   }
 }
@@ -33,7 +27,7 @@
 @mixin responsive-width($width, $breakpoint) {
   width: $width;
 
-  @include media-query($breakpoint) {
+  @include media-under($breakpoint) {
     width: 100%;
   }
 }

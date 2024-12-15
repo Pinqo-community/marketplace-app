@@ -8,11 +8,11 @@
   justify-content: center;
   position: relative;
   height: 100vh;
-  color: $color-white;
+  color: color(neutral, white);
   overflow: hidden;
   flex-direction: column;
   max-width: none;
-  margin-bottom: 40px;
+  margin-bottom: space(xl);
 
   &::before {
     position: absolute;
@@ -21,7 +21,7 @@
     background-image: url("@/assets/images/hero-banner.png");
     background-size: cover;
     background-position: center;
-    z-index: 1;
+    z-index: z(modal);
   }
 
   .container {
@@ -31,28 +31,22 @@
     .content {
       display: flex;
       position: relative;
-      z-index: 2;
+      z-index: z(modal);
       flex-direction: column;
-      gap: $gap-lg;
+      gap: space(lg);
 
       h1 {
         display: flex;
         flex-direction: column;
       }
 
-      @include media-query($breakpoint-sm) {
+      @include media-under(sm) {
         align-items: center;
         text-align: center;
 
         h1 {
-          font-size: 38px;
+          font-size: font-size(xxl);
           line-height: normal;
-        }
-      }
-
-      @include media-query($breakpoint-xs) {
-        h1 {
-          font-size: 32px;
         }
       }
     }
@@ -76,5 +70,5 @@
   left: 0;
   width: 65rem;
   animation: blurAnimation 3s ease-in-out forwards;
-  z-index: 1;
+  z-index: z(modal);
 }

@@ -1,6 +1,7 @@
 @use "@/scss/global";
 @use "@/scss/variables" as *;
 @use "@/scss/mixins" as *;
+@use "sass:map";
 
 .header {
   display: flex;
@@ -8,23 +9,23 @@
   position: fixed;
   width: 100%;
   transition: all 0.3s ease-in-out;
-  box-shadow: 0 2px 5px rgb(0 0 0 / 10%);
+  box-shadow: shadow(light);
   flex-direction: column;
-  background-color: $color-white;
-  z-index: $z-index-header;
+  background-color: color(neutral, white);
+  z-index: z(header);
 
-  @include media-query($screen-md) {
-    padding-bottom: 10px;
+  @include media-under(md) {
+    padding-bottom: space(sm);
   }
 
   &.compactMode {
-    @include media-query($screen-md) {
+    @include media-under(md) {
       padding-bottom: 0;
 
       .searchBar {
         transition:
-          opacity 0.2s ease-in-out,
-          max-height 0.2s ease-in-out;
+          opacity transition(fast) ease-in-out,
+          max-height transition(fast) ease-in-out;
         opacity: 0;
         max-height: 0;
         overflow: hidden;
@@ -32,10 +33,10 @@
     }
 
     .container {
-      padding: 5px 16px;
+      padding: space(xs) 15px;
 
-      @include media-query($screen-md) {
-        gap: 0;
+      @include media-under(md) {
+        gap: space(xs);
       }
     }
   }
@@ -43,25 +44,25 @@
   .topBanner {
     display: flex;
     justify-content: space-between;
-    gap: $gap-xl;
+    gap: space(xl);
     width: 100%;
-    padding: 6px 20px;
+    padding: space(xs) space(md);
     background: linear-gradient(to right, #f0fdf4, #dcfce7);
 
-    @include media-query($screen-xs) {
+    @include media-under(xs) {
       gap: 0;
-      padding: 6px;
+      padding: space(xs);
     }
 
     .separator {
       width: 1px;
       height: 1rem;
-      background-color: $separator-color;
+      background-color: color(neutral, separator-color);
 
       &.separatorMobileOnly {
         display: none;
 
-        @include media-query($screen-xs) {
+        @include media-under(xs) {
           display: block;
         }
       }
@@ -71,9 +72,9 @@
     .rightContainer {
       display: flex;
       align-items: center;
-      gap: $gap-md;
+      gap: space(md);
 
-      @include media-query($screen-xs) {
+      @include media-under(xs) {
         gap: 0;
         justify-content: space-evenly;
         width: 100%;
@@ -83,24 +84,24 @@
     .button {
       display: flex;
       align-items: center;
-      color: $text-color;
+      color: color(neutral, text);
       font-family: system-ui;
-      font-weight: 400;
-      font-size: 0.75rem;
-      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-      gap: 8px;
+      font-weight: font-weight(normal);
+      font-size: font-size(xs);
+      transition: all transition(fast) cubic-bezier(0.4, 0, 0.2, 1);
+      gap: space(xs);
       cursor: pointer;
 
       &:hover {
-        color: $primary-color;
+        color: color(primary, base);
       }
 
       .icon {
-        color: $primary-color;
+        color: color(primary, base);
       }
 
-      @include media-query($screen-xs) {
-        gap: $gap-xs;
+      @include media-under(xs) {
+        gap: space(xs);
       }
     }
   }
@@ -111,24 +112,24 @@
     justify-content: space-between;
     width: 100%;
     margin: 0 auto;
-    padding: 8px 5px;
-    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-    max-width: $screen-xl;
-    gap: $gap-md;
+    padding: 8px space(xs);
+    transition: all transition(fast) cubic-bezier(0.4, 0, 0.2, 1);
+    max-width: map.get($breakpoints, xl);
+    gap: space(md);
 
-    @include media-query($screen-md) {
+    @include media-under(md) {
       flex-wrap: wrap;
-      padding: 10px 15px 0;
-      gap: 11px;
+      padding: space(sm) 15px 0;
+      gap: space(sm);
     }
 
     .leftContainer {
       display: flex;
       align-items: center;
-      gap: $gap-md;
+      gap: space(md);
 
-      @include media-query($screen-md) {
-        gap: $gap-sm;
+      @include media-under(md) {
+        gap: space(sm);
         justify-content: space-between;
         width: 100%;
       }
@@ -136,7 +137,7 @@
       .mobileNav {
         display: none;
 
-        @include media-query($screen-md) {
+        @include media-under(md) {
           display: flex;
         }
       }
@@ -147,12 +148,12 @@
     }
 
     .logo {
-      padding-right: 10px;
+      padding-right: space(xs);
       cursor: pointer;
-      transition: all 0.2s ease-in-out;
+      transition: all transition(fast) ease-in-out;
       transform: scale(0.9);
 
-      @include media-query($screen-md) {
+      @include media-under(md) {
         width: 200px;
       }
     }
@@ -160,8 +161,8 @@
     .searchBar {
       display: flex;
       transition:
-        opacity 0.2s ease-in-out,
-        max-height 0.2s ease-in-out;
+        opacity transition(fast) ease-in-out,
+        max-height transition(fast) ease-in-out;
       opacity: 1;
       max-height: 100px;
       margin-right: auto;
@@ -170,13 +171,13 @@
     nav {
       display: flex;
       align-items: center;
-      gap: $gap-md;
-      margin-left: 20px;
+      gap: space(md);
+      margin-left: space(lg);
 
-      @include hide-on-mobile($screen-md);
+      @include hide-on-mobile(md);
 
-      @include media-query($screen-md) {
-        gap: 7px;
+      @include media-under(md) {
+        gap: space(sm);
         margin-left: 0;
 
         img {
