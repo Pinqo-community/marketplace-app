@@ -1,4 +1,5 @@
 import L from "leaflet";
+import "leaflet.markercluster";
 import { useEffect } from "react";
 import { useMap } from "react-leaflet";
 import arrowIcon from "../../assets/icons/arrow.svg";
@@ -26,8 +27,8 @@ const ClusterMarkers = ({ producers }: { producers: Producer[] }) => {
               <h3 class="${styles.name}">${producer.name}</h3>
             </div>
            <div class="${styles.producerStatus} ${
-        producer.isOpen ? styles.open : styles.closed
-      }">
+             producer.isOpen ? styles.open : styles.closed
+           }">
             <div class="${styles.dot}"></div>
             <div class="${styles.statusText}">
               ${producer.isOpen ? "Disponible" : "Indisponible"}
