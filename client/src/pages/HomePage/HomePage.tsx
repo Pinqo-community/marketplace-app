@@ -136,10 +136,9 @@ const HomePage: React.FC = () => {
           slidesPerViewDefault={3}
           pagination={true}
           breakpoints={{
-            320: { slidesPerView: 1 },
-            768: { slidesPerView: 1 },
-            1024: { slidesPerView: 2 },
-            1440: { slidesPerView: 3 },
+            0: { slidesPerView: 1 },
+            768: { slidesPerView: 2 },
+            1200: { slidesPerView: 3 },
           }}
         />
       </div>
