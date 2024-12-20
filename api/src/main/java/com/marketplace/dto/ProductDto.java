@@ -1,6 +1,5 @@
 package com.marketplace.dto;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.marketplace.validation.OnCreate;
 import lombok.*;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
@@ -19,7 +18,7 @@ import java.math.BigDecimal;
 @Builder
 public class ProductDto {
 
-    @Null(groups = OnCreate.class)
+
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Long id;
     /**
@@ -73,23 +72,15 @@ public class ProductDto {
 
 
     /**
-     * Minimum quantity of product in stock.
+     * Maximum quantity of product by purchase.
      * Cannot be zero and must be greater than or equal to 1.
      */
-    @NotNull(message = "La quantité minimale ne peut pas être nulle")
-    @Min(value = 1, message = "La quantité minimale doit être supérieure ou égale à 1")
-    private Integer minQuantity;
-
-
-    /**
-     * Maximum quantity of product in stock.
-     * Cannot be zero and must be greater than or equal to 1.
-     */
-    @Max(value = 1000, message = "La quantité maximale ne peut pas être supérieure à 1000")
-    private Integer maxQuantity;
+    @NotNull(message = "La quantité maximale par achat ne peut pas être nulle")
+    @Min(value = 1, message = "La quantité maximale par achat doit être supérieure ou égale à 1")
+    private Integer maxQuantityByPurchase;
 
     /**
-     * Step quantity of product in stock.
+     * Step quantity of product.
      * Cannot be zero and must be greater than or equal to 1.
      */
     @NotNull(message = "Le palier de quantité ne peut pas être nul")

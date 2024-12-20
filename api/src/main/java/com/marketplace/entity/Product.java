@@ -34,10 +34,7 @@ public class Product{
     private Integer stockQuantity;
 
     @Column(columnDefinition = "INTEGER DEFAULT 1")
-    private Integer minQuantity;
-
-    @Column(columnDefinition = "INTEGER DEFAULT 100")
-    private Integer maxQuantity;
+    private Integer maxQuantityByPurchase;
 
     @Column(nullable = false, columnDefinition = "INTEGER DEFAULT 1")
     private Integer stepQuantity;

@@ -44,15 +44,15 @@ class ProductServiceImplTest {
         void createProduct_ValidProduct_SavesProduct() {
             // Arrange
             ProductDto productDto = new ProductDto();
-            productDto.setMinQuantity(1);
-            productDto.setMaxQuantity(5);
+            productDto.setStockQuantity(50);
+            productDto.setMaxQuantityByPurchase(5);
             Product savedProduct = Product.builder()
                     .id(1L)
-                    .minQuantity(1)
-                    .maxQuantity(5)
+                    .stockQuantity(50)
+                    .maxQuantityByPurchase(5)
                     .build();
 
-            when(productRepository.save(argThat(new ProductMatcher(1, 5)))).thenReturn(savedProduct);
+            when(productRepository.save(argThat(new ProductMatcher(50, 5)))).thenReturn(savedProduct);
 
             // Act
             ProductDto result = productService.createProduct(productDto);
@@ -60,48 +60,48 @@ class ProductServiceImplTest {
             // Assert
             assertNotNull(result);
             assertEquals(1L, result.getId());
-            verify(productRepository, times(1)).save(argThat(new ProductMatcher(1, 5)));
+            verify(productRepository, times(1)).save(argThat(new ProductMatcher(50, 5)));
         }
 
         /**
          * Custom ArgumentMatcher for Product.
          */
         static class ProductMatcher implements ArgumentMatcher<Product> {
-            private final Integer expectedMinQuantity;
-            private final Integer expectedMaxQuantity;
+            private final Integer expectedStockQuantity;
+            private final Integer expectedMaxQuantityByPurchase;
 
-            public ProductMatcher(Integer expectedMinQuantity, Integer expectedMaxQuantity) {
-                this.expectedMinQuantity = expectedMinQuantity;
-                this.expectedMaxQuantity = expectedMaxQuantity;
+            public ProductMatcher(Integer expectedSockQuantity, Integer expectedMaxQuantityByPurchase) {
+                this.expectedStockQuantity = expectedSockQuantity;
+                this.expectedMaxQuantityByPurchase = expectedMaxQuantityByPurchase;
             }
 
             @Override
             public boolean matches(Product product) {
                 return product != null &&
-                        product.getMinQuantity() != null &&
-                        product.getMaxQuantity() != null &&
-                        product.getMinQuantity().equals(expectedMinQuantity) &&
-                        product.getMaxQuantity().equals(expectedMaxQuantity);
+                        product.getStockQuantity() != null &&
+                        product.getMaxQuantityByPurchase() != null &&
+                        product.getStockQuantity().equals(expectedStockQuantity) &&
+                        product.getMaxQuantityByPurchase().equals(expectedMaxQuantityByPurchase);
             }
 
             @Override
             public String toString() {
-                return String.format("Product with minQuantity=%d and maxQuantity=%d", expectedMinQuantity, expectedMaxQuantity);
+                return String.format("Product with stockQuantity=%d and maxQuantityByPurchase=%d", expectedStockQuantity, expectedMaxQuantityByPurchase);
             }
         }
 
         @Test
-        @DisplayName("Should throwException when the minimum quantity is greater than the maximum quantity")
-        void createProduct_MinGreaterThanMax_ThrowsException() {
+        @DisplayName("Should throwException when the max quantity by purchase is greater than the stock quantity")
+        void createProduct_MaxGreaterThanStock_ThrowsException() {
             // Arrange
             ProductDto productDto = new ProductDto();
-            productDto.setMinQuantity(5);
-            productDto.setMaxQuantity(1);
+            productDto.setStockQuantity(50);
+            productDto.setMaxQuantityByPurchase(60);
 
             // Act & Assert
             IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
                     () -> productService.createProduct(productDto));
-            assertEquals("La quantité minimale doit être inférieure à la quantité maximale", exception.getMessage());
+            assertEquals("La quantité maximale par achat doit être supérieure à 0 et inférieure ou égale à la quantité en stock", exception.getMessage());
         }
     }
 
@@ -205,17 +205,10 @@ class ProductServiceImplTest {
         }
 
         @Test
-        @DisplayName("Should throw IllegalArgumentException when active is null")
-        void getProductsByStatus_NullActive_ThrowsIllegalArgumentException() {
-            // Act & Assert
-            assertThrows(IllegalArgumentException.class, () -> productService.getProductsByStatus(null));
-        }
-
-        @Test
         @DisplayName("Should return product list when products are found")
         void getProductsByStatus_ProductsFound_ReturnsProductList() {
             // Arrange
-            Product product = new Product(1L, "Test Product",null,null,null,null,null,1,1,10,1,1,true);
+            Product product = new Product(1L, "Test Product",null,null,null,null,null,110,10,1,1,true);
             List<Product> productList = List.of(product);
 
             when(productRepository.findByActive(true)).thenReturn(productList);

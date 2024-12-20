@@ -1,6 +1,6 @@
 package com.marketplace.controller;
 
-import com.marketplace.validation.OnCreate;
+
 import com.marketplace.dto.ProductDto;
 import com.marketplace.entity.Product;
 import com.marketplace.service.ProductService;
@@ -9,14 +9,12 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import io.swagger.v3.oas.annotations.*;
 import io.swagger.v3.oas.annotations.responses.*;
 import io.swagger.v3.oas.annotations.tags.Tag;
-
 import jakarta.validation.Valid;
 import java.util.List;
 
@@ -42,10 +40,9 @@ public class ProductController {
      * @return A ResponseEntity with the created product and HTTP status 201.
      */
     @PostMapping
-    @Validated(OnCreate.class)
     @Operation(summary = "Create a product", description = "Add a new product in the marketplace")
     @ApiResponse(responseCode = "201", description = "Successfully created product")
-    public ResponseEntity<ProductDto> createProduct(@Valid @RequestBody ProductDto productDto) {
+    public ResponseEntity<ProductDto> createProduct(@RequestBody @Valid ProductDto productDto) {
         try {
             log.info("POST /products - START: Creating a new product");
             ProductDto savedProductDto = productService.createProduct(productDto);
@@ -105,11 +102,11 @@ public class ProductController {
                     content = {@Content(mediaType = "application/json",
                             schema = @Schema(implementation = Product.class))}),
                     @ApiResponse(responseCode = "400", description = "Invalid input parameter"),
-                    @ApiResponse(responseCode = "500", description = "Internal server error"),
+//                    @ApiResponse(responseCode = "500", description = "Internal server error"),
 
             })
     @GetMapping("/status")
-    public ResponseEntity<List<ProductDto>> getProductsByStatus(@RequestParam Boolean active) {
+    public ResponseEntity<List<ProductDto>> getProductsByStatus(@RequestParam(name = "active", required = true) Boolean active) {
         try {
             log.info("GET /products/status?active={} - START: Retrieving products", active);
             List<ProductDto> products = productService.getProductsByStatus(active);

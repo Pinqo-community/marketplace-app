@@ -57,7 +57,6 @@ class ProductControllerTest {
                 "High",
                 "",
                 30,
-                1,
                 50,
                 1,
                 2,
@@ -87,7 +86,7 @@ class ProductControllerTest {
         @DisplayName("Should return 400 when input is invalid")
         void shouldReturnBadRequestForInvalidInput() throws Exception {
             //Arrange
-            ProductDto invalidProductDto = new ProductDto(null, null, "desc", null, null, "Low", "", 0, 0, 0, 0, 0, false);
+            ProductDto invalidProductDto = new ProductDto(null, null, "desc", null, null, "Low", "", 0,  0, 0, 0, false);
 
             // Act & Assert
             mockMvc.perform(post("/products")
@@ -155,7 +154,7 @@ class ProductControllerTest {
         void shouldUpdateProduct() throws Exception {
             //Arrange
             Product updatedProduct = new Product();
-            ProductDto updatedDto = new ProductDto(1L, "Updated Miel", "Pot 500g", "new_img", new BigDecimal("15.00"), "High", "", 50, 1, 100, 1, 2, true);
+            ProductDto updatedDto = new ProductDto(1L, "Updated Miel", "Pot 500g", "new_img", new BigDecimal("15.00"), "High", "", 50,  100, 1, 2, true);
             Mockito.when(productService.updateProduct(anyLong(), any(ProductDto.class))).thenReturn(updatedProduct);
             Mockito.when(productMapper.toDto(updatedProduct)).thenReturn(updatedDto);
 
@@ -165,6 +164,59 @@ class ProductControllerTest {
                             .content(objectMapper.writeValueAsString(updatedDto)))
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$.name").value("Updated Miel"));
+        }
+    }
+
+    @Nested
+    @DisplayName("GET /products/status - Get Products By Status")
+    class GetProductsByStatus {
+
+        @Test
+        @DisplayName("Should return products by active status successfully")
+        void shouldReturnProductsByStatus() throws Exception {
+            // Arrange
+            List<ProductDto> products = List.of(baseProductDto);
+            Mockito.when(productService.getProductsByStatus(true)).thenReturn(products);
+
+            // Act & Assert
+            mockMvc.perform(get("/products/status")
+                            .param("active", "true")
+                            .contentType(MediaType.APPLICATION_JSON))
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$[0].id").value(baseProductDto.getId()))
+                    .andExpect(jsonPath("$[0].name").value(baseProductDto.getName()));
+        }
+
+        @Test
+        @DisplayName("Should return 400 when active parameter is missing")
+        void shouldReturnBadRequestForMissingParameter() throws Exception {
+            // Act & Assert
+            mockMvc.perform(get("/products/status")
+                            .contentType(MediaType.APPLICATION_JSON))
+                    .andExpect(status().isBadRequest())
+                    .andExpect(jsonPath("$.message").value("Le paramètre 'active' est requis et ne peut pas être vide."));
+        }
+
+        @Test
+        @DisplayName("Should return 400 when active parameter is empty")
+        void shouldReturnBadRequestForEmptyParameter() throws Exception {
+            mockMvc.perform(get("/products/status")
+                            .param("active", " ")
+                            .contentType(MediaType.APPLICATION_JSON))
+                    .andExpect(status().isBadRequest())
+                    .andExpect(jsonPath("$.message").value("Le paramètre 'active' est requis et ne peut pas être vide."));
+        }
+
+
+        @Test
+        @DisplayName("Should return 400 when active parameter is invalid")
+        void shouldReturnBadRequestForInvalidParameter() throws Exception {
+            // Act & Assert
+            mockMvc.perform(get("/products/status")
+                            .param("active", "invalid")
+                            .contentType(MediaType.APPLICATION_JSON))
+                    .andExpect(status().isBadRequest())
+                    .andExpect(jsonPath("$.message").value("Le paramètre 'active' doit être un booléen valide."));
         }
     }
 

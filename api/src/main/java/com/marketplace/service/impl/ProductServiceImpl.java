@@ -12,6 +12,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
 
 /**
@@ -35,9 +36,11 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public ProductDto createProduct(ProductDto productDto) {
         log.info("Received ProductDto: {}", productDto);
-        if (productDto.getMinQuantity() >= productDto.getMaxQuantity()) {
-            throw new IllegalArgumentException("La quantité minimale doit être inférieure à la quantité maximale");
+
+        if (productDto.getMaxQuantityByPurchase() <= 0 || productDto.getMaxQuantityByPurchase() > productDto.getStockQuantity()){
+            throw new IllegalArgumentException("La quantité maximale par achat doit être supérieure à 0 et inférieure ou égale à la quantité en stock");
         }
+
         Product product = ProductMapper.INSTANCE.toEntity(productDto);
         log.info("Converted Product: {}", product);
         Product savedProduct = productRepository.save(product);
@@ -53,9 +56,7 @@ public class ProductServiceImpl implements ProductService {
     public List<Product> getAvailableProducts() {
         log.info("Retrieving products with stock > 0 and active status");
 
-        List<Product> products = productRepository.findByActiveAndStockQuantityGreaterThan(true, 0);
-
-            return products;
+      return productRepository.findByActiveAndStockQuantityGreaterThan(true, 0);
     }
 
 
@@ -67,9 +68,11 @@ public class ProductServiceImpl implements ProductService {
      */
     @Override
     public Product getProductById(Long id) {
+        log.info("Retrieving product with ID {}", id);
+        log.info("Found product with ID {}", id);
           return productRepository.findByIdAndActive(id)
                 .orElseThrow(() -> new NotFoundException("Le produit avec l'ID " + id + " est inactif ou n'existe pas."));
-}
+    }
 
     /**
      * Retrieves product entities from the database by status.
@@ -78,12 +81,9 @@ public class ProductServiceImpl implements ProductService {
      */
     @Override
     public List<ProductDto> getProductsByStatus(Boolean active) {
-        if (active == null) {
-            throw new IllegalArgumentException("Le paramètre 'active' ne peut pas être null.");
-        }
-
+        log.info("Retrieving products with status {}", active);
         List<Product> products = productRepository.findByActive(active);
-
+        log.info("Found {} products with status {}", products.size(), active);
         return ProductMapper.INSTANCE.toDtoList(products);
     }
 
