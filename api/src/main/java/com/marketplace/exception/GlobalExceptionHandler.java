@@ -16,7 +16,6 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 import java.util.List;
 import java.util.stream.Collectors;
 
-
 @ControllerAdvice
 public class GlobalExceptionHandler {
     @ExceptionHandler(MethodArgumentNotValidException.class)
@@ -101,9 +100,9 @@ public class GlobalExceptionHandler {
         );
     }
 
-    @ExceptionHandler(IllegalArgumentException.class)
+    @ExceptionHandler({IllegalArgumentException.class, UserAlreadyExistsException.class})
     @ResponseStatus(HttpStatus.CONFLICT)
-    public ResponseEntity<ExceptionResponse>handleIllegalArgumentException(IllegalArgumentException ex, WebRequest request) {
+    public ResponseEntity<ExceptionResponse>handleIllegalArgumentException(Exception ex, WebRequest request) {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(
                 new ExceptionResponse(
                         HttpStatus.CONFLICT.value(),
