@@ -142,11 +142,11 @@ $typography: (
 */
 
 $spacing: (
-  xs: 5px,
-  sm: 10px,
-  md: 20px,
-  lg: 30px,
-  xl: 40px,
+  xs: 8px,
+  sm: 12px,
+  md: 16px,
+  lg: 24px,
+  xl: 32px,
   xxl: 60px,
   xxxl: 80px
 );
@@ -160,9 +160,11 @@ $spacing: (
 // 4. Border Radius
 // -----------------------------------------------------
 $border-radius: (
-  sm: 3px,
+  sm: 4px,
   md: 8px,
-  lg: 16px,
+  lg: 12px,
+  xl: 16px,
+  2xl: 24px,
   circle: 50%
 );
 
@@ -177,7 +179,8 @@ $border-radius: (
 $shadows: (
   light: 0 2px 4px rgb(0 0 0 / 10%),
   dark: 0 2px 4px rgb(0 0 0 / 30%),
-  raised: 0 4px 6px rgb(0 0 0 / 15%)
+  raised: 0 4px 6px rgb(0 0 0 / 15%),
+  popup: 0 25px 50px -12px rgb(0 0 0 / 25%)
 );
 
 // Fonction d'accès aux ombres
