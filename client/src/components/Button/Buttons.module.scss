@@ -43,11 +43,7 @@
   border-radius: $border-radius-md;
   background-color: $primary-color;
   padding: 14px 48px 14px 48px;
-  @include font-style(
-    $size: $font-size-sm,
-    $weight: $font-weight-semibold,
-    $color: $color-white
-  );
+  @include font-style($size: $font-size-sm, $weight: $font-weight-semibold, $color: $color-white);
 
   &:hover {
     background-color: #029751;
@@ -60,26 +56,6 @@
     &:hover {
       background-color: $primary-color;
       color: $color-white;
-    }
-  }
-}
-
-/* -------------------------------------------------------------------------- */
-/*                                SliderButton                                */
-/* -------------------------------------------------------------------------- */
-
-.sliderButton {
-  width: 40px;
-  height: 40px;
-  background-color: #f2f2f2;
-  border-radius: $border-radius-circle;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  &:first-child {
-    img {
-      transform: rotate(180deg);
     }
   }
 }
