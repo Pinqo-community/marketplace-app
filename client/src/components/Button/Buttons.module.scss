@@ -83,3 +83,23 @@
     }
   }
 }
+
+/* -------------------------------------------------------------------------- */
+/*                                SliderButton                                */
+/* -------------------------------------------------------------------------- */
+
+.sliderButton {
+  width: 40px;
+  height: 40px;
+  background-color: #f2f2f2;
+  border-radius: $border-radius-circle;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &:first-child {
+    img {
+      transform: rotate(180deg);
+    }
+  }
+}

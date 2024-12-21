@@ -14,6 +14,7 @@ import MainLayout from "@/layouts/MainLayout";
 import { motion } from "framer-motion";
 import "swiper/css";
 import "swiper/css/pagination";
+import "swiper/css/pagination";
 import styles from "./HomePage.module.scss";
 
 const HomePage: React.FC = () => {
