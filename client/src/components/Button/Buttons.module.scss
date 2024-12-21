@@ -43,11 +43,7 @@
   border-radius: $border-radius-md;
   background-color: $primary-color;
   padding: 14px 48px 14px 48px;
-  @include font-style(
-    $size: $font-size-sm,
-    $weight: $font-weight-semibold,
-    $color: $color-white
-  );
+  @include font-style($size: $font-size-sm, $weight: $font-weight-semibold, $color: $color-white);
 
   &:hover {
     background-color: #029751;
@@ -85,21 +81,45 @@
 }
 
 /* -------------------------------------------------------------------------- */
-/*                                SliderButton                                */
+/*                                 MenuButton                                 */
 /* -------------------------------------------------------------------------- */
 
-.sliderButton {
-  width: 40px;
-  height: 40px;
-  background-color: #f2f2f2;
-  border-radius: $border-radius-circle;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  &:first-child {
-    img {
-      transform: rotate(180deg);
-    }
+.menu {
+  .icon {
+    width: 40px;
+    min-width: 35px;
+    opacity: 0.9;
   }
+}
+
+.line {
+  fill: none;
+  stroke: black;
+  stroke-width: 6;
+  stroke-linecap: round;
+  transition:
+    stroke-dasharray 600ms ease,
+    stroke-dashoffset 600ms ease,
+    stroke 600ms ease;
+}
+
+.opened .line {
+  stroke: $error-color;
+}
+
+.line1,
+.line3 {
+  stroke-dasharray: 60 207;
+}
+.opened .line1,
+.opened .line3 {
+  stroke-dasharray: 90 207;
+  stroke-dashoffset: -134;
+}
+.line2 {
+  stroke-dasharray: 60 60;
+}
+.opened .line2 {
+  stroke-dasharray: 1 60;
+  stroke-dashoffset: -30;
 }

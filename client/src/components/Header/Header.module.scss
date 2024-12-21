@@ -128,24 +128,7 @@
     align-items: center;
     gap: $gap-md;
 
-    .hamburger {
-      opacity: 0.9;
-
-      @include media-query($screen-md) {
-        padding: 10px;
-
-        .hamburgerBox {
-          width: 30px;
-        }
-
-        .hamburgerInner,
-        .hamburgerInner::before,
-        .hamburgerInner::after {
-          width: 30px;
-          height: 3px;
-        }
-      }
-    }
+    // X
 
     @include media-query($screen-md) {
       gap: $gap-sm;
