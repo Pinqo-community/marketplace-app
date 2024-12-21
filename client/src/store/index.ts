@@ -1,6 +1,7 @@
+import { testimonialsApi } from "@/api/testimonialsApi";
 import { configureStore } from "@reduxjs/toolkit";
-import { categoriesApi } from "../api/categoriesApi";
-import { productsApi } from "../api/productsApi";
+import { categoriesApi } from "@/api/categoriesApi";
+import { productsApi } from "@/api/productsApi";
 import productsReducer from "./slices/postsSlice";
 
 const store = configureStore({
@@ -8,11 +9,13 @@ const store = configureStore({
     products: productsReducer,
     [productsApi.reducerPath]: productsApi.reducer,
     [categoriesApi.reducerPath]: categoriesApi.reducer,
+    [testimonialsApi.reducerPath]: testimonialsApi.reducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware()
       .concat(productsApi.middleware)
-      .concat(categoriesApi.middleware),
+      .concat(categoriesApi.middleware)
+      .concat(testimonialsApi.middleware),
 });
 
 export type RootState = ReturnType<typeof store.getState>;
