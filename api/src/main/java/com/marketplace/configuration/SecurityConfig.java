@@ -1,14 +1,11 @@
 package com.marketplace.configuration;
 
-import com.marketplace.security.jwt.CustomAccessDeniedHandler;
 import com.marketplace.security.jwt.JwtAuthenticationEntryPoint;
 import com.marketplace.security.jwt.JwtRequestFilter;
 import com.marketplace.security.oauth.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
-import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -18,12 +15,10 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @Configuration
 @EnableWebSecurity
-@EnableMethodSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
     private final JwtRequestFilter jwtRequestFilter;
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
-    private final CustomAccessDeniedHandler CustomAccessDeniedHandler;
     private final CustomOidcUserService customOidcUserService;
     private final CustomOAuth2UserService customOAuth2UserService;
     private final OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler;
@@ -39,7 +34,7 @@ public class SecurityConfig {
     };
 
     private static final String[] API_URLS_WHITELIST = {
-            "/auth/**",
+            "/auth/**"
     };
 
     @Bean
@@ -51,8 +46,6 @@ public class SecurityConfig {
                         req
                                 .requestMatchers(SWAGGER_WHITELIST).permitAll()
                                 .requestMatchers(API_URLS_WHITELIST).permitAll()
-                                .requestMatchers(HttpMethod.GET, "/categories/**").permitAll()
-                                .requestMatchers("/categories/**").hasRole("ADMIN")
                                 .anyRequest().authenticated()
                 )
                 .oauth2Login(oauth -> oauth.authorizationEndpoint(endpoint -> endpoint
@@ -65,7 +58,6 @@ public class SecurityConfig {
                 )
                 .exceptionHandling(exceptionHandling ->
                         exceptionHandling.authenticationEntryPoint(jwtAuthenticationEntryPoint)
-                                .accessDeniedHandler(CustomAccessDeniedHandler)
                 );
 
         http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);

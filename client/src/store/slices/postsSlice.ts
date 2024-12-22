@@ -1,4 +1,4 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 
 interface Posts {
@@ -23,10 +23,10 @@ export const fetchPosts = createAsyncThunk(
   "products/fetchProducts",
   async () => {
     const response = await axios.get(
-      "https://jsonplaceholder.typicode.com/posts"
+      "https://jsonplaceholder.typicode.com/posts",
     );
     return response.data;
-  }
+  },
 );
 
 const productsSlice = createSlice({

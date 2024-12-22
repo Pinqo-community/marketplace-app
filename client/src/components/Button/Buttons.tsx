@@ -1,17 +1,13 @@
 import { buttonVariants } from "@/animations/animations";
 import arrowSlider from "@/assets/icons/arrow-slider.svg";
-import { motion } from "framer-motion";
-import { ShoppingCart, User } from "lucide-react";
 import {
   MenuButtonProps,
   PrimaryButtonProps,
   SliderButtonProps,
-} from "../../types/Button";
+} from "@/types/Button";
+import { motion } from "framer-motion";
+import { ShoppingCart, User } from "lucide-react";
 import styles from "./Buttons.module.scss";
-
-/* -------------------------------------------------------------------------- */
-/*                                 UserButton                                 */
-/* -------------------------------------------------------------------------- */
 
 /* -------------------------------------------------------------------------- */
 /*                                 UserButton                                 */
@@ -22,10 +18,6 @@ export const UserButton: React.FC = () => (
     <User size={25} />
   </button>
 );
-
-/* -------------------------------------------------------------------------- */
-/*                                 CartButton                                 */
-/* -------------------------------------------------------------------------- */
 
 /* -------------------------------------------------------------------------- */
 /*                                 CartButton                                 */

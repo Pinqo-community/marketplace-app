@@ -1,9 +1,9 @@
+import arrowIcon from "@/assets/icons/arrow.svg";
+import { Producer } from "@/types/Producer";
 import L from "leaflet";
 import "leaflet.markercluster";
 import { useEffect } from "react";
 import { useMap } from "react-leaflet";
-import arrowIcon from "../../assets/icons/arrow.svg";
-import { Producer } from "../../types/Producer";
 import styles from "./ClusterMarkers.module.scss";
 import { mapIcon } from "./MapIcon";
 

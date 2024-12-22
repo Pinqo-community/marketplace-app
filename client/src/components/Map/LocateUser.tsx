@@ -1,7 +1,7 @@
+import { LocateUserProps } from "@/types/types";
 import L from "leaflet";
 import { useCallback, useEffect, useState } from "react";
 import { useMap } from "react-leaflet";
-import { LocateUserProps } from "../../types/types";
 import styles from "./LocateUser.module.scss";
 
 const LocateUser: React.FC<LocateUserProps> = ({ mapRef, defaultPosition }) => {
@@ -63,7 +63,7 @@ const LocateUser: React.FC<LocateUserProps> = ({ mapRef, defaultPosition }) => {
           handleLocation();
         }
       },
-      { threshold: 0.7 }
+      { threshold: 0.7 },
     );
     const mapElement = mapRef.current;
     if (mapElement) observer.observe(mapElement);

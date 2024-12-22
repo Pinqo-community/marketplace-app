@@ -1,5 +1,5 @@
-import buyer from "../../assets/images/buyer-profile.png";
-import producer from "../../assets/images/producer-profile.png";
+import buyer from "@/assets/images/buyer-profile.png";
+import producer from "@/assets/images/producer-profile.png";
 import BuyerProducerCard from "./BuyerProducerCard";
 
 const BuyerProducer: React.FC = () => {

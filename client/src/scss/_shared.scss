@@ -3,18 +3,16 @@
 
 .moreInfo {
   display: flex;
-  justify-content: end;
   align-items: center;
-  gap: 15px;
+  justify-content: end;
   transition: all 0.1s ease-in-out;
-
+  gap: 15px;
   cursor: pointer;
 
   .moreInfoText {
-    color: $primary-color;
-    font-weight: 400;
-    font-size: 14px;
-    font-family: Inter;
+    color: color(primary, base);
+    font-weight: font-weight(normal);
+    font-size: font-size(sm);
   }
 
   &:hover {

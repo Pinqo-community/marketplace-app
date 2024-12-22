@@ -1,7 +1,7 @@
-import { testimonialsApi } from "@/api/testimonialsApi";
-import { configureStore } from "@reduxjs/toolkit";
 import { categoriesApi } from "@/api/categoriesApi";
 import { productsApi } from "@/api/productsApi";
+import { testimonialsApi } from "@/api/testimonialsApi";
+import { configureStore } from "@reduxjs/toolkit";
 import productsReducer from "./slices/postsSlice";
 
 const store = configureStore({

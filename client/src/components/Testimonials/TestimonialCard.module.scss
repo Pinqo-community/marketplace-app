@@ -5,18 +5,18 @@
 .testimonial {
   display: flex;
   justify-content: space-between;
+  width: 413px;
+  height: 246px;
+  padding: space(md);
   flex-direction: column;
-  gap: 16px;
-  padding: 20px;
-  width: 100%;
-  height: auto;
-  border-radius: $border-radius-md;
-  background-color: $color-white;
+  gap: space(sm);
+  border-radius: radius(md);
+  background-color: color(neutral, white);
 
   .content {
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    gap: space(md);
 
     .icon {
       width: 32px;
@@ -24,7 +24,7 @@
     }
 
     .text {
-      @include font-style($size: $font-size-sm, $weight: $font-weight-normal, $color: $text-color);
+      @include font-style($size: font-size(sm), $weight: font-weight(normal), $color: color(neutral, text));
     }
   }
 
@@ -36,19 +36,19 @@
     .author {
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: space(sm);
 
       .profile {
         width: 56px;
         height: 56px;
-        border-radius: $border-radius-circle;
+        border-radius: radius(circle);
       }
     }
 
     .rating {
       display: flex;
       align-items: center;
-      gap: $gap-xs;
+      gap: space(xs);
     }
   }
 }

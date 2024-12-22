@@ -4,17 +4,17 @@
 @use "@/scss/shared" as *;
 
 .testimonials {
-  @include media-query($screen-xs) {
+  @include media-under(xs) {
     :nth-child(1) {
       text-align: center;
 
-      #arrowContainer {
+      #arrow-container {
         display: none;
       }
     }
   }
 
   .swiper {
-    padding-bottom: 50px !important;
+    padding-bottom: space(xl) !important;
   }
 }

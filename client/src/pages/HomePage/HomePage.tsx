@@ -3,7 +3,7 @@ import { useGetCategoriesQuery } from "@/api/categoriesApi";
 import { useGetProductsQuery } from "@/api/productsApi";
 import { useGetTestimonialsQuery } from "@/api/testimonialsApi";
 import arrowIcon from "@/assets/icons/arrow.svg";
-import BuyerProducer from "../../components/BuyerProducer/BuyerProducer";
+import BuyerProducer from "@/components/BuyerProducer/BuyerProducer";
 import CategoryCard from "@/components/CategoryCard/CategoryCard";
 import Hero from "@/components/Hero/Hero";
 import Map from "@/components/Map/Map";
@@ -13,7 +13,6 @@ import TestimonialCard from "@/components/Testimonials/TestimonialCard";
 import MainLayout from "@/layouts/MainLayout";
 import { motion } from "framer-motion";
 import "swiper/css";
-import "swiper/css/pagination";
 import "swiper/css/pagination";
 import styles from "./HomePage.module.scss";
 
@@ -90,26 +89,50 @@ const HomePage: React.FC = () => {
           </motion.div>
         </div>
       </section>
-      <section className={styles.categorySection}>
-        <Slider
-          title="Catégories"
-          items={categories || []}
-          renderItem={(category) => (
-            <CategoryCard title={category.name} image={category.image} />
-          )}
-          slidesPerViewDefault={6}
-          breakpoints={{
-            320: { slidesPerView: 1 },
-            420: { slidesPerView: 2 },
-            580: { slidesPerView: 3 },
-            768: { slidesPerView: 4 },
-            1024: { slidesPerView: 5 },
-            1440: { slidesPerView: 6 },
-          }}
-        />
-      </section>
+      <Slider
+        title="Catégories"
+        items={categories || []}
+        renderItem={(category) => (
+          <CategoryCard title={category.name} image={category.image} />
+        )}
+        slidesPerViewDefault={6}
+        breakpoints={{
+          320: { slidesPerView: 1 },
+          420: { slidesPerView: 2 },
+          580: { slidesPerView: 3 },
+          768: { slidesPerView: 4 },
+          1024: { slidesPerView: 5 },
+          1440: { slidesPerView: 6 },
+        }}
+      />
       <section className={styles.buyerProducer}>
         <BuyerProducer />
+      </section>
+
+      <section
+        className={styles.popularProducts}
+        aria-labelledby="popular-products-title"
+      >
+        <div className={styles.sectionContainer}>
+          <div className={styles.titleContainer}>
+            <h2 className={styles.title}>Les bonnes affaires</h2>
+            <div className={styles.moreInfo}>
+              <div className={styles.moreInfoText}>Voir tout</div>
+              <img src={arrowIcon} alt="arrow" />
+            </div>
+          </div>
+
+          <motion.div
+            initial="hidden"
+            animate="visible"
+            variants={listVariants}
+            className={styles.productsGrid}
+          >
+            {products?.map((product) => (
+              <ProductCard key={product.id} product={product} />
+            ))}
+          </motion.div>
+        </div>
       </section>
 
       <section
@@ -141,9 +164,10 @@ const HomePage: React.FC = () => {
           slidesPerViewDefault={3}
           pagination={true}
           breakpoints={{
-            0: { slidesPerView: 1 },
-            768: { slidesPerView: 2 },
-            1200: { slidesPerView: 3 },
+            320: { slidesPerView: 1 },
+            768: { slidesPerView: 1 },
+            1024: { slidesPerView: 2 },
+            1440: { slidesPerView: 3 },
           }}
         />
       </div>

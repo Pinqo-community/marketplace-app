@@ -1,10 +1,10 @@
+import logo from "@/assets/images/logo.svg";
+import { useScroll } from "@/hooks/useScroll";
 import classNames from "classnames";
 import { motion } from "framer-motion";
 import { Bell, ChevronDown, HelpCircle, MapPin } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import logo from "../../assets/images/logo.svg";
-import { useScroll } from "../../hooks/useScroll";
 import { CartButton, MenuButton, UserButton } from "../Button/Buttons";
 import styles from "./Header.module.scss";
 import SearchBar from "./SearchBar";

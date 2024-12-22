@@ -1,5 +1,6 @@
-@use "variables" as *;
 @use "mixins" as *;
+@use "variables" as *;
+@use "sass:map";
 
 // Reset global
 *,
@@ -14,12 +15,12 @@
 body,
 html {
   margin: 0;
-  background-color: $background-color;
   padding: 0;
-  color: $text-color;
-  font-weight: $font-weight-normal;
+  color: color(neutral, text);
+  font-family: map.get(map.get($typography, font-family), primary);
+  font-weight: font-weight(normal);
   line-height: 1.5;
-  font-family: $font-family;
+  background-color: color(neutral, background);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   overflow-x: hidden;
@@ -43,11 +44,11 @@ input,
 textarea,
 select {
   margin: 0;
-  outline: none;
+  padding: 0;
   border: none;
   background: none;
-  padding: 0;
   color: inherit;
+  outline: none;
   font: inherit;
 }
 
@@ -55,10 +56,10 @@ select {
 input,
 textarea {
   margin: 0;
-  outline: none;
+  padding: 0;
   border: none;
   background: none;
-  padding: 0;
+  outline: none;
   resize: none;
 }
 
@@ -81,15 +82,15 @@ h4,
 h5,
 h6 {
   color: inherit;
+  color: color(neutral, text);
   font-weight: inherit;
-  color: inherit;
 }
 
 // Paragraph reset
 p {
   margin: 0;
   padding: 0;
-  line-height: 1.5;
+  line-height: line-height(normal);
 }
 
 // Table reset
@@ -101,39 +102,39 @@ table {
 // Input reset
 input[type="number"]::-webkit-inner-spin-button,
 input[type="number"]::-webkit-outer-spin-button {
-  -webkit-appearance: none;
+  appearance: none;
   margin: 0;
 }
 
 input[type="number"] {
-  -moz-appearance: textfield;
   appearance: textfield;
 }
 
 // Button
 button {
-  cursor: pointer;
   margin: 0;
+  padding: 0;
   border: none;
   background: none;
-  padding: 0;
+  cursor: pointer;
 }
 
 h1 {
-  @include font-style($size: 64px, $weight: $font-weight-extrabold, $color: $color-white, $line-height: 72px);
+  @include font-style($size: 64px, $weight: font-weight(extrabold), $color: color(neutral, white), $line-height: 72px);
 }
 
 h2 {
-  @include font-style($size: $font-size-xxl, $weight: $font-weight-bold);
-  @include media-query($breakpoint-xs) {
-    line-height: 1;
+  @include font-style($size: font-size(xxl), $weight: font-weight(bold));
+
+  @include media-under(xs) {
+    line-height: line-height(tight);
   }
 }
 
 h3 {
-  @include font-style($size: $font-size-xl, $weight: $font-weight-bold);
+  @include font-style($size: font-size(xl), $weight: font-weight(bold));
 }
 
 h4 {
-  @include font-style($size: $font-size-md, $weight: $font-weight-medium);
+  @include font-style($size: font-size(md), $weight: font-weight(medium));
 }

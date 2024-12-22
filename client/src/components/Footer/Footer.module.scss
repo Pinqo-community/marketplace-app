@@ -1,35 +1,36 @@
-@use "../../scss/global";
-@use "../../scss/variables" as *;
-@use "../../scss/mixins" as *;
+@use "@/scss/global";
+@use "@/scss/variables" as *;
+@use "@/scss/mixins" as *;
+@use "sass:map";
 
 .footer {
   display: flex;
-  flex-direction: column;
   align-items: center;
-  gap: $gap-lg;
-  background: rgb(16, 16, 16);
-  padding: 40px 80px;
-  color: $color-light;
+  padding: space(xl) space(xxl);
+  background: color(secondary, base);
+  color: color(neutral, background);
+  flex-direction: column;
+  gap: space(lg);
 
-  @include media-query($breakpoint-md) {
-    padding: 40px 40px;
+  @include media-under(md) {
+    padding: space(xl);
   }
 
-  @include media-query($breakpoint-sm) {
-    padding: 40px 20px;
+  @include media-under(sm) {
+    padding: space(xl) space(md);
   }
 
   .footerMain {
-    max-width: $screen-xl;
+    max-width: map.get($breakpoints, xl);
 
     .footerContent {
       display: flex;
       justify-content: space-between;
-      gap: $gap-lg;
-      margin: 0 auto;
       width: 100%;
+      margin: 0 auto;
+      gap: space(lg);
 
-      @include media-query($breakpoint-sm) {
+      @include media-under(sm) {
         flex-direction: column;
         align-items: center;
       }
@@ -37,22 +38,22 @@
       .footerBrand {
         display: flex;
         flex-direction: column;
-        gap: $gap-md;
+        gap: space(md);
         width: 24%;
 
-        @include media-query($breakpoint-sm) {
+        @include media-under(sm) {
           display: flex;
-          justify-content: center;
           align-items: center;
+          justify-content: center;
           width: 100%;
         }
 
         .brandInfo {
           display: flex;
           flex-direction: column;
-          gap: $gap-sm;
+          gap: space(sm);
 
-          @include media-query($breakpoint-sm) {
+          @include media-under(sm) {
             align-items: center;
           }
 
@@ -61,13 +62,11 @@
           }
 
           .description {
-            @include font-style(
-              $size: $font-size-sm,
-              $weight: $font-weight-normal,
-              $color: $color-light
-            );
+            color: color(neutral, background);
+            font-weight: font-weight(normal);
+            font-size: font-size(sm);
 
-            @include media-query($breakpoint-sm) {
+            @include media-under(sm) {
               text-align: center;
             }
           }
@@ -75,12 +74,14 @@
 
         .socialLinks {
           display: flex;
-          gap: $gap-md;
+          gap: space(md);
 
           .socialIcon {
-            transition: all 0.2s ease-in-out;
+            transition: all transition(normal);
+
             &:hover {
               cursor: pointer;
+
               @include icon-light-filter;
             }
           }
@@ -89,19 +90,19 @@
 
       .footerLinks {
         display: flex;
-        gap: 80px;
+        gap: space(xxxl);
 
-        @include media-query($breakpoint-sm) {
+        @include media-under(sm) {
           flex-direction: column;
-          gap: $gap-lg;
+          gap: space(lg);
         }
 
         .linksColumn {
           display: flex;
           flex-direction: column;
-          gap: $gap-md;
+          gap: space(md);
 
-          @include media-query($breakpoint-sm) {
+          @include media-under(sm) {
             align-items: center;
 
             &:last-child {
@@ -110,32 +111,29 @@
           }
 
           .columnTitle {
-            @include font-style(
-              $size: $font-size-md,
-              $weight: $font-weight-semibold,
-              $color: $color-white
-            );
+            color: color(neutral, white);
+            font-weight: font-weight(semibold);
+            font-size: font-size(md);
           }
 
           .linksList {
             display: flex;
             flex-direction: column;
-            gap: $gap-sm;
+            gap: space(sm);
 
-            @include media-query($breakpoint-sm) {
+            @include media-under(sm) {
               text-align: center;
             }
 
             .linkItem {
-              @include font-style(
-                $size: $font-size-sm,
-                $weight: $font-weight-normal,
-                $color: $color-light
-              );
-              transition: all 0.2s ease-in-out;
+              color: color(neutral, background);
+              font-weight: font-weight(normal);
+              font-size: font-size(sm);
+              transition: all transition(normal);
+
               &:hover {
                 cursor: pointer;
-                color: $primary-color;
+                color: color(primary, base);
               }
             }
           }
@@ -146,43 +144,41 @@
 
   .footerBottom {
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    border-top: 1px solid $color-light;
-    padding-top: 15px;
+    justify-content: space-between;
     width: 100%;
-    max-width: $screen-xl;
+    border-top: 1px solid color(neutral, background);
+    padding-top: 15px;
+    max-width: map.get($breakpoints, xl);
 
-    @include media-query($breakpoint-sm) {
+    @include media-under(sm) {
       flex-direction: column-reverse;
-      gap: $gap-md;
+      gap: space(md);
     }
 
     .copyright {
-      @include font-style(
-        $size: $font-size-sm,
-        $weight: $font-weight-normal,
-        $color: $color-light
-      );
+      color: color(neutral, background);
+      font-weight: font-weight(normal);
+      font-size: font-size(sm);
     }
 
     .paymentMethods {
       display: flex;
-      gap: $gap-md;
+      gap: space(md);
 
-      @include media-query($breakpoint-sm) {
+      @include media-under(sm) {
         justify-content: space-around;
         width: 100%;
       }
 
       .paymentIcon {
         display: flex;
-        justify-content: center;
         align-items: center;
-        border-radius: 6px;
-        background-color: $color-white;
+        justify-content: center;
         width: 50px;
         height: 34px;
+        border-radius: 6px;
+        background-color: color(neutral, white);
       }
     }
   }

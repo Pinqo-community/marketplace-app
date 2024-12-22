@@ -1,75 +1,255 @@
-// Colors
-$primary-color: #1ab66d;
-$secondary-color: #d4fadd;
-$background-color: #fdfdfd;
-$text-color: #212529;
-$border-color: #e3e6e9;
-$color-white: #ffffff;
-$color-black: #000000;
-$color-dark: #171717;
-$color-light: #f5f5f5;
-$placeholder-color: #9ca3af;
-$separator-color: #d1d5db;
-$section-secondary: #f2f2f2;
+@use "sass:color";
+@use "sass:map";
+
+// =========================================================
+// Design System - Variables SCSS
+// https://www.figma.com/design/wgeH97e5YFSQrggaoqUwAW/Maquette-Marketplace-%F0%9F%8F%AA?node-id=11-36
+// =========================================================
+
+// -----------------------------------------------------
+// 1. Color Palette
+// -----------------------------------------------------
+// Colors primaires et secondaires
+$color-palette: (
+  primary: (
+    base: #1ab66d,
+    light: #d4fadd,
+    dark: color.adjust(#02af5e, $lightness: -5%)
+  ),
+  secondary: (
+    base: #101010,
+    light: #f2f2f2,
+    dark: #000
+  ),
+  neutral: (
+    white: #fff,
+    black: #000,
+    background: #fdfdfd,
+    border: #e5e7eb,
+    text: #212529,
+    separator-color: #d1d5db,
+    placeholder-color: #9ca3af
+  )
+);
 
 // Status Colors
-$success-color: #00b800;
-$error-color: #ff0000;
-$warning-color: #ffa700;
+$color-status: (
+  success: (
+    base: #00b800,
+    light: color.adjust(#00b800, $lightness: 40%),
+    dark: color.adjust(#00b800, $lightness: -10%)
+  ),
+  error: (
+    base: #f00,
+    light: color.adjust(#f00, $lightness: 40%),
+    dark: color.adjust(#f00, $lightness: -10%)
+  ),
+  warning: (
+    base: #ffa700,
+    light: color.adjust(#ffa700, $lightness: 40%),
+    dark: color.adjust(#ffa700, $lightness: -10%)
+  )
+);
 
-// Font Styles
-$font-family: "Inter", sans-serif;
+// Fonction d'accès aux couleurs
+@function color($palette, $tone: "base") {
+  @return map.get(map.get($color-palette, $palette), $tone);
+}
 
-// Font Sizes
-$font-size-xs: 12px;
-$font-size-sm: 14px;
-$font-size-md: 16px;
-$font-size-base: 18px;
-$font-size-lg: 20px;
-$font-size-xl: 24px;
-$font-size-xxl: 36px;
+@function status($status, $tone: "base") {
+  @return map.get(map.get($color-status, $status), $tone);
+}
 
-// Font Weights
-$font-weight-normal: 400;
-$font-weight-medium: 500;
-$font-weight-semibold: 600;
-$font-weight-bold: 700;
-$font-weight-extrabold: 800;
+// -----------------------------------------------------
+// 2. Typography
+// -----------------------------------------------------
+/*
+| Valeurs en px | Nouveau en rem (calcul : px / 16) |
+|---------------|-----------------------------------|
+| xs: 12px      | xs: 0.75rem                       |
+| sm: 14px      | sm: 0.875rem                      |
+| md: 16px      | md: 1rem                          |
+| base: 18px    | base: 1.125rem                    |
+| lg: 20px      | lg: 1.25rem                       |
+| xl: 24px      | xl: 1.5rem                        |
+| xxl: 36px     | xxl: 2.25rem                      |
+*/
 
-// Gaps
-$gap-xs: 5px;
-$gap-sm: 10px;
-$gap-md: 20px;
-$gap-lg: 30px;
-$gap-xl: 40px;
+// Configuration typographique
+$typography: (
+  font-family: (
+    primary: (
+      "Inter",
+      sans-serif
+    ),
+    secondary: (
+      "Arial",
+      sans-serif
+    )
+  ),
+  size: (
+    xs: 0.75rem,
+    sm: 0.875rem,
+    md: 1rem,
+    base: 1.125rem,
+    lg: 1.25rem,
+    xl: 1.5rem,
+    xxl: 2.25rem
+  ),
+  weight: (
+    thin: 300,
+    normal: 400,
+    medium: 500,
+    semibold: 600,
+    bold: 700,
+    extrabold: 800
+  ),
+  line-height: (
+    tight: 1,
+    normal: 1.5,
+    loose: 1.8
+  )
+);
 
-// Border Radius
-$border-radius-sm: 3px;
-$border-radius-md: 8px;
-$border-radius-lg: 16px;
-$border-radius-circle: 50%;
+// Fonction d'accès aux tailles de police
+@function font-size($size) {
+  @return map.get(map.get($typography, "size"), $size);
+}
 
-// Shadows
-$box-shadow-light: 0 2px 4px rgba(0, 0, 0, 0.1);
-$box-shadow-dark: 0 2px 4px rgba(0, 0, 0, 0.3);
+// Fonction d'accès aux graisses de police
+@function font-weight($weight) {
+  @return map.get(map.get($typography, "weight"), $weight);
+}
 
-// Breakpoints
-$breakpoint-xs: 480px;
-$breakpoint-sm: 768px;
-// $breakpoint-md: 992px;
-$breakpoint-md: 992px;
-$breakpoint-lg: 1200px;
-$breakpoint-xl: 1440px;
+// Fonction d'accès aux lignes de police
+@function line-height($line-height) {
+  @return map.get(map.get($typography, "line-height"), $line-height);
+}
 
-// Screen Sizes
-$screen-xs: 480px;
-$screen-sm: 768px;
-$screen-md: 992px;
-$screen-lg: 1200px;
-$screen-xl: 1440px;
+// -----------------------------------------------------
+// 3. Spacing & Layout
+// -----------------------------------------------------
+/* 
+| Valeurs en px | Nouveau en rem (calcul : px / 16) |
+|---------------|-----------------------------------|
+| xs: 5px       | xs: 0.3125rem                     |
+| sm: 10px      | sm: 0.625rem                      |
+| md: 20px      | md: 1.25rem                       |
+| lg: 30px      | lg: 1.875rem                      |
+| xl: 40px      | xl: 2.5rem                        |
+| xxl: 60px     | xxl: 3.75rem                      |
+| xxxl: 80px    | xxxl: 5rem                        |
+*/
 
-// z-index
-$z-index-header: 1000;
-$z-index-modal: 2000;
-$z-index-tooltip: 3000;
-$z-index-overlay: 4000;
+$spacing: (
+  xs: 8px,
+  sm: 12px,
+  md: 16px,
+  lg: 24px,
+  xl: 32px,
+  xxl: 60px,
+  xxxl: 80px
+);
+
+// Fonction d'accès aux espacements
+@function space($size) {
+  @return map.get($spacing, $size);
+}
+
+// -----------------------------------------------------
+// 4. Border Radius
+// -----------------------------------------------------
+$border-radius: (
+  sm: 4px,
+  md: 8px,
+  lg: 12px,
+  xl: 16px,
+  2xl: 24px,
+  circle: 50%
+);
+
+// Fonction d'accès aux radius
+@function radius($size) {
+  @return map.get($border-radius, $size);
+}
+
+// -----------------------------------------------------
+// 5. Shadows
+// -----------------------------------------------------
+$shadows: (
+  light: 0 2px 4px rgb(0 0 0 / 10%),
+  dark: 0 2px 4px rgb(0 0 0 / 30%),
+  raised: 0 4px 6px rgb(0 0 0 / 15%),
+  popup: 0 25px 50px -12px rgb(0 0 0 / 25%)
+);
+
+// Fonction d'accès aux ombres
+@function shadow($type) {
+  @return map.get($shadows, $type);
+}
+
+// -----------------------------------------------------
+// 6. Breakpoints & Responsive
+// -----------------------------------------------------
+$breakpoints: (
+  xs: 480px,
+  sm: 768px,
+  md: 992px,
+  lg: 1200px,
+  xl: 1440px,
+  xxl: 1920px
+);
+
+// Mixin pour les media queries
+@mixin respond-to($breakpoint) {
+  @if map.has-key($breakpoints, $breakpoint) {
+    @media (min-width: map.get($breakpoints, $breakpoint)) {
+      @content;
+    }
+  } @else {
+    @warn "Breakpoint #{$breakpoint} n'existe pas.";
+  }
+}
+
+// Mixin pour les styles sous un breakpoint
+@mixin media-under($breakpoint) {
+  @if map.has-key($breakpoints, $breakpoint) {
+    @media (max-width: map.get($breakpoints, $breakpoint)) {
+      @content;
+    }
+  } @else {
+    @warn "Breakpoint #{$breakpoint} n'existe pas.";
+  }
+}
+
+// -----------------------------------------------------
+// 7. Transitions
+// -----------------------------------------------------
+$transitions: (
+  fast: 0.2s,
+  normal: 0.4s,
+  slow: 0.6s
+);
+
+// Fonction d'accès aux transitions
+@function transition($speed) {
+  @return map.get($transitions, $speed);
+}
+
+// -----------------------------------------------------
+// 8. Z-Index
+// -----------------------------------------------------
+$z-index: (
+  auto: auto,
+  base: 0,
+  dropdown: 1000,
+  sticky: 1020,
+  modal: 1050,
+  tooltip: 1070,
+  header: 1100
+);
+
+// Fonction d'accès aux z-index
+@function z($layer) {
+  @return map.get($z-index, $layer);
+}

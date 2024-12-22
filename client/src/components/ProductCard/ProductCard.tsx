@@ -1,8 +1,8 @@
+import bag from "@/assets/icons/bag.svg";
+import star from "@/assets/icons/star.svg";
+import { ProductProps } from "@/types/Product";
 import { motion } from "framer-motion";
 import { useState } from "react";
-import bag from "../../assets/icons/bag.svg";
-import star from "../../assets/icons/star.svg";
-import { ProductProps } from "../../types/Product";
 import styles from "./ProductCard.module.scss";
 
 const ProductCard: React.FC<ProductProps> = ({ product }) => {
@@ -32,7 +32,7 @@ const ProductCard: React.FC<ProductProps> = ({ product }) => {
   const handleQuantityChange = (value: number) => {
     const validatedValue = Math.max(
       MIN_QUANTITY,
-      Math.min(MAX_QUANTITY, value)
+      Math.min(MAX_QUANTITY, value),
     );
     setCurrentQuantity(validatedValue);
   };

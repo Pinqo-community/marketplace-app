@@ -1,9 +1,15 @@
+// External libraries
 import "leaflet/dist/leaflet.css";
 import { MapContainer, TileLayer } from "react-leaflet";
+import "react-leaflet-markercluster/dist/styles.min.css";
+
+// Assets and styles
 import "leaflet.markercluster/dist/leaflet.markercluster";
 import styles from "./Map.module.scss";
+
+// Types and Components
+import { Producer } from "@/types/Producer";
 import { useRef, useState } from "react";
-import { Producer } from "../../types/Producer";
 import ClusterMarkers from "./ClusterMarkers";
 import LocateUser from "./LocateUser";
 

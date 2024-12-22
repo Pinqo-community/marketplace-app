@@ -5,81 +5,61 @@
 
 .userButton,
 .cartButton {
-  transition: all 0.2s ease-in-out;
-  color: $primary-color;
-  padding: 10px;
-  border-radius: $border-radius-circle;
   position: relative;
+  padding: space(sm);
+  color: color(primary);
+  transition: background-color transition(fast) ease-in-out;
+  border-radius: radius(circle);
 
   &:hover {
     background-color: #d4fadd59;
   }
 
   .quantity {
-    position: absolute;
-    top: 3px;
-    right: 3px;
-    background-color: #e61616;
-    color: $color-light;
-    font-size: 0.75rem;
-    font-weight: bold;
-    width: 16px;
-    height: 16px;
     display: flex;
     align-items: center;
     justify-content: center;
-    border-radius: $border-radius-circle;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    position: absolute;
+    top: 3px;
+    right: 3px;
+    width: 16px;
+    height: 16px;
+    color: color(secondary, light);
+    font-weight: font-weight(bold);
+    font-size: font-size(xs);
+    box-shadow: shadow(light);
+    background-color: #e61616;
+    border-radius: radius(circle);
     pointer-events: none;
   }
 }
-
 /* -------------------------------------------------------------------------- */
 /*                                PrimaryButton                               */
 /* -------------------------------------------------------------------------- */
 
 .primaryButton {
-  transition: background-color 0.2s ease-in-out;
-  border-radius: $border-radius-md;
-  background-color: $primary-color;
-  padding: 14px 48px 14px 48px;
-  @include font-style($size: $font-size-sm, $weight: $font-weight-semibold, $color: $color-white);
+  padding: 14px 48px;
+  color: color(neutral, white);
+  font-weight: font-weight(semibold);
+  font-size: font-size(sm);
+  transition: background-color transition(fast) ease-in-out;
+  border-radius: radius(md);
+  background-color: color(primary);
 
   &:hover {
-    background-color: #029751;
+    background-color: color(primary, dark);
   }
 
   &.light {
-    background-color: $color-white;
-    color: $primary-color;
+    background-color: color(neutral, white);
+    color: color(primary);
 
     &:hover {
-      background-color: $primary-color;
-      color: $color-white;
+      background-color: color(primary);
+      color: color(neutral, white);
     }
   }
 }
-
-/* -------------------------------------------------------------------------- */
-/*                                SliderButton                                */
-/* -------------------------------------------------------------------------- */
-
-.sliderButton {
-  width: 40px;
-  height: 40px;
-  background-color: #f2f2f2;
-  border-radius: $border-radius-circle;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  &:first-child {
-    img {
-      transform: rotate(180deg);
-    }
-  }
-}
-
 /* -------------------------------------------------------------------------- */
 /*                                 MenuButton                                 */
 /* -------------------------------------------------------------------------- */
@@ -94,7 +74,7 @@
 
 .line {
   fill: none;
-  stroke: black;
+  stroke: color(neutral, black);
   stroke-width: 6;
   stroke-linecap: round;
   transition:
@@ -104,22 +84,44 @@
 }
 
 .opened .line {
-  stroke: $error-color;
+  stroke: status(error);
 }
 
 .line1,
 .line3 {
   stroke-dasharray: 60 207;
 }
+
 .opened .line1,
 .opened .line3 {
   stroke-dasharray: 90 207;
   stroke-dashoffset: -134;
 }
+
 .line2 {
   stroke-dasharray: 60 60;
 }
+
 .opened .line2 {
   stroke-dasharray: 1 60;
   stroke-dashoffset: -30;
+}
+/* -------------------------------------------------------------------------- */
+/*                                SliderButton                                */
+/* -------------------------------------------------------------------------- */
+
+.sliderButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  background-color: color(secondary, light);
+  border-radius: radius(circle);
+
+  &:first-child {
+    img {
+      transform: rotate(180deg);
+    }
+  }
 }

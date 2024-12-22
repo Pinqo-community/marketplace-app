@@ -2,10 +2,10 @@
 @use "@/scss/variables" as *;
 @use "@/scss/mixins" as *;
 @use "@/scss/shared" as *;
-@use "@/pages/HomePage/HomePage.module.scss";
+@use "@/pages/HomePage/HomePage.module";
 
 .arrowContainer {
   display: flex;
   align-items: center;
-  gap: $gap-sm;
+  gap: space(sm);
 }

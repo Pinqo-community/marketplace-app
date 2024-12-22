@@ -1,20 +1,23 @@
-@use "../../scss/global";
-@use "../../scss/variables" as *;
-@use "../../scss/mixins" as *;
+@use "@/scss/global";
+@use "@/scss/variables" as *;
+@use "@/scss/mixins" as *;
 
 .locateUser {
   position: absolute;
   top: 60vh;
   right: 0;
-  z-index: 9999;
+  padding: space(sm);
+  box-shadow: shadow(dark);
+  z-index: z(dropdown);
   cursor: pointer;
-  margin-right: 20px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
-
-  border-radius: $border-radius-circle;
-  background-color: $color-white;
-  padding: 10px;
+  margin-right: space(md);
+  border-radius: radius(circle);
+  background-color: color(neutral, white);
   fill: #979797;
+
+  @include media-under(sm) {
+    top: 55vh;
+  }
 }
 
 .locateUser svg {
@@ -27,11 +30,11 @@
 }
 
 .userLocationIcon {
-  box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
-  border: 2px solid $color-white;
-  border-radius: 50%;
   width: 15px !important;
   height: 15px !important;
+  border: 2px solid color(neutral, white);
+  box-shadow: shadow(dark);
+  border-radius: radius(circle);
 
   &.active {
     background-color: #007bff;
