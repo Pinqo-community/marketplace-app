@@ -1,6 +1,6 @@
 package com.marketplace.service;
 
-import com.marketplace.dto.Label.LabelDto;
+import com.marketplace.dto.LabelDto;
 import java.util.List;
 
 public interface LabelService {
