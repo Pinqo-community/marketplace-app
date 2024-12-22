@@ -1,6 +1,6 @@
 package com.marketplace.service.impl;
 
-import com.marketplace.dto.Label.LabelDto;
+import com.marketplace.dto.LabelDto;
 import com.marketplace.entity.Label;
 import com.marketplace.exception.AlreadyExistsException;
 import com.marketplace.exception.NotFoundException;
@@ -25,7 +25,7 @@ public class LabelServiceImpl implements LabelService {
     @Override
     public LabelDto createLabel(LabelDto labelDto) {
         log.info("Received request to create a new label");
-        if (labelRepository.existsByNameIgnoreCase(labelDto.name()))  {
+        if (labelRepository.existsByNameIgnoreCase(labelDto.getName()))  {
             throw new AlreadyExistsException("Le nom du label existe déjà");
         }
         log.info("Creating label: {}", labelDto);
@@ -38,12 +38,11 @@ public class LabelServiceImpl implements LabelService {
     @Override
     public LabelDto updateLabel(LabelDto labelDto, Long id) {
         log.info("Received request to update label with id {}", id);
-
         Label updatedLabel = labelRepository.findById(id)
                 .map(existingLabel -> {
                     log.info("Label with id {} found", id);
-                    existingLabel.setName(labelDto.name());
-                    existingLabel.setDescription(labelDto.description());
+                    existingLabel.setName(labelDto.getName());
+                    existingLabel.setDescription(labelDto.getDescription());
                     return labelRepository.save(existingLabel);
                 })
                 .orElseThrow(() -> new NotFoundException("Il n'existe pas de label avec cet id"));

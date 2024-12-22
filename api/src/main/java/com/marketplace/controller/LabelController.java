@@ -1,6 +1,6 @@
 package com.marketplace.controller;
 
-import com.marketplace.dto.Label.LabelDto;
+import com.marketplace.dto.LabelDto;
 import com.marketplace.service.LabelService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
