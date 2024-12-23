@@ -14,12 +14,17 @@ services:
     build:
       context: ./api
       dockerfile: Dockerfile.dev
+    command: >
+      ./gradlew bootRun --no-daemon -Dspring-boot.run.profiles=dev -Dspring.devtools.restart.enabled=true -Dspring.devtools.livereload.enable=true
     ports:
       - "8080:8080"
     container_name: marketplace-backend
     volumes:
-      - ./api:/app
-      - gradle-cache:/home/gradle/.gradle
+      - ./api:/app:rw,cached, rshared
+      - type: bind
+        source: ./api/gradlew
+        target: /app/gradlew
+        read_only: false
     depends_on:
       - db
     networks:
@@ -45,11 +50,33 @@ services:
         target: /app
       - type: volume
         target: /app/node_modules
+
+  backend-tests:
+    build:
+      context: ./api
+      dockerfile: Dockerfile.dev
+    container_name: marketplace-backend-tests
+    command: >
+     ./gradlew clean test --refresh-dependencies --no-daemon
+    environment:
+      DB_NAME: ${DB_NAME}
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_HOST: db
+      DB_PORT: 5432
+    depends_on:
+      - db
+    networks:
+      - app-network
+    volumes:
+      - ./api:/app:cached
+      - gradle-cache-tests:/home/gradle/.gradle:rw
+
   db:
     image: postgres:15
     container_name: marketplace-database
     ports:
-      - "5433:5432"
+      - "15433:5432"
     environment:
       POSTGRES_DB: ${DB_NAME}
       POSTGRES_USER: ${DB_USER}
@@ -61,7 +88,8 @@ services:
       - app-network
 
 volumes:
-  gradle-cache:
+  gradle-cache-backend:
+  gradle-cache-tests:
   postgres_data:
 
 networks:
