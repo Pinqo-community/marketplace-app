@@ -6,6 +6,7 @@ import { Bell, ChevronDown, HelpCircle, MapPin } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { CartButton, MenuButton, UserButton } from "../Button/Buttons";
+import LocationPopup from "../LocationPopup/LocationPopup";
 import styles from "./Header.module.scss";
 import SearchBar from "./SearchBar";
 
@@ -19,6 +20,7 @@ const Header: React.FC = () => {
   const [isOpened, setIsOpened] = useState(false);
   const isTopBarVisible = scrollPosition < 50;
   const shouldShowTopBar = isTopBarVisible || isScrolledUp;
+  const [isPopupOpen, setIsPopupOpen] = useState(false);
 
   /* -------------------------------------------------------------------------- */
   /*                                  Function                                  */
@@ -48,7 +50,11 @@ const Header: React.FC = () => {
         className={styles.topBanner}
       >
         <div className={styles.leftContainer}>
-          <button type="button" className={styles.button}>
+          <button
+            type="button"
+            className={styles.button}
+            onClick={() => setIsPopupOpen(true)}
+          >
             <MapPin size={16} className={styles.icon} />
             <span>Paris 11e</span>
           </button>
@@ -107,6 +113,10 @@ const Header: React.FC = () => {
           <CartButton />
         </nav>
       </div>
+      <LocationPopup
+        isOpen={isPopupOpen}
+        onClose={() => setIsPopupOpen(false)}
+      />
     </header>
   );
 };

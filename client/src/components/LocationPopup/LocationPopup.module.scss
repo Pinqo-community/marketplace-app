@@ -1,0 +1,156 @@
+@use "@/scss/global";
+@use "@/scss/variables" as *;
+@use "@/scss/mixins" as *;
+
+/* -------------------------------------------------------------------------- */
+/*                                 Search Bar                                 */
+/* -------------------------------------------------------------------------- */
+
+.searchContainer {
+  padding: space(lg);
+  padding-top: space(md);
+}
+
+.searchWrapper {
+  position: relative;
+
+  .icon {
+    position: absolute;
+    top: 50%;
+    left: 1rem;
+    color: #0003;
+    transform: translateY(-50%);
+    pointer-events: none;
+  }
+}
+
+.searchInput {
+  width: 100%;
+  padding: space(sm) space(md) space(sm) 45px;
+  border: 1px solid #f3f4f6;
+  border-radius: radius(lg);
+  background-color: rgb(240 253 244 / 30%);
+  color: color(neutral, text);
+  transition: all transition(fast) ease-in-out;
+}
+
+.searchInput:focus {
+  outline: none;
+  border-color: transparent;
+  box-shadow: 0 0 0 2px color(primary, base);
+}
+
+.searchInput::placeholder {
+  color: color(neutral, placeholder-color);
+}
+
+.locationOptions {
+  padding: 0 space(lg) space(lg);
+}
+
+.automaticLocationButton {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: space(md);
+  transition: background-color transition(fast) ease;
+  background-color: #f0fdf4;
+  border-radius: radius(xl);
+  gap: space(md);
+
+  &:hover {
+    background-color: #e3ffec;
+  }
+}
+
+.iconContainer {
+  padding: space(sm);
+  background-color: #dcfce7;
+  border-radius: radius(circle);
+  transition: background-color transition(fast) ease;
+
+  .automaticLocationButton:hover & {
+    background-color: #bbf7d0;
+  }
+
+  .icon {
+    width: 24px;
+    height: 24px;
+    color: color(primary, base);
+  }
+}
+
+.textContainer {
+  text-align: left;
+}
+
+.subtitle {
+  color: #6b7280;
+  font-size: font-size(xs);
+}
+/* -------------------------------------------------------------------------- */
+/*                               Recent Location                              */
+/* -------------------------------------------------------------------------- */
+
+.recentLocations {
+  margin-top: space(xs);
+
+  .title {
+    color: #4b5563;
+    font-weight: 400;
+    font-size: font-size(sm);
+    margin-bottom: space(xs);
+  }
+}
+
+.locationButton {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: space(sm);
+  transition: background-color transition(fast) ease;
+  border-radius: radius(xl);
+  margin-bottom: space(xs);
+
+  &:hover {
+    background-color: color(secondary, light);
+  }
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.locationContent {
+  display: flex;
+  align-items: center;
+  gap: space(sm);
+
+  .icon {
+    width: 20px;
+    height: 20px;
+    color: #6b7280;
+  }
+}
+
+.locationInfo {
+  text-align: left;
+
+  .locationName {
+    color: color(neutral, text);
+    font-weight: 400;
+  }
+
+  .locationAddress {
+    color: #6b7280;
+    font-size: font-size(xs);
+  }
+}
+
+.noLocations {
+  padding: space(md);
+  color: #6b7280;
+  font-size: font-size(xs);
+  text-align: center;
+}
