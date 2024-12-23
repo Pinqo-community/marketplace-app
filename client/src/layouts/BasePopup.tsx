@@ -58,7 +58,7 @@ const BasePopup: React.FC<BasePopupProps> = ({
                 <X size={24} />
               </motion.button>
             </div>
-            <div className={styles.body}>{children}</div>
+            <div>{children}</div>
           </motion.div>
         </motion.div>
       )}
