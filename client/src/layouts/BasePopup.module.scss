@@ -29,10 +29,19 @@
   padding: space(lg);
   padding-bottom: 0;
   background-color: color(neutral, background);
+
+  @include media-under(sm) {
+    padding: space(md);
+    padding-bottom: 0;
+  }
 }
 
 .title {
   color: color(neutral, text);
+
+  @include media-under(sm) {
+    font-size: font-size(lg);
+  }
 }
 
 .close {

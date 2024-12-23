@@ -9,6 +9,11 @@
 .searchContainer {
   padding: space(lg);
   padding-top: space(md);
+
+  @include media-under(sm) {
+    padding: space(md);
+    padding-top: space(sm);
+  }
 }
 
 .searchWrapper {
@@ -21,32 +26,51 @@
     color: #0003;
     transform: translateY(-50%);
     pointer-events: none;
+    transition: color 0.2s ease-in-out;
   }
-}
 
-.searchInput {
-  width: 100%;
-  padding: space(sm) space(md) space(sm) 45px;
-  border: 1px solid #f3f4f6;
-  border-radius: radius(lg);
-  background-color: rgb(240 253 244 / 30%);
-  color: color(neutral, text);
-  transition: all transition(fast) ease-in-out;
-}
+  .searchInput {
+    width: 100%;
+    padding: space(sm) space(md) space(sm) 45px;
+    border: 1px solid #f3f4f6;
+    border-radius: radius(lg);
+    background-color: rgb(240 253 244 / 30%);
+    color: color(neutral, text);
+    transition: all transition(fast) ease-in-out;
 
-.searchInput:focus {
-  outline: none;
-  border-color: transparent;
-  box-shadow: 0 0 0 2px color(primary, base);
-}
+    @include media-under(sm) {
+      padding: space(xs) space(sm) space(xs) 45px;
+    }
 
-.searchInput::placeholder {
-  color: color(neutral, placeholder-color);
+    &:focus {
+      outline: none;
+      border-color: transparent;
+      box-shadow: 0 0 0 2px color(primary, base);
+    }
+
+    &::placeholder {
+      color: color(neutral, placeholder-color);
+    }
+  }
+
+  &:focus-within {
+    .icon {
+      color: color(primary, base);
+    }
+  }
 }
 
 .locationOptions {
   padding: 0 space(lg) space(lg);
+
+  @include media-under(sm) {
+    padding: 0 space(md) space(md);
+  }
 }
+
+/* -------------------------------------------------------------------------- */
+/*                             Automatic Location                             */
+/* -------------------------------------------------------------------------- */
 
 .automaticLocationButton {
   display: flex;
@@ -61,6 +85,10 @@
   &:hover {
     background-color: #e3ffec;
   }
+
+  @include media-under(sm) {
+    padding: space(sm);
+  }
 }
 
 .iconContainer {
@@ -68,6 +96,10 @@
   background-color: #dcfce7;
   border-radius: radius(circle);
   transition: background-color transition(fast) ease;
+
+  @include media-under(sm) {
+    padding: space(xs);
+  }
 
   .automaticLocationButton:hover & {
     background-color: #bbf7d0;
@@ -77,6 +109,11 @@
     width: 24px;
     height: 24px;
     color: color(primary, base);
+
+    @include media-under(sm) {
+      width: 20px;
+      height: 20px;
+    }
   }
 }
 
@@ -112,6 +149,10 @@
   transition: background-color transition(fast) ease;
   border-radius: radius(xl);
   margin-bottom: space(xs);
+
+  @include media-under(sm) {
+    padding: space(xs);
+  }
 
   &:hover {
     background-color: color(secondary, light);
@@ -153,4 +194,8 @@
   color: #6b7280;
   font-size: font-size(xs);
   text-align: center;
+
+  @include media-under(sm) {
+    padding: space(sm);
+  }
 }
