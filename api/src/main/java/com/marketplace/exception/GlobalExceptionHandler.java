@@ -66,17 +66,6 @@ public class GlobalExceptionHandler {
         );
     }
 
-    @ExceptionHandler(UserAlreadyExistsException.class)
-    public ResponseEntity<ExceptionResponse> handleUserAlreadyExists(UserAlreadyExistsException ex, WebRequest request) {
-        return ResponseEntity.status(HttpStatus.CONFLICT).body(
-                new ExceptionResponse(
-                        HttpStatus.CONFLICT.value(),
-                        ex.getMessage(),
-                        ((ServletWebRequest) request).getRequest().getRequestURI()
-                )
-        );
-    }
-
     @ExceptionHandler({WrongCredentialException.class, InvalidTokenException.class})
     public ResponseEntity<ExceptionResponse> handleWrongCredentialException(Exception ex, WebRequest request) {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(
