@@ -1,8 +1,9 @@
 import BasePopup from "@/layouts/BasePopup";
 import Loader from "@/shared/Loader";
 import { BasePopupProps } from "@/types/BasePopup";
+import classNames from "classnames";
 import { AnimatePresence, motion } from "framer-motion";
-import { Locate, MapPin, Search } from "lucide-react";
+import { Locate, LocateOff, MapPin, Search } from "lucide-react";
 import { useState } from "react";
 import styles from "./LocationPopup.module.scss";
 
@@ -14,16 +15,15 @@ const LocationPopup = ({ isOpen, onClose }: BasePopupProps) => {
 
   const [address, setAddress] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [hasError, setHasError] = useState(false);
 
   const handleLocate = () => {
     if (!navigator.geolocation) {
-      alert(
-        "La géolocalisation n'est pas prise en charge par votre navigateur.",
-      );
+      setHasError(true);
       return;
     }
-
     setIsLoading(true);
+    setHasError(false);
 
     navigator.geolocation.getCurrentPosition(
       async (position) => {
@@ -44,14 +44,14 @@ const LocationPopup = ({ isOpen, onClose }: BasePopupProps) => {
           const street = data.address?.road || "Rue introuvable";
 
           setAddress(`${street} - ${city}, ${postcode}`);
-        } catch (error) {
-          alert("Erreur lors de la récupération de l’adresse.");
+        } catch {
+          setHasError(true);
         } finally {
           setIsLoading(false);
         }
       },
-      (error) => {
-        alert("Erreur lors de la géolocalisation.");
+      () => {
+        setHasError(true);
         setIsLoading(false);
       },
     );
@@ -99,20 +99,37 @@ const LocationPopup = ({ isOpen, onClose }: BasePopupProps) => {
 
       {/* Location Options */}
       <div className={styles.locationOptions}>
-        <button
-          className={styles.automaticLocationButton}
+        <motion.button
+          className={classNames(styles.automaticLocationButton, {
+            [styles.error]: hasError,
+          })}
           onClick={handleLocate}
         >
-          <div className={styles.iconContainer}>
-            <Locate className={styles.icon} />
-          </div>
+          <motion.div
+            initial={{ opacity: 0, scale: 0 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 0.2 }}
+            className={styles.iconContainer}
+          >
+            {hasError ? (
+              <LocateOff className={styles.icon} />
+            ) : (
+              <Locate className={styles.icon} />
+            )}
+          </motion.div>
           <div className={styles.textContainer}>
-            <h4 className={styles.title}>Détecter ma position</h4>
+            <motion.h4 className={styles.title}>
+              {hasError
+                ? "Impossible de détecter votre position"
+                : "Détecter ma position"}
+            </motion.h4>
             <p className={styles.subtitle}>
-              Utilisez la localisation de votre appareil
+              {hasError
+                ? "Veuillez utiliser une adresse ou un code postal"
+                : "Utilisez la localisation de votre appareil"}
             </p>
           </div>
-        </button>
+        </motion.button>
 
         {/* Recent Locations */}
         <div className={styles.recentLocations}>

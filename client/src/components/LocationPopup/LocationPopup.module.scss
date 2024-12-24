@@ -91,6 +91,22 @@
   }
 }
 
+.automaticLocationButton.error {
+  background-color: #f3f3f3a2;
+
+  &:hover {
+    background-color: #f0f0f0;
+  }
+
+  .iconContainer {
+    background-color: #ebebeb;
+  }
+
+  .icon {
+    color: #3b3b3b;
+  }
+}
+
 .iconContainer {
   padding: space(sm);
   background-color: #dcfce7;
@@ -103,6 +119,13 @@
 
   .automaticLocationButton:hover & {
     background-color: #bbf7d0;
+
+    .error & {
+      background-color: #ebebeb;
+    }
+  }
+  .automaticLocationButton.error:hover & {
+    background-color: #dddddd;
   }
 
   .icon {
