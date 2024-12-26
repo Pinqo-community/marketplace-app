@@ -34,9 +34,6 @@ class LabelControllerTest {
     @MockBean
     private LabelService labelService;
 
-    @MockBean
-    private LabelMapper labelMapper;
-
     @Autowired
     private ObjectMapper objectMapper;
     private LabelDto baseLabelDto;
