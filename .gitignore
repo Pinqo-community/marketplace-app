@@ -162,3 +162,5 @@ dist
 
 # Ignore all files and folders starting with an point and underscore 
 ._*
+
+.gradle/
