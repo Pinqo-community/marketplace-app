@@ -30,7 +30,10 @@ public class LabelController {
 
     @PostMapping
     @Operation(summary = "Create a label", description = "Add a new label in the marketplace")
-    @ApiResponse(responseCode = "201", description = "Successfully created label")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Successfully created label"),
+            @ApiResponse(responseCode = "409", description = "Label with this name already exists")
+    })
     public ResponseEntity<LabelDto> createLabel(@Valid @RequestBody LabelDto labelDto) {
         try {
             log.info("POST /labels - START: Creating a new label");
