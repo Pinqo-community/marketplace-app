@@ -1,7 +1,6 @@
 @use "@/scss/global";
 @use "@/scss/variables" as *;
 @use "@/scss/mixins" as *;
-
 /* -------------------------------------------------------------------------- */
 /*                                 Search Bar                                 */
 /* -------------------------------------------------------------------------- */
@@ -23,10 +22,9 @@
     position: absolute;
     top: 50%;
     left: 1rem;
-    color: #0003;
+    transition: color 0.2s ease-in-out;
     transform: translateY(-50%);
     pointer-events: none;
-    transition: color 0.2s ease-in-out;
   }
 
   .searchInput {
@@ -45,11 +43,19 @@
     &:focus {
       outline: none;
       border-color: transparent;
-      box-shadow: 0 0 0 2px color(primary, base);
+      box-shadow: 0 0 0 2px #0000002b;
     }
 
     &::placeholder {
       color: color(neutral, placeholder-color);
+    }
+
+    &.valid {
+      box-shadow: 0 0 0 2px color(primary, base);
+    }
+
+    &.invalid {
+      box-shadow: 0 0 0 2px #ff008f;
     }
   }
 
@@ -67,7 +73,6 @@
     padding: 0 space(md) space(md);
   }
 }
-
 /* -------------------------------------------------------------------------- */
 /*                             Automatic Location                             */
 /* -------------------------------------------------------------------------- */
@@ -124,8 +129,9 @@
       background-color: #ebebeb;
     }
   }
+
   .automaticLocationButton.error:hover & {
-    background-color: #dddddd;
+    background-color: #ddd;
   }
 
   .icon {
@@ -222,21 +228,20 @@
     padding: space(sm);
   }
 }
-
 /* -------------------------------------------------------------------------- */
 /*                                   Loading                                  */
 /* -------------------------------------------------------------------------- */
 
 .loading {
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: space(md);
   position: absolute;
+  padding: space(md);
+  flex-direction: column;
   inset: 0;
   z-index: z(tooltip);
-  background-color: rgba(255, 255, 255, 0.4);
+  background-color: rgb(255 255 255 / 40%);
   backdrop-filter: blur(4px);
 
   .text {

@@ -1,60 +1,39 @@
+import { useGeolocation } from "@/hooks/useGeolocation";
 import BasePopup from "@/layouts/BasePopup";
 import Loader from "@/shared/Loader";
 import { BasePopupProps } from "@/types/BasePopup";
+import { Suggestion } from "@/types/Location";
 import classNames from "classnames";
 import { AnimatePresence, motion } from "framer-motion";
-import { Locate, LocateOff, MapPin, Search } from "lucide-react";
+import { Locate, LocateOff, MapPin } from "lucide-react";
 import { useState } from "react";
+import { useSuggestions } from "../../hooks/useSuggestions";
 import styles from "./LocationPopup.module.scss";
+import SearchIcon from "./SearchIcon";
+import SuggestionList from "./SuggestionList";
+
+const RECENT_LOCATIONS = [
+  { name: "Paris 11e", address: "Paris, 11ème arrondissement" },
+  { name: "Lyon", address: "Lyon, Rhône-Alpes" },
+];
 
 const LocationPopup = ({ isOpen, onClose }: BasePopupProps) => {
-  const locations = [
-    { name: "Paris 11e", address: "Paris, 11ème arrondissement" },
-    { name: "Lyon", address: "Lyon, Rhône-Alpes" },
-  ];
-
   const [address, setAddress] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
-  const [hasError, setHasError] = useState(false);
+  const [isValidAddress, setIsValidAddress] = useState(false);
+  const { suggestions, fetchSuggestions, clearSuggestions } = useSuggestions();
+  const { isLoading, hasError, locate } = useGeolocation();
 
-  const handleLocate = () => {
-    if (!navigator.geolocation) {
-      setHasError(true);
-      return;
-    }
-    setIsLoading(true);
-    setHasError(false);
+  const handleSelectAddress = (suggestion: Suggestion) => {
+    setAddress(suggestion.label);
+    clearSuggestions();
+    setIsValidAddress(true);
+  };
 
-    navigator.geolocation.getCurrentPosition(
-      async (position) => {
-        const { latitude, longitude } = position.coords;
-
-        try {
-          const response = await fetch(
-            `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`,
-          );
-          const data = await response.json();
-
-          const city =
-            data.address?.city ||
-            data.address?.town ||
-            data.address?.village ||
-            "Ville introuvable";
-          const postcode = data.address?.postcode || "Code postal introuvable";
-          const street = data.address?.road || "Rue introuvable";
-
-          setAddress(`${street} - ${city}, ${postcode}`);
-        } catch {
-          setHasError(true);
-        } finally {
-          setIsLoading(false);
-        }
-      },
-      () => {
-        setHasError(true);
-        setIsLoading(false);
-      },
-    );
+  const handleAddressChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setAddress(value);
+    setIsValidAddress(false);
+    fetchSuggestions(value);
   };
 
   return (
@@ -63,7 +42,7 @@ const LocationPopup = ({ isOpen, onClose }: BasePopupProps) => {
       onClose={onClose}
       title="Choisissez votre localisation"
     >
-      <AnimatePresence>
+      <AnimatePresence mode="wait">
         {isLoading && (
           <motion.div
             initial={{ opacity: 0 }}
@@ -72,85 +51,80 @@ const LocationPopup = ({ isOpen, onClose }: BasePopupProps) => {
             className={styles.loading}
           >
             <Loader />
-            <motion.p
-              initial={{ opacity: 0, y: -10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.3 }}
-              className={styles.text}
-            >
-              Recherche de votre localisation...
-            </motion.p>
+            <p className={styles.text}>Recherche de votre localisation...</p>
           </motion.div>
         )}
       </AnimatePresence>
-      {/* Search Input */}
+
       <div className={styles.searchContainer}>
         <div className={styles.searchWrapper}>
-          <Search size={20} className={styles.icon} />
+          <div className={styles.icon}>
+            <SearchIcon address={address} isValidAddress={isValidAddress} />
+          </div>
+
           <input
             type="text"
             value={address}
-            onChange={(e) => setAddress(e.target.value)}
+            onChange={handleAddressChange}
             placeholder="Entrez votre adresse, code postal, ville..."
-            className={styles.searchInput}
+            className={classNames(styles.searchInput, {
+              [styles.valid]: isValidAddress,
+              [styles.invalid]: !isValidAddress && address !== "",
+            })}
           />
+
+          <AnimatePresence>
+            {suggestions.length > 0 && (
+              <SuggestionList
+                suggestions={suggestions}
+                onSelect={handleSelectAddress}
+              />
+            )}
+          </AnimatePresence>
         </div>
       </div>
 
-      {/* Location Options */}
       <div className={styles.locationOptions}>
-        <motion.button
+        <button
           className={classNames(styles.automaticLocationButton, {
             [styles.error]: hasError,
           })}
-          onClick={handleLocate}
+          onClick={locate}
         >
-          <motion.div
-            initial={{ opacity: 0, scale: 0 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: 0.2 }}
-            className={styles.iconContainer}
-          >
+          <div className={styles.iconContainer}>
             {hasError ? (
               <LocateOff className={styles.icon} />
             ) : (
               <Locate className={styles.icon} />
             )}
-          </motion.div>
+          </div>
           <div className={styles.textContainer}>
-            <motion.h4 className={styles.title}>
+            <h4 className={styles.title}>
               {hasError
                 ? "Impossible de détecter votre position"
                 : "Détecter ma position"}
-            </motion.h4>
+            </h4>
             <p className={styles.subtitle}>
               {hasError
                 ? "Veuillez utiliser une adresse ou un code postal"
                 : "Utilisez la localisation de votre appareil"}
             </p>
           </div>
-        </motion.button>
+        </button>
 
-        {/* Recent Locations */}
         <div className={styles.recentLocations}>
           <h5 className={styles.title}>Localisations récentes</h5>
-          {locations.length > 0 ? (
-            locations.map((location) => (
-              <button key={location.name} className={styles.locationButton}>
-                <div className={styles.locationContent}>
-                  <MapPin className={styles.icon} />
-                  <div className={styles.locationInfo}>
-                    <h4 className={styles.locationName}>{location.name}</h4>
-                    <p className={styles.locationAddress}>{location.address}</p>
-                  </div>
+          {RECENT_LOCATIONS.map((location) => (
+            <button key={location.name} className={styles.locationButton}>
+              <div className={styles.locationContent}>
+                <MapPin className={styles.icon} />
+                <div className={styles.locationInfo}>
+                  <h4 className={styles.locationName}>{location.name}</h4>
+                  <p className={styles.locationAddress}>{location.address}</p>
                 </div>
-              </button>
-            ))
-          ) : (
-            <p className={styles.noLocations}>
-              Aucune localisation récente disponible.
-            </p>
-          )}
+              </div>
+            </button>
+          ))}
         </div>
       </div>
     </BasePopup>

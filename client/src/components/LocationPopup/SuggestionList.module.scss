@@ -1,0 +1,46 @@
+@use "@/scss/global";
+@use "@/scss/variables" as *;
+@use "@/scss/mixins" as *;
+
+.suggestions {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  left: 0;
+  border: 1px #bfbfbf0f solid;
+  box-shadow: shadow(light);
+  max-height: 200px;
+  overflow-y: auto;
+  z-index: z(tooltip);
+  background-color: #ffffff82;
+  backdrop-filter: blur(10px);
+  border-radius: radius(xl);
+  margin-top: space(xs);
+
+  .item {
+    padding: space(md);
+    cursor: pointer;
+    transition: background-color transition(fast) ease;
+
+    @include media-under(sm) {
+      padding: space(sm);
+    }
+
+    &:hover {
+      background-color: #0000000a;
+    }
+
+    .label {
+      color: color(neutral, text);
+
+      @include media-under(sm) {
+        font-size: font-size(sm);
+      }
+    }
+
+    .context {
+      color: #6b7280;
+      font-size: font-size(xs);
+    }
+  }
+}
