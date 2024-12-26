@@ -160,4 +160,5 @@ dist
 .yarn/install-state.gz
 .pnp.*
 
-
+# Ignore all files and folders starting with an underscore
+__*
