@@ -1,9 +1,11 @@
 import logo from "@/assets/images/logo.svg";
 import { useScroll } from "@/hooks/useScroll";
+import { RootState } from "@/store";
 import classNames from "classnames";
 import { motion } from "framer-motion";
 import { Bell, ChevronDown, HelpCircle, MapPin } from "lucide-react";
 import { useState } from "react";
+import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { CartButton, MenuButton, UserButton } from "../Button/Buttons";
 import LocationPopup from "../LocationPopup/LocationPopup";
@@ -21,6 +23,7 @@ const Header: React.FC = () => {
   const isTopBarVisible = scrollPosition < 50;
   const shouldShowTopBar = isTopBarVisible || isScrolledUp;
   const [isPopupOpen, setIsPopupOpen] = useState(false);
+  const userLocation = useSelector((state: RootState) => state.location);
 
   /* -------------------------------------------------------------------------- */
   /*                                  Function                                  */
@@ -56,7 +59,7 @@ const Header: React.FC = () => {
             onClick={() => setIsPopupOpen(true)}
           >
             <MapPin size={16} className={styles.icon} />
-            <span>Paris 11e</span>
+            <span>{userLocation.address || "Ajouter ma localisation"}</span>
           </button>
 
           <div className={styles.separator}></div>

@@ -2,15 +2,17 @@ import { useGeolocation } from "@/hooks/useGeolocation";
 import BasePopup from "@/layouts/BasePopup";
 import Loader from "@/shared/Loader";
 import { BasePopupProps } from "@/types/BasePopup";
-import { Suggestion } from "@/types/Location";
+import { Coordinates, Suggestion } from "@/types/Location";
 import classNames from "classnames";
 import { AnimatePresence, motion } from "framer-motion";
 import { Locate, LocateOff, MapPin } from "lucide-react";
-import { useState } from "react";
-import { useSuggestions } from "../../hooks/useSuggestions";
+import { useEffect, useState } from "react";
+import { useSuggestions } from "@/hooks/useSuggestions";
 import styles from "./LocationPopup.module.scss";
 import SearchIcon from "./SearchIcon";
 import SuggestionList from "./SuggestionList";
+import { setUserLocation } from "@/store/slices/locationSlice";
+import { useDispatch } from "react-redux";
 
 const RECENT_LOCATIONS = [
   { name: "Paris 11e", address: "Paris, 11ème arrondissement" },
@@ -21,12 +23,28 @@ const LocationPopup = ({ isOpen, onClose }: BasePopupProps) => {
   const [address, setAddress] = useState("");
   const [isValidAddress, setIsValidAddress] = useState(false);
   const { suggestions, fetchSuggestions, clearSuggestions } = useSuggestions();
-  const { isLoading, hasError, locate } = useGeolocation();
+  const {
+    coordinates,
+    address: geoAddress,
+    isLoading,
+    hasError,
+    locate,
+  } = useGeolocation();
+
+  const dispatch = useDispatch();
 
   const handleSelectAddress = (suggestion: Suggestion) => {
     setAddress(suggestion.label);
     clearSuggestions();
     setIsValidAddress(true);
+    const location: { address: string; coordinates: Coordinates } = {
+      address: suggestion.label,
+      coordinates: {
+        latitude: suggestion.coordinates[1],
+        longitude: suggestion.coordinates[0],
+      },
+    };
+    dispatch(setUserLocation(location));
   };
 
   const handleAddressChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -35,6 +53,25 @@ const LocationPopup = ({ isOpen, onClose }: BasePopupProps) => {
     setIsValidAddress(false);
     fetchSuggestions(value);
   };
+
+  useEffect(() => {
+    if (geoAddress) {
+      console.log(geoAddress);
+
+      setAddress(geoAddress);
+      setIsValidAddress(true);
+
+      const location: { address: string; coordinates: Coordinates } = {
+        address: geoAddress,
+        coordinates: {
+          latitude: coordinates?.latitude || 0,
+          longitude: coordinates?.longitude || 0,
+        },
+      };
+
+      dispatch(setUserLocation(location));
+    }
+  }, [geoAddress, coordinates, dispatch]);
 
   return (
     <BasePopup
