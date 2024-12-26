@@ -2,7 +2,6 @@ package com.marketplace.annotation;
 
 import com.marketplace.configuration.SecurityConfig;
 import com.marketplace.security.jwt.JwtRequestFilter;
-import com.marketplace.controller.ProductController;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.autoconfigure.security.oauth2.client.servlet.OAuth2ClientAutoConfiguration;
@@ -23,7 +22,6 @@ import java.lang.annotation.Target;
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 @WebMvcTest(
-        controllers = ProductController.class,
         excludeAutoConfiguration = {
                 SecurityAutoConfiguration.class,
                 SecurityFilterAutoConfiguration.class,
