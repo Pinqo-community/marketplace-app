@@ -601,7 +601,7 @@ const Map: React.FC = () => {
           url={`https://tile.jawg.io/jawg-lagoon/{z}/{x}/{y}{r}.png?access-token=${jawgApiKey}`}
         />
         <ClusterMarkers producers={producers} />
-        <LocateUser mapRef={mapRef} defaultPosition={defaultPosition} />
+        <LocateUser defaultPosition={defaultPosition} />
       </MapContainer>
     </div>
   );

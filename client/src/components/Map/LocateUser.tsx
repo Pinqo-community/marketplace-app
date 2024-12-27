@@ -1,78 +1,78 @@
+import { RootState } from "@/store";
 import { LocateUserProps } from "@/types/types";
 import L from "leaflet";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useMap } from "react-leaflet";
+import { useSelector } from "react-redux";
 import styles from "./LocateUser.module.scss";
 
-const LocateUser: React.FC<LocateUserProps> = ({ mapRef, defaultPosition }) => {
+const LocateUser: React.FC<LocateUserProps> = ({ defaultPosition }) => {
   /* -------------------------------------------------------------------------- */
   /*                                  Statement                                 */
   /* -------------------------------------------------------------------------- */
 
   const map = useMap();
   const [position, setPosition] = useState(false);
-  const [defaultMarker, setDefaultMarker] = useState<L.Marker | null>(null);
+  const { coordinates } = useSelector((state: RootState) => state.location);
+  const markerRef = useRef<L.Marker | null>(null);
 
   /* -------------------------------------------------------------------------- */
-  /*                                  Function                                  */
+  /*                                  Functions                                 */
   /* -------------------------------------------------------------------------- */
 
-  /* --------------------------- Marqueur par défaut --------------------------- */
+  const addMarker = useCallback(
+    (lat: number, lng: number, isActive: boolean) => {
+      // Supprime le marqueur existant
+      if (markerRef.current) {
+        map.removeLayer(markerRef.current);
+      }
 
+      // Ajoute un nouveau marqueur
+      const markerIcon = new L.DivIcon({
+        className: `${styles.userLocationIcon} ${isActive ? styles.active : styles.inactive}`,
+      });
+      const newMarker = L.marker([lat, lng], { icon: markerIcon }).addTo(map);
+
+      // Mise à jour de la reference du marqueur
+      markerRef.current = newMarker;
+    },
+    [map],
+  );
+
+  // Initialise le marqueur par défaut
   useEffect(() => {
-    const marker = L.marker(defaultPosition, {
-      icon: new L.DivIcon({
-        className: `${styles.userLocationIcon} ${styles.inactive}`,
-      }),
-    }).addTo(map);
-    setDefaultMarker(marker);
+    if (defaultPosition) {
+      addMarker(defaultPosition.lat, defaultPosition.lng, false);
+    }
 
-    // Cleanup du marqueur lors du démontage
     return () => {
-      marker.remove();
+      // Nettoyage du marqueur lors du démontage du composant
+      if (markerRef.current) {
+        map.removeLayer(markerRef.current);
+      }
     };
-  }, [map, defaultPosition]);
+  }, [defaultPosition, addMarker, map]);
 
-  /* ----------------------------- Géolocalisation ---------------------------- */
+  // Mise à jour du marqueur utilisateur lors du changement de coordonnés
+  useEffect(() => {
+    if (coordinates) {
+      setPosition(true);
+      map.flyTo([coordinates.latitude, coordinates.longitude], 13);
+      addMarker(coordinates.latitude, coordinates.longitude, true);
+    }
+  }, [map, coordinates, addMarker]);
 
+  // Gestion de la récupération manuelle de la position
   const handleLocation = useCallback(() => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition((position) => {
         const { latitude, longitude } = position.coords;
         setPosition(true);
         map.flyTo([latitude, longitude], 13);
-
-        // Retire le marqueur par défaut et ajouter le marqueur utilisateur
-        if (defaultMarker) map.removeLayer(defaultMarker);
-
-        const userLocationIcon = new L.DivIcon({
-          className: `${styles.userLocationIcon} ${styles.active}`,
-        });
-        L.marker([latitude, longitude], { icon: userLocationIcon }).addTo(map);
+        addMarker(latitude, longitude, true);
       });
     }
-  }, [map, defaultMarker]);
-
-  /* ------------------------------------ Observer ----------------------------------- */
-
-  // Observer pour voir si la map est visible et lancer la localisation
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        if (entries[0].isIntersecting) {
-          handleLocation();
-        }
-      },
-      { threshold: 0.7 },
-    );
-    const mapElement = mapRef.current;
-    if (mapElement) observer.observe(mapElement);
-
-    return () => {
-      if (mapElement) observer.unobserve(mapElement);
-    };
-  }, [mapRef, handleLocation]);
-
+  }, [map, addMarker]);
   /* -------------------------------------------------------------------------- */
   /*                                   Render                                   */
   /* -------------------------------------------------------------------------- */
