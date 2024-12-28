@@ -28,6 +28,10 @@ public class LabelServiceImpl implements LabelService {
         if (labelRepository.existsByNameIgnoreCase(labelDto.getName()))  {
             throw new AlreadyExistsException("Le nom du label existe déjà");
         }
+        log.info("Checking if label name is null or empty");
+        if (labelDto.getName() == null) {
+            throw new IllegalArgumentException("Le nom du label est obligatoire et ne peut pas être nul");
+        }
         log.info("Creating label: {}", labelDto);
         Label newlabel = LabelMapper.INSTANCE.toEntity(labelDto);
         log.info("New label created with id {}", newlabel.getId());

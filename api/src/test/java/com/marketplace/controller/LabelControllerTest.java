@@ -7,10 +7,7 @@ import com.marketplace.exception.AlreadyExistsException;
 import com.marketplace.exception.NotFoundException;
 import com.marketplace.service.LabelService;
 import com.marketplace.utils.mapper.LabelMapper;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Nested;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -24,7 +21,7 @@ import static org.mockito.ArgumentMatchers.anyLong;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-
+@Tag("LabelController")
 @ControllerWebMvcTest(LabelController.class)
 @DisplayName("Tests for LabelController")
 class LabelControllerTest {
