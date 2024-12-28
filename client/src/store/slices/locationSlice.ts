@@ -8,11 +8,22 @@ interface LocationState {
   recentLocations: RecentLocation[];
 }
 
+// Charge les infos de localisation depuis localStorage
+const loadUserLocation = () => {
+  const savedLocation = localStorage.getItem("userLocation");
+  return savedLocation ? JSON.parse(savedLocation) : null;
+};
+
+const loadRecentLocations = (): RecentLocation[] => {
+  const savedLocations = localStorage.getItem("recentLocations");
+  return savedLocations ? JSON.parse(savedLocations) : [];
+};
+
 const initialState: LocationState = {
-  name: null,
-  address: null,
-  coordinates: null,
-  recentLocations: [],
+  name: loadUserLocation()?.name || null,
+  address: loadUserLocation()?.address || null,
+  coordinates: loadUserLocation()?.coordinates || null,
+  recentLocations: loadRecentLocations(),
 };
 
 const locationSlice = createSlice({
@@ -30,17 +41,36 @@ const locationSlice = createSlice({
       state.name = action.payload.name;
       state.address = action.payload.address;
       state.coordinates = action.payload.coordinates;
+
+      // Sauvegarde dans localStorage
+      localStorage.setItem(
+        "userLocation",
+        JSON.stringify({
+          name: action.payload.name,
+          address: action.payload.address,
+          coordinates: action.payload.coordinates,
+        }),
+      );
     },
     resetLocation: (state) => {
       state.name = null;
       state.address = null;
       state.coordinates = null;
+
+      // Supprime les données du cache
+      localStorage.removeItem("userLocation");
     },
     removeRecentLocation: (state, action: PayloadAction<Coordinates>) => {
       state.recentLocations = state.recentLocations.filter(
         (loc) =>
           loc.coordinates.latitude !== action.payload.latitude ||
           loc.coordinates.longitude !== action.payload.longitude,
+      );
+
+      // Met à jour le cache
+      localStorage.setItem(
+        "recentLocations",
+        JSON.stringify(state.recentLocations),
       );
     },
     addRecentLocation: (state, action: PayloadAction<RecentLocation>) => {
@@ -54,6 +84,12 @@ const locationSlice = createSlice({
           action.payload,
           ...state.recentLocations,
         ].slice(0, 2);
+
+        // Met à jour le cache
+        localStorage.setItem(
+          "recentLocations",
+          JSON.stringify(state.recentLocations),
+        );
       }
     },
   },
