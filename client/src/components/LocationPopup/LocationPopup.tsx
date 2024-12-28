@@ -1,27 +1,28 @@
 import { useGeolocation } from "@/hooks/useGeolocation";
+import { useSuggestions } from "@/hooks/useSuggestions";
 import BasePopup from "@/layouts/BasePopup";
 import Loader from "@/shared/Loader";
+import { RootState } from "@/store";
+import {
+  addRecentLocation,
+  removeRecentLocation,
+  setUserLocation,
+} from "@/store/slices/locationSlice";
 import { BasePopupProps } from "@/types/BasePopup";
-import { Coordinates, Suggestion } from "@/types/Location";
+import { RecentLocation, Suggestion } from "@/types/Location";
 import classNames from "classnames";
 import { AnimatePresence, motion } from "framer-motion";
-import { Locate, LocateOff, MapPin } from "lucide-react";
+import { Locate, LocateOff, MapPin, Trash2 } from "lucide-react";
 import { useEffect, useState } from "react";
-import { useSuggestions } from "@/hooks/useSuggestions";
+import { useDispatch, useSelector } from "react-redux";
 import styles from "./LocationPopup.module.scss";
 import SearchIcon from "./SearchIcon";
 import SuggestionList from "./SuggestionList";
-import { setUserLocation } from "@/store/slices/locationSlice";
-import { useDispatch } from "react-redux";
-
-const RECENT_LOCATIONS = [
-  { name: "Paris 11e", address: "Paris, 11ème arrondissement" },
-  { name: "Lyon", address: "Lyon, Rhône-Alpes" },
-];
 
 const LocationPopup = ({ isOpen, onClose }: BasePopupProps) => {
   const [address, setAddress] = useState("");
   const [isValidAddress, setIsValidAddress] = useState(false);
+
   const { suggestions, fetchSuggestions, clearSuggestions } = useSuggestions();
   const {
     coordinates,
@@ -32,19 +33,38 @@ const LocationPopup = ({ isOpen, onClose }: BasePopupProps) => {
   } = useGeolocation();
 
   const dispatch = useDispatch();
+  const recentLocations = useSelector(
+    (state: RootState) => state.location.recentLocations,
+  );
 
+  /* -------------------------------------------------------------------------- */
+  /*                            Gestion des suggestions                         */
+  /* -------------------------------------------------------------------------- */
   const handleSelectAddress = (suggestion: Suggestion) => {
     setAddress(suggestion.label);
     clearSuggestions();
     setIsValidAddress(true);
-    const location: { address: string; coordinates: Coordinates } = {
-      address: suggestion.label,
+
+    // Regex pour extraire la ville
+    const match = suggestion.label.match(/(\d{5})\s+(.+)$/);
+
+    // Retire le dernier mot de l'adresse
+    const addressWithoutLastWord = suggestion.label
+      .split(" ")
+      .slice(0, -1)
+      .join(" ");
+
+    const location = {
+      name: match ? match[2] : suggestion.label.split(",")[0],
+      address: addressWithoutLastWord,
       coordinates: {
         latitude: suggestion.coordinates[1],
         longitude: suggestion.coordinates[0],
       },
     };
+
     dispatch(setUserLocation(location));
+    dispatch(addRecentLocation(location));
   };
 
   const handleAddressChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -54,24 +74,61 @@ const LocationPopup = ({ isOpen, onClose }: BasePopupProps) => {
     fetchSuggestions(value);
   };
 
-  useEffect(() => {
-    if (geoAddress) {
-      console.log(geoAddress);
+  /* -------------------------------------------------------------------------- */
+  /*                      Gestion de la géolocalisation automatique             */
+  /* -------------------------------------------------------------------------- */
 
+  useEffect(() => {
+    if (coordinates && geoAddress) {
       setAddress(geoAddress);
       setIsValidAddress(true);
-
-      const location: { address: string; coordinates: Coordinates } = {
-        address: geoAddress,
-        coordinates: {
-          latitude: coordinates?.latitude || 0,
-          longitude: coordinates?.longitude || 0,
-        },
-      };
-
-      dispatch(setUserLocation(location));
     }
-  }, [geoAddress, coordinates, dispatch]);
+  }, [coordinates, geoAddress]);
+
+  /* -------------------------------------------------------------------------- */
+  /*                  Gestion de la sélection d'une localisation récente        */
+  /* -------------------------------------------------------------------------- */
+  const handleSelectRecentLocation = (location: RecentLocation) => {
+    setAddress(`${location.address} ${location.name}`);
+    setIsValidAddress(true);
+
+    // Met à jour la localisation actuelle sans ajouter un doublon
+    dispatch(setUserLocation(location));
+    onClose(); // Ferme la pop-up
+  };
+
+  /* -------------------------------- Animation ------------------------------- */
+
+  const itemVariants = {
+    hidden: {
+      opacity: 0,
+      x: -20,
+      scale: 0.8,
+    },
+    show: {
+      opacity: 1,
+      x: 0,
+      scale: 1,
+      transition: {
+        type: "spring",
+        stiffness: 300,
+        damping: 24,
+        delay: 0.2,
+      },
+    },
+    exit: {
+      opacity: 0,
+      x: 20,
+      scale: 0.8,
+      transition: {
+        duration: 0.2,
+      },
+    },
+  };
+
+  /* -------------------------------------------------------------------------- */
+  /*                                   Render                                   */
+  /* -------------------------------------------------------------------------- */
 
   return (
     <BasePopup
@@ -151,17 +208,46 @@ const LocationPopup = ({ isOpen, onClose }: BasePopupProps) => {
 
         <div className={styles.recentLocations}>
           <h5 className={styles.title}>Localisations récentes</h5>
-          {RECENT_LOCATIONS.map((location) => (
-            <button key={location.name} className={styles.locationButton}>
-              <div className={styles.locationContent}>
-                <MapPin className={styles.icon} />
-                <div className={styles.locationInfo}>
-                  <h4 className={styles.locationName}>{location.name}</h4>
-                  <p className={styles.locationAddress}>{location.address}</p>
-                </div>
-              </div>
-            </button>
-          ))}
+
+          <AnimatePresence mode="popLayout">
+            {recentLocations.length > 0 ? (
+              recentLocations.map((location) => (
+                <motion.button
+                  variants={itemVariants}
+                  initial="hidden"
+                  animate="show"
+                  exit="exit"
+                  layout
+                  key={location.address}
+                  className={styles.locationButton}
+                  onClick={() => handleSelectRecentLocation(location)}
+                >
+                  <div className={styles.locationContent}>
+                    <MapPin className={styles.icon} />
+                    <div className={styles.locationInfo}>
+                      <h4 className={styles.locationName}>{location.name}</h4>
+                      <p className={styles.locationAddress}>
+                        {location.address}
+                      </p>
+                    </div>
+                  </div>
+                  <div
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      dispatch(removeRecentLocation(location.coordinates));
+                    }}
+                    className={styles.removeButton}
+                  >
+                    <Trash2 size={16} />
+                  </div>
+                </motion.button>
+              ))
+            ) : (
+              <p className={styles.noLocations}>
+                Aucune localisation récente disponible.
+              </p>
+            )}
+          </AnimatePresence>
         </div>
       </div>
     </BasePopup>

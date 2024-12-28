@@ -44,3 +44,9 @@ export interface LocationSearchState {
   isLoading: boolean;
   hasError: boolean;
 }
+
+export interface RecentLocation {
+  name: string;
+  address: string;
+  coordinates: Coordinates;
+}
