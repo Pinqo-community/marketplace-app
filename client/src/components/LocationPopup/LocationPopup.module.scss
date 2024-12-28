@@ -167,28 +167,46 @@
     font-size: font-size(sm);
     margin-bottom: space(xs);
   }
-}
 
-.locationButton {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  width: 100%;
-  padding: space(sm);
-  transition: background-color transition(fast) ease;
-  border-radius: radius(xl);
-  margin-bottom: space(xs);
-
-  @include media-under(sm) {
+  .removeButton {
     padding: space(xs);
+    color: #6b72809c;
+    transition: all transition(fast) ease;
+    margin-right: space(xs);
+    opacity: 0; /* Caché par défaut */
+    visibility: hidden; /* Empêche de prendre de l'espace */
+
+    &:hover {
+      color: #f00;
+    }
   }
 
-  &:hover {
-    background-color: color(secondary, light);
-  }
+  .locationButton {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: space(sm);
+    transition: background-color transition(fast) ease;
+    border-radius: radius(xl);
+    margin-bottom: space(xs);
 
-  &:last-child {
-    margin-bottom: 0;
+    @include media-under(sm) {
+      padding: space(xs);
+    }
+
+    &:hover {
+      background-color: color(secondary, light);
+
+      .removeButton {
+        opacity: 1;
+        visibility: visible;
+      }
+    }
+
+    &:last-child {
+      margin-bottom: 0;
+    }
   }
 }
 

@@ -59,7 +59,7 @@ const Header: React.FC = () => {
             onClick={() => setIsPopupOpen(true)}
           >
             <MapPin size={16} className={styles.icon} />
-            <span>{userLocation.address || "Ajouter ma localisation"}</span>
+            <span>{userLocation.name || "Ajouter ma localisation"}</span>
           </button>
 
           <div className={styles.separator}></div>

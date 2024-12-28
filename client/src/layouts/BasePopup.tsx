@@ -44,7 +44,8 @@ const BasePopup: React.FC<BasePopupProps> = ({
             initial={{ y: 0, opacity: 0, scale: 0.8 }}
             animate={{ y: 0, opacity: 1, scale: 1 }}
             exit={{ y: 0, opacity: 0, scale: 0.8 }}
-            transition={{ duration: 0.2 }}
+            layout
+            transition={{ duration: 0.2, ease: "easeOut" }}
             onClick={(e) => e.stopPropagation()}
           >
             <div className={styles.header}>
