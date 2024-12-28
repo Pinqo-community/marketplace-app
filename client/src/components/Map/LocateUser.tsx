@@ -3,8 +3,9 @@ import { LocateUserProps } from "@/types/types";
 import L from "leaflet";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useMap } from "react-leaflet";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import styles from "./LocateUser.module.scss";
+import { openLocationPopup } from "@/store/slices/locationSlice";
 
 const LocateUser: React.FC<LocateUserProps> = ({ defaultPosition }) => {
   /* -------------------------------------------------------------------------- */
@@ -15,6 +16,7 @@ const LocateUser: React.FC<LocateUserProps> = ({ defaultPosition }) => {
   const [position, setPosition] = useState(false);
   const { coordinates } = useSelector((state: RootState) => state.location);
   const markerRef = useRef<L.Marker | null>(null);
+  const dispatch = useDispatch();
 
   /* -------------------------------------------------------------------------- */
   /*                                  Functions                                 */
@@ -62,17 +64,6 @@ const LocateUser: React.FC<LocateUserProps> = ({ defaultPosition }) => {
     }
   }, [map, coordinates, addMarker]);
 
-  // Gestion de la récupération manuelle de la position
-  const handleLocation = useCallback(() => {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition((position) => {
-        const { latitude, longitude } = position.coords;
-        setPosition(true);
-        map.flyTo([latitude, longitude], 13);
-        addMarker(latitude, longitude, true);
-      });
-    }
-  }, [map, addMarker]);
   /* -------------------------------------------------------------------------- */
   /*                                   Render                                   */
   /* -------------------------------------------------------------------------- */
@@ -82,7 +73,7 @@ const LocateUser: React.FC<LocateUserProps> = ({ defaultPosition }) => {
       className={styles.locateUser}
       onClick={(e) => {
         e.stopPropagation();
-        handleLocation();
+        dispatch(openLocationPopup());
       }}
     >
       <svg

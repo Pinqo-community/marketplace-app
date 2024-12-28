@@ -4,12 +4,13 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 interface LocationState {
   name: string | null;
   address: string | null;
+  isLocationPopupOpen: boolean;
   coordinates: Coordinates | null;
   recentLocations: RecentLocation[];
 }
 
 // Charge les infos de localisation depuis localStorage
-const loadUserLocation = () => {
+export const loadUserLocation = () => {
   const savedLocation = localStorage.getItem("userLocation");
   return savedLocation ? JSON.parse(savedLocation) : null;
 };
@@ -24,12 +25,19 @@ const initialState: LocationState = {
   address: loadUserLocation()?.address || null,
   coordinates: loadUserLocation()?.coordinates || null,
   recentLocations: loadRecentLocations(),
+  isLocationPopupOpen: false,
 };
 
 const locationSlice = createSlice({
   name: "location",
   initialState,
   reducers: {
+    openLocationPopup: (state) => {
+      state.isLocationPopupOpen = true;
+    },
+    closeLocationPopup: (state) => {
+      state.isLocationPopupOpen = false;
+    },
     setUserLocation: (
       state,
       action: PayloadAction<{
@@ -100,5 +108,7 @@ export const {
   resetLocation,
   addRecentLocation,
   removeRecentLocation,
+  openLocationPopup,
+  closeLocationPopup,
 } = locationSlice.actions;
 export default locationSlice.reducer;

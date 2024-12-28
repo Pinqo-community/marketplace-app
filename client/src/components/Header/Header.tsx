@@ -5,12 +5,16 @@ import classNames from "classnames";
 import { motion } from "framer-motion";
 import { Bell, ChevronDown, HelpCircle, MapPin } from "lucide-react";
 import { useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { CartButton, MenuButton, UserButton } from "../Button/Buttons";
 import LocationPopup from "../LocationPopup/LocationPopup";
 import styles from "./Header.module.scss";
 import SearchBar from "./SearchBar";
+import {
+  closeLocationPopup,
+  openLocationPopup,
+} from "@/store/slices/locationSlice";
 
 const Header: React.FC = () => {
   /* -------------------------------------------------------------------------- */
@@ -22,8 +26,11 @@ const Header: React.FC = () => {
   const [isOpened, setIsOpened] = useState(false);
   const isTopBarVisible = scrollPosition < 50;
   const shouldShowTopBar = isTopBarVisible || isScrolledUp;
-  const [isPopupOpen, setIsPopupOpen] = useState(false);
   const userLocation = useSelector((state: RootState) => state.location);
+  const dispatch = useDispatch();
+  const isLocationPopupOpen = useSelector(
+    (state: RootState) => state.location.isLocationPopupOpen,
+  );
 
   /* -------------------------------------------------------------------------- */
   /*                                  Function                                  */
@@ -56,7 +63,7 @@ const Header: React.FC = () => {
           <button
             type="button"
             className={styles.button}
-            onClick={() => setIsPopupOpen(true)}
+            onClick={() => dispatch(openLocationPopup())}
           >
             <MapPin size={16} className={styles.icon} />
             <span>{userLocation.name || "Ajouter ma localisation"}</span>
@@ -117,8 +124,8 @@ const Header: React.FC = () => {
         </nav>
       </div>
       <LocationPopup
-        isOpen={isPopupOpen}
-        onClose={() => setIsPopupOpen(false)}
+        isOpen={isLocationPopupOpen}
+        onClose={() => dispatch(closeLocationPopup())}
       />
     </header>
   );
