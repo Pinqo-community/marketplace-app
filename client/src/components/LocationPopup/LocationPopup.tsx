@@ -5,6 +5,7 @@ import Loader from "@/shared/Loader";
 import { RootState } from "@/store";
 import {
   addRecentLocation,
+  loadUserLocation,
   removeRecentLocation,
   setUserLocation,
 } from "@/store/slices/locationSlice";
@@ -86,15 +87,27 @@ const LocationPopup = ({ isOpen, onClose }: BasePopupProps) => {
   }, [coordinates, geoAddress]);
 
   /* -------------------------------------------------------------------------- */
+  /*                    Recherche de la localisation actuelle                   */
+  /* -------------------------------------------------------------------------- */
+
+  useEffect(() => {
+    const userLocation = loadUserLocation();
+    if (userLocation) {
+      setAddress(`${userLocation.address} ${userLocation.name}`);
+      setIsValidAddress(true);
+    }
+  }, []);
+
+  /* -------------------------------------------------------------------------- */
   /*                  Gestion de la sélection d'une localisation récente        */
   /* -------------------------------------------------------------------------- */
   const handleSelectRecentLocation = (location: RecentLocation) => {
     setAddress(`${location.address} ${location.name}`);
     setIsValidAddress(true);
 
-    // Met à jour la localisation actuelle sans ajouter un doublon
+    // Met à jour la localisation actuelle sans doublon
     dispatch(setUserLocation(location));
-    onClose(); // Ferme la pop-up
+    onClose();
   };
 
   /* -------------------------------- Animation ------------------------------- */
