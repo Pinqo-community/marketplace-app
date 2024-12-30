@@ -1,7 +1,6 @@
 // External libraries
 import "leaflet/dist/leaflet.css";
 import { MapContainer, TileLayer } from "react-leaflet";
-import "react-leaflet-markercluster/dist/styles.min.css";
 
 // Assets and styles
 import "leaflet.markercluster/dist/leaflet.markercluster";
