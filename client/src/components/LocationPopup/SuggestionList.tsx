@@ -8,12 +8,14 @@ const SuggestionList = ({ suggestions, onSelect }: SuggestionListProps) => (
     animate={{ opacity: 1, y: 0 }}
     exit={{ opacity: 0, y: 10 }}
     className={styles.suggestions}
+    data-testid="suggestion-list"
   >
     {suggestions.map((suggestion, index) => (
       <li
         className={styles.item}
         key={index}
         onClick={() => onSelect(suggestion)}
+        data-testid="suggestion-item"
       >
         <div className={styles.label}>{suggestion.label}</div>
         <div className={styles.context}>

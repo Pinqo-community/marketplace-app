@@ -156,6 +156,7 @@ const LocationPopup = ({ isOpen, onClose }: BasePopupProps) => {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             className={styles.loading}
+            data-testid="location-loading"
           >
             <Loader />
             <p className={styles.text}>Recherche de votre localisation...</p>
@@ -170,6 +171,8 @@ const LocationPopup = ({ isOpen, onClose }: BasePopupProps) => {
           </div>
 
           <input
+            data-testid="address-input"
+            data-valid={isValidAddress}
             type="text"
             value={address}
             onChange={handleAddressChange}
@@ -193,6 +196,8 @@ const LocationPopup = ({ isOpen, onClose }: BasePopupProps) => {
 
       <div className={styles.locationOptions}>
         <button
+          data-testid="automatic-location-button"
+          data-error={hasError}
           className={classNames(styles.automaticLocationButton, {
             [styles.error]: hasError,
           })}
@@ -234,6 +239,7 @@ const LocationPopup = ({ isOpen, onClose }: BasePopupProps) => {
                   key={location.address}
                   className={styles.locationButton}
                   onClick={() => handleSelectRecentLocation(location)}
+                  data-testid="recent-location"
                 >
                   <div className={styles.locationContent}>
                     <MapPin className={styles.icon} />
@@ -250,13 +256,17 @@ const LocationPopup = ({ isOpen, onClose }: BasePopupProps) => {
                       dispatch(removeRecentLocation(location.coordinates));
                     }}
                     className={styles.removeButton}
+                    data-testid="remove-location"
                   >
                     <Trash2 size={16} />
                   </div>
                 </motion.button>
               ))
             ) : (
-              <p className={styles.noLocations}>
+              <p
+                className={styles.noLocations}
+                data-testid="no-recent-locations"
+              >
                 Aucune localisation récente disponible.
               </p>
             )}

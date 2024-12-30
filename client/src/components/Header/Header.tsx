@@ -61,12 +61,15 @@ const Header: React.FC = () => {
       >
         <div className={styles.leftContainer}>
           <button
+            data-testid="open-popup-button"
             type="button"
             className={styles.button}
             onClick={() => dispatch(openLocationPopup())}
           >
             <MapPin size={16} className={styles.icon} />
-            <span>{userLocation.name || "Ajouter ma localisation"}</span>
+            <span data-testid="location-header-text">
+              {userLocation.name || "Ajouter ma localisation"}
+            </span>
           </button>
 
           <div className={styles.separator}></div>

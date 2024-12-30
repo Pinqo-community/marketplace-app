@@ -38,6 +38,7 @@ const BasePopup: React.FC<BasePopupProps> = ({
           exit={{ opacity: 0 }}
           onClick={handleOutsideClick}
           data-overlay
+          data-testid="overlay"
         >
           <motion.div
             className={styles.content}
@@ -47,6 +48,7 @@ const BasePopup: React.FC<BasePopupProps> = ({
             layout
             transition={{ duration: 0.2, ease: "easeOut" }}
             onClick={(e) => e.stopPropagation()}
+            data-testid="location-popup"
           >
             <div className={styles.header}>
               {title && <h3 className={styles.title}>{title}</h3>}
@@ -54,7 +56,8 @@ const BasePopup: React.FC<BasePopupProps> = ({
                 whileHover={{ scale: 1.1, rotate: 90 }}
                 className={styles.close}
                 onClick={onClose}
-                aria-label="Fermer la popup"
+                aria-label="close"
+                data-testid="close-button"
               >
                 <X size={24} />
               </motion.button>
