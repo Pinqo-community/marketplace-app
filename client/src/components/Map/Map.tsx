@@ -2,7 +2,6 @@
 import "leaflet/dist/leaflet.css";
 import { MapContainer, TileLayer } from "react-leaflet";
 
-
 // Assets and styles
 import "leaflet.markercluster/dist/leaflet.markercluster";
 import styles from "./Map.module.scss";
