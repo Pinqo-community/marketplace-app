@@ -1,29 +1,32 @@
-import { Coordinates, RecentLocation } from "@/types/Location";
+import {
+  Coordinates,
+  LocationStoreState,
+  RecentLocation,
+} from "@/types/Location";
+import { isUserLocation } from "@/types/typeValidators";
+import {
+  loadFromLocalStorage,
+  removeFromLocalStorage,
+  saveToLocalStorage,
+} from "@/utils/localStorageUtils";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-interface LocationState {
-  name: string | null;
-  address: string | null;
-  isLocationPopupOpen: boolean;
-  coordinates: Coordinates | null;
-  recentLocations: RecentLocation[];
-}
-
-// Charge les infos de localisation depuis localStorage
-export const loadUserLocation = () => {
-  const savedLocation = localStorage.getItem("userLocation");
-  return savedLocation ? JSON.parse(savedLocation) : null;
-};
-
+// Chargement des localisations depuis localStorage
 const loadRecentLocations = (): RecentLocation[] => {
-  const savedLocations = localStorage.getItem("recentLocations");
-  return savedLocations ? JSON.parse(savedLocations) : [];
+  return (
+    loadFromLocalStorage<RecentLocation[]>("recentLocations", Array.isArray) ||
+    []
+  );
 };
 
-const initialState: LocationState = {
-  name: loadUserLocation()?.name || null,
-  address: loadUserLocation()?.address || null,
-  coordinates: loadUserLocation()?.coordinates || null,
+const userLocation = loadFromLocalStorage("userLocation", isUserLocation);
+
+const MAX_RECENT_LOCATIONS = 2;
+
+const initialState: LocationStoreState = {
+  name: userLocation?.name || null,
+  address: userLocation?.address || null,
+  coordinates: userLocation?.coordinates || null,
   recentLocations: loadRecentLocations(),
   isLocationPopupOpen: false,
 };
@@ -51,14 +54,11 @@ const locationSlice = createSlice({
       state.coordinates = action.payload.coordinates;
 
       // Sauvegarde dans localStorage
-      localStorage.setItem(
-        "userLocation",
-        JSON.stringify({
-          name: action.payload.name,
-          address: action.payload.address,
-          coordinates: action.payload.coordinates,
-        }),
-      );
+      saveToLocalStorage("userLocation", {
+        name: action.payload.name,
+        address: action.payload.address,
+        coordinates: action.payload.coordinates,
+      });
     },
     resetLocation: (state) => {
       state.name = null;
@@ -66,7 +66,7 @@ const locationSlice = createSlice({
       state.coordinates = null;
 
       // Supprime les données du cache
-      localStorage.removeItem("userLocation");
+      removeFromLocalStorage("userLocation");
     },
     removeRecentLocation: (state, action: PayloadAction<Coordinates>) => {
       state.recentLocations = state.recentLocations.filter(
@@ -76,10 +76,7 @@ const locationSlice = createSlice({
       );
 
       // Met à jour le cache
-      localStorage.setItem(
-        "recentLocations",
-        JSON.stringify(state.recentLocations),
-      );
+      saveToLocalStorage("recentLocations", state.recentLocations);
     },
     addRecentLocation: (state, action: PayloadAction<RecentLocation>) => {
       const locationExists = state.recentLocations.some(
@@ -87,17 +84,15 @@ const locationSlice = createSlice({
           loc.coordinates.latitude === action.payload.coordinates.latitude &&
           loc.coordinates.longitude === action.payload.coordinates.longitude,
       );
+
       if (!locationExists) {
         state.recentLocations = [
           action.payload,
           ...state.recentLocations,
-        ].slice(0, 2);
+        ].slice(0, MAX_RECENT_LOCATIONS);
 
         // Met à jour le cache
-        localStorage.setItem(
-          "recentLocations",
-          JSON.stringify(state.recentLocations),
-        );
+        saveToLocalStorage("recentLocations", state.recentLocations);
       }
     },
   },
@@ -111,4 +106,5 @@ export const {
   openLocationPopup,
   closeLocationPopup,
 } = locationSlice.actions;
+
 export default locationSlice.reducer;

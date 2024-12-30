@@ -2,7 +2,8 @@ import {
   addRecentLocation,
   setUserLocation,
 } from "@/store/slices/locationSlice";
-import { Coordinates } from "@/types/Location";
+import { Coordinates, NominatimResponse } from "@/types/Location";
+import { parseGeoAddress } from "@/utils/locationUtils";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 
@@ -14,68 +15,66 @@ export const useGeolocation = () => {
 
   const dispatch = useDispatch();
 
+  const resetState = () => {
+    setAddress("");
+    setCoordinates(null);
+    setIsLoading(false);
+    setHasError(false);
+  };
+
   const locate = () => {
-    // Vérifie si la géolocalisation est disponible
+    resetState();
+
     if (!navigator.geolocation) {
       setHasError(true);
+      alert("La géolocalisation n'est pas supportée par votre navigateur.");
       return;
     }
-    setAddress("");
+
     setIsLoading(true);
-    setHasError(false);
 
     navigator.geolocation.getCurrentPosition(
       async (position) => {
         try {
           const { latitude, longitude } = position.coords;
 
-          // Mise à jour des coordonnées
+          if (!latitude || !longitude) {
+            throw new Error("Coordonnées invalides.");
+          }
+
           setCoordinates({ latitude, longitude });
 
-          // Récupère l'adresse depuis OpenStreetMap
           const response = await fetch(
             `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`,
           );
-          const data = await response.json();
 
-          // Extraction des informations d'adresse
-          const street = data.address?.road;
-          const city =
-            data.address?.city || data.address?.town || data.address?.village;
-          const postcode = data.address?.postcode;
+          if (!response.ok) {
+            throw new Error("Erreur API Nominatim.");
+          }
 
-          // Combine l'adresse
-          const geoAddress = `${street} ${postcode} ${city}`;
-
-          // Regex pour extraire le code postal et la ville
-          const regex = /(\d{5})\s+(.+)$/;
-          const match = geoAddress.match(regex);
-
-          // Retire le dernier mot de l'adresse
-          const addressWithoutLastWord = geoAddress
-            .split(" ")
-            .slice(0, -1)
-            .join(" ");
+          const data: NominatimResponse = await response.json();
+          const { geoAddress, name, addressWithoutLastWord } =
+            parseGeoAddress(data);
 
           const location = {
-            name: match ? match[2] : geoAddress.split(",")[0],
+            name,
             address: addressWithoutLastWord,
             coordinates: { latitude, longitude },
           };
 
           setAddress(geoAddress);
 
-          // Mise à jour et ajout à la liste des récentes
           dispatch(setUserLocation(location));
           dispatch(addRecentLocation(location));
         } catch (error) {
-          console.error("Erreur lors de la récupération de l'adresse :", error);
+          console.error("Erreur lors de la localisation :", error);
           setHasError(true);
         } finally {
           setIsLoading(false);
         }
       },
-      () => {
+      (error) => {
+        console.error("Erreur de géolocalisation :", error);
         setHasError(true);
         setIsLoading(false);
       },
