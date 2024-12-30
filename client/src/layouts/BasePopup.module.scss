@@ -14,13 +14,13 @@
 }
 
 .content {
+  position: relative;
   width: 100%;
   box-shadow: shadow(popup);
   background-color: color(neutral, background);
   overflow: hidden;
   border-radius: radius(xl);
   max-width: 36rem;
-  position: relative;
 }
 
 .header {

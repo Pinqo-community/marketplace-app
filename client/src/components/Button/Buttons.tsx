@@ -1,13 +1,17 @@
 import { buttonVariants } from "@/animations/animations";
 import arrowSlider from "@/assets/icons/arrow-slider.svg";
 import {
+  LocationButtonProps,
   MenuButtonProps,
   PrimaryButtonProps,
   SliderButtonProps,
 } from "@/types/Button";
 import { motion } from "framer-motion";
-import { ShoppingCart, User } from "lucide-react";
+import { Locate, LocateOff, ShoppingCart, User } from "lucide-react";
 import styles from "./Buttons.module.scss";
+import classNames from "classnames/bind";
+
+const cx = classNames.bind(styles);
 
 /* -------------------------------------------------------------------------- */
 /*                                 UserButton                                 */
@@ -113,5 +117,43 @@ export const MenuButton: React.FC<MenuButtonProps> = ({
         d="M 20,70.999954 H 80.000231 C 80.000231,70.999954 94.498839,71.182648 94.532987,33.288669 94.543142,22.019327 90.966081,18.329754 85.259173,18.331003 79.552261,18.332249 75.000211,25.000058 75.000211,25.000058 L 25.000021,74.999942"
       />
     </svg>
+  </button>
+);
+
+/* -------------------------------------------------------------------------- */
+/*                               LocationButton                               */
+/* -------------------------------------------------------------------------- */
+
+export const LocationButton: React.FC<LocationButtonProps> = ({
+  hasError,
+  locate,
+}) => (
+  <button
+    data-testid="automatic-location-button"
+    data-error={hasError}
+    className={cx("automaticLocationButton", {
+      error: hasError,
+    })}
+    onClick={locate}
+  >
+    <div className={styles.iconContainer}>
+      {hasError ? (
+        <LocateOff className={styles.icon} />
+      ) : (
+        <Locate className={styles.icon} />
+      )}
+    </div>
+    <div className={styles.textContainer}>
+      <h4>
+        {hasError
+          ? "Impossible de détecter votre position"
+          : "Détecter ma position"}
+      </h4>
+      <p className={styles.subtitle}>
+        {hasError
+          ? "Veuillez utiliser une adresse ou un code postal"
+          : "Utilisez la localisation de votre appareil"}
+      </p>
+    </div>
   </button>
 );

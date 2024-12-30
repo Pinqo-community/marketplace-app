@@ -50,3 +50,21 @@ export interface RecentLocation {
   address: string;
   coordinates: Coordinates;
 }
+
+export interface NominatimResponse {
+  address: {
+    road?: string;
+    city?: string;
+    town?: string;
+    village?: string;
+    postcode?: string;
+  };
+}
+
+export interface LocationStoreState {
+  name: string | null;
+  address: string | null;
+  isLocationPopupOpen: boolean;
+  coordinates: Coordinates | null;
+  recentLocations: RecentLocation[];
+}

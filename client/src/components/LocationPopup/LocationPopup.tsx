@@ -1,3 +1,4 @@
+import { itemVariants } from "@/animations/animations";
 import { useGeolocation } from "@/hooks/useGeolocation";
 import { useSuggestions } from "@/hooks/useSuggestions";
 import BasePopup from "@/layouts/BasePopup";
@@ -5,25 +6,27 @@ import Loader from "@/shared/Loader";
 import { RootState } from "@/store";
 import {
   addRecentLocation,
-  loadUserLocation,
   removeRecentLocation,
   setUserLocation,
 } from "@/store/slices/locationSlice";
 import { BasePopupProps } from "@/types/BasePopup";
 import { RecentLocation, Suggestion } from "@/types/Location";
-import classNames from "classnames";
+import { parseAddress } from "@/utils/locationUtils";
+import classNames from "classnames/bind";
 import { AnimatePresence, motion } from "framer-motion";
-import { Locate, LocateOff, MapPin, Trash2 } from "lucide-react";
+import { MapPin, Trash2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { LocationButton } from "../Button/Buttons";
 import styles from "./LocationPopup.module.scss";
 import SearchIcon from "./SearchIcon";
 import SuggestionList from "./SuggestionList";
+import { isUserLocation } from "@/types/typeValidators";
+import { loadFromLocalStorage } from "@/utils/localStorageUtils";
 
 const LocationPopup = ({ isOpen, onClose }: BasePopupProps) => {
   const [address, setAddress] = useState("");
   const [isValidAddress, setIsValidAddress] = useState(false);
-
   const { suggestions, fetchSuggestions, clearSuggestions } = useSuggestions();
   const {
     coordinates,
@@ -32,32 +35,23 @@ const LocationPopup = ({ isOpen, onClose }: BasePopupProps) => {
     hasError,
     locate,
   } = useGeolocation();
-
   const dispatch = useDispatch();
   const recentLocations = useSelector(
     (state: RootState) => state.location.recentLocations,
   );
+  const cx = classNames.bind(styles);
 
   /* -------------------------------------------------------------------------- */
   /*                            Gestion des suggestions                         */
   /* -------------------------------------------------------------------------- */
+
   const handleSelectAddress = (suggestion: Suggestion) => {
     setAddress(suggestion.label);
     clearSuggestions();
     setIsValidAddress(true);
 
-    // Regex pour extraire la ville
-    const match = suggestion.label.match(/(\d{5})\s+(.+)$/);
-
-    // Retire le dernier mot de l'adresse
-    const addressWithoutLastWord = suggestion.label
-      .split(" ")
-      .slice(0, -1)
-      .join(" ");
-
     const location = {
-      name: match ? match[2] : suggestion.label.split(",")[0],
-      address: addressWithoutLastWord,
+      ...parseAddress(suggestion.label),
       coordinates: {
         latitude: suggestion.coordinates[1],
         longitude: suggestion.coordinates[0],
@@ -76,27 +70,21 @@ const LocationPopup = ({ isOpen, onClose }: BasePopupProps) => {
   };
 
   /* -------------------------------------------------------------------------- */
-  /*                      Gestion de la géolocalisation automatique             */
+  /*                  Récupère l'adresse depuis le localStorage                 */
   /* -------------------------------------------------------------------------- */
 
   useEffect(() => {
     if (coordinates && geoAddress) {
       setAddress(geoAddress);
       setIsValidAddress(true);
+    } else {
+      const userLocation = loadFromLocalStorage("userLocation", isUserLocation);
+      if (userLocation) {
+        setAddress(`${userLocation.address} ${userLocation.name}`);
+        setIsValidAddress(true);
+      }
     }
   }, [coordinates, geoAddress]);
-
-  /* -------------------------------------------------------------------------- */
-  /*                    Recherche de la localisation actuelle                   */
-  /* -------------------------------------------------------------------------- */
-
-  useEffect(() => {
-    const userLocation = loadUserLocation();
-    if (userLocation) {
-      setAddress(`${userLocation.address} ${userLocation.name}`);
-      setIsValidAddress(true);
-    }
-  }, []);
 
   /* -------------------------------------------------------------------------- */
   /*                  Gestion de la sélection d'une localisation récente        */
@@ -108,35 +96,6 @@ const LocationPopup = ({ isOpen, onClose }: BasePopupProps) => {
     // Met à jour la localisation actuelle sans doublon
     dispatch(setUserLocation(location));
     onClose();
-  };
-
-  /* -------------------------------- Animation ------------------------------- */
-
-  const itemVariants = {
-    hidden: {
-      opacity: 0,
-      x: -20,
-      scale: 0.8,
-    },
-    show: {
-      opacity: 1,
-      x: 0,
-      scale: 1,
-      transition: {
-        type: "spring",
-        stiffness: 300,
-        damping: 24,
-        delay: 0.2,
-      },
-    },
-    exit: {
-      opacity: 0,
-      x: 20,
-      scale: 0.8,
-      transition: {
-        duration: 0.2,
-      },
-    },
   };
 
   /* -------------------------------------------------------------------------- */
@@ -177,9 +136,9 @@ const LocationPopup = ({ isOpen, onClose }: BasePopupProps) => {
             value={address}
             onChange={handleAddressChange}
             placeholder="Entrez votre adresse, code postal, ville..."
-            className={classNames(styles.searchInput, {
-              [styles.valid]: isValidAddress,
-              [styles.invalid]: !isValidAddress && address !== "",
+            className={cx("searchInput", {
+              valid: isValidAddress,
+              invalid: !isValidAddress && address !== "",
             })}
           />
 
@@ -195,34 +154,7 @@ const LocationPopup = ({ isOpen, onClose }: BasePopupProps) => {
       </div>
 
       <div className={styles.locationOptions}>
-        <button
-          data-testid="automatic-location-button"
-          data-error={hasError}
-          className={classNames(styles.automaticLocationButton, {
-            [styles.error]: hasError,
-          })}
-          onClick={locate}
-        >
-          <div className={styles.iconContainer}>
-            {hasError ? (
-              <LocateOff className={styles.icon} />
-            ) : (
-              <Locate className={styles.icon} />
-            )}
-          </div>
-          <div className={styles.textContainer}>
-            <h4 className={styles.title}>
-              {hasError
-                ? "Impossible de détecter votre position"
-                : "Détecter ma position"}
-            </h4>
-            <p className={styles.subtitle}>
-              {hasError
-                ? "Veuillez utiliser une adresse ou un code postal"
-                : "Utilisez la localisation de votre appareil"}
-            </p>
-          </div>
-        </button>
+        <LocationButton locate={locate} hasError={hasError} />
 
         <div className={styles.recentLocations}>
           <h5 className={styles.title}>Localisations récentes</h5>
