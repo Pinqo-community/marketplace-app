@@ -39,7 +39,7 @@ $color-status: (
     light: color.adjust(#00b800, $lightness: 40%),
     dark: color.adjust(#00b800, $lightness: -10%)
   ),
-  error: (
+  danger: (
     base: #f00,
     light: color.adjust(#f00, $lightness: 40%),
     dark: color.adjust(#f00, $lightness: -10%)
