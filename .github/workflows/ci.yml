@@ -70,7 +70,7 @@ jobs:
         with:
           working-directory: ./client
           build: npm run build
-          start: npm start
+          start: npm run dev
           wait-on: "http://localhost:5173"
 
       - name: Build project
