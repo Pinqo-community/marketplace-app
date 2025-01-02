@@ -11,6 +11,7 @@ import ProductCard from "@/components/ProductCard/ProductCard";
 import Slider from "@/components/Slider/Slider";
 import TestimonialCard from "@/components/Testimonials/TestimonialCard";
 import MainLayout from "@/layouts/MainLayout";
+import Loader from "@/shared/Loader";
 import { motion } from "framer-motion";
 import "swiper/css";
 import "swiper/css/pagination";
@@ -51,9 +52,9 @@ const HomePage: React.FC = () => {
   /* -------------------------------------------------------------------------- */
 
   // Loading / Error Handling
-  if (isLoadingCategories || isLoadingProducts || isLoadingTestimonials) {
-    return <p>Chargement des données...</p>;
-  }
+  const isLoading =
+    isLoadingCategories || isLoadingProducts || isLoadingTestimonials;
+
   if (errorCategories || errorProducts || errorTestimonials) {
     return <p>Une erreur est survenue lors du chargement des données.</p>;
   }
@@ -62,116 +63,132 @@ const HomePage: React.FC = () => {
   /*                                   Render                                   */
   /* -------------------------------------------------------------------------- */
   return (
-    <MainLayout>
-      <Hero />
-      <section
-        className={styles.popularProducts}
-        aria-labelledby="popular-products-title"
-      >
-        <div className={styles.sectionContainer}>
-          <div className={styles.titleContainer}>
-            <h2 className={styles.title}>Produits populaires</h2>
-            <div className={styles.moreInfo}>
-              <div className={styles.moreInfoText}>Voir tout</div>
-              <img src={arrowIcon} alt="arrow" />
-            </div>
-          </div>
+    <>
+      {isLoading ? (
+        <motion.div
+          initial={{ opacity: 0, y: 50 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: 50 }}
+          className={styles.loader}
+        >
+          <Loader size={50} />
+        </motion.div>
+      ) : (
+        <MainLayout>
+          <Hero />
 
-          <motion.div
-            initial="hidden"
-            animate="visible"
-            variants={listVariants}
-            className={styles.productsGrid}
+          <section
+            className={styles.popularProducts}
+            aria-labelledby="popular-products-title"
           >
-            {products?.map((product) => (
-              <ProductCard key={product.id} product={product} />
-            ))}
-          </motion.div>
-        </div>
-      </section>
-      <Slider
-        title="Catégories"
-        items={categories || []}
-        renderItem={(category) => (
-          <CategoryCard title={category.name} image={category.image} />
-        )}
-        slidesPerViewDefault={6}
-        breakpoints={{
-          320: { slidesPerView: 1 },
-          420: { slidesPerView: 2 },
-          580: { slidesPerView: 3 },
-          768: { slidesPerView: 4 },
-          1024: { slidesPerView: 5 },
-          1440: { slidesPerView: 6 },
-        }}
-      />
-      <section className={styles.buyerProducer}>
-        <BuyerProducer />
-      </section>
+            <div className={styles.sectionContainer}>
+              <div className={styles.titleContainer}>
+                <h2 className={styles.title}>Produits populaires</h2>
+                <div className={styles.moreInfo}>
+                  <div className={styles.moreInfoText}>Voir tout</div>
+                  <img src={arrowIcon} alt="arrow" />
+                </div>
+              </div>
 
-      <section
-        className={styles.popularProducts}
-        aria-labelledby="popular-products-title"
-      >
-        <div className={styles.sectionContainer}>
-          <div className={styles.titleContainer}>
-            <h2 className={styles.title}>Les bonnes affaires</h2>
-            <div className={styles.moreInfo}>
-              <div className={styles.moreInfoText}>Voir tout</div>
-              <img src={arrowIcon} alt="arrow" />
+              <motion.div
+                initial="hidden"
+                animate="visible"
+                variants={listVariants}
+                className={styles.productsGrid}
+              >
+                {products?.map((product) => (
+                  <ProductCard key={product.id} product={product} />
+                ))}
+              </motion.div>
             </div>
-          </div>
+          </section>
+          <Slider
+            title="Catégories"
+            items={categories || []}
+            renderItem={(category) => (
+              <CategoryCard title={category.name} image={category.image} />
+            )}
+            slidesPerViewDefault={6}
+            breakpoints={{
+              320: { slidesPerView: 1 },
+              420: { slidesPerView: 2 },
+              580: { slidesPerView: 3 },
+              768: { slidesPerView: 4 },
+              1024: { slidesPerView: 5 },
+              1440: { slidesPerView: 6 },
+            }}
+          />
+          <section className={styles.buyerProducer}>
+            <BuyerProducer />
+          </section>
 
-          <motion.div
-            initial="hidden"
-            animate="visible"
-            variants={listVariants}
-            className={styles.productsGrid}
+          <section
+            className={styles.popularProducts}
+            aria-labelledby="popular-products-title"
           >
-            {products?.map((product) => (
-              <ProductCard key={product.id} product={product} />
-            ))}
-          </motion.div>
-        </div>
-      </section>
+            <div className={styles.sectionContainer}>
+              <div className={styles.titleContainer}>
+                <h2 className={styles.title}>Les bonnes affaires</h2>
+                <div className={styles.moreInfo}>
+                  <div className={styles.moreInfoText}>Voir tout</div>
+                  <img src={arrowIcon} alt="arrow" />
+                </div>
+              </div>
 
-      <section
-        className={styles.localProducers}
-        aria-labelledby="local-producers-title"
-      >
-        <div className={styles.sectionContainer}>
-          <div className={styles.titleContainer}>
-            <h2 className={styles.title}>Les producteurs près de chez vous</h2>
-          </div>
-          <div className={styles.mapWrapper}>
-            <Map />
-          </div>
-        </div>
-      </section>
-      <div className={styles.testimonials}>
-        <Slider
-          title="Ce que disent nos clients"
-          items={testimonials || []}
-          customClassName="testimonials"
-          renderItem={(testimonial) => (
-            <TestimonialCard
-              text={testimonial.text}
-              name={testimonial.name}
-              avatar={testimonial.avatar}
-              rating={testimonial.rating}
+              <motion.div
+                initial="hidden"
+                animate="visible"
+                variants={listVariants}
+                className={styles.productsGrid}
+              >
+                {products?.map((product) => (
+                  <ProductCard key={product.id} product={product} />
+                ))}
+              </motion.div>
+            </div>
+          </section>
+
+          <section
+            className={styles.localProducers}
+            aria-labelledby="local-producers-title"
+          >
+            <div className={styles.sectionContainer}>
+              <div className={styles.titleContainer}>
+                <h2 className={styles.title}>
+                  Les producteurs près de chez vous
+                </h2>
+              </div>
+              <div className={styles.mapWrapper}>
+                <Map />
+              </div>
+            </div>
+          </section>
+          <div className={styles.testimonials}>
+            <Slider
+              title="Ce que disent nos clients"
+              items={testimonials || []}
+              customClassName="testimonials"
+              renderItem={(testimonial) => (
+                <TestimonialCard
+                  text={testimonial.text}
+                  name={testimonial.name}
+                  avatar={testimonial.avatar}
+                  rating={testimonial.rating}
+                />
+              )}
+              slidesPerViewDefault={3}
+              pagination={true}
+              breakpoints={{
+                320: { slidesPerView: 1 },
+                768: { slidesPerView: 1 },
+                1024: { slidesPerView: 2 },
+                1440: { slidesPerView: 3 },
+              }}
             />
-          )}
-          slidesPerViewDefault={3}
-          pagination={true}
-          breakpoints={{
-            320: { slidesPerView: 1 },
-            768: { slidesPerView: 1 },
-            1024: { slidesPerView: 2 },
-            1440: { slidesPerView: 3 },
-          }}
-        />
-      </div>
-    </MainLayout>
+          </div>
+        </MainLayout>
+      )}
+    </>
   );
 };
 

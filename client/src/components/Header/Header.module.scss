@@ -75,7 +75,7 @@
       gap: space(md);
 
       @include media-under(xs) {
-        gap: 0;
+        gap: space(xs);
         justify-content: space-evenly;
         width: 100%;
       }
@@ -97,11 +97,18 @@
       }
 
       .icon {
+        flex-shrink: 0;
         color: color(primary, base);
       }
 
       @include media-under(xs) {
         gap: space(xs);
+      }
+
+      .text {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
       }
     }
   }

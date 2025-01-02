@@ -109,3 +109,13 @@ section {
   background-color: color(secondary, light);
   margin-top: space(xl);
 }
+/* -------------------------------------------------------------------------- */
+/*                                   Loader                                   */
+/* -------------------------------------------------------------------------- */
+
+.loader {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  background-color: color(neutral, background);
+}

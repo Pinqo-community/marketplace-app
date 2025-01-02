@@ -95,8 +95,13 @@
     opacity: 0;
     visibility: hidden;
 
+    @include media-under(sm) {
+      opacity: 1;
+      visibility: visible;
+    }
+
     &:hover {
-      color: #f00;
+      color: status(danger);
     }
   }
 

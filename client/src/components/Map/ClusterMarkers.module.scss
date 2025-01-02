@@ -43,11 +43,11 @@
 
     &.closed {
       .dot {
-        background-color: status(error, base);
+        background-color: status(danger);
       }
 
       .statusText {
-        color: status(error, base);
+        color: status(danger);
       }
     }
 

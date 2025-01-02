@@ -67,7 +67,7 @@ const Header: React.FC = () => {
             onClick={() => dispatch(openLocationPopup())}
           >
             <MapPin size={16} className={styles.icon} />
-            <span data-testid="location-header-text">
+            <span data-testid="location-header-text" className={styles.text}>
               {userLocation.name || "Ajouter ma localisation"}
             </span>
           </button>
@@ -76,7 +76,7 @@ const Header: React.FC = () => {
 
           <button type="button" className={styles.button}>
             <Bell size={16} className={styles.icon} />
-            <span>Nouveautés</span>
+            <span className={styles.text}>Nouveautés</span>
           </button>
         </div>
         <div
