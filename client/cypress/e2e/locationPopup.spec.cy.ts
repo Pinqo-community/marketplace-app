@@ -53,6 +53,52 @@ describe("LocationPopup Component", () => {
     expect(end - start).to.be.lessThan(100);
   });
 
+  it("Sauvegarde l'adresse dans le localStorage", () => {
+    cy.get("[data-testid='open-popup-button']").click();
+    cy.get("[data-testid='address-input']").type(
+      "5 Rue de Champagne 42400 Saint-Chamond"
+    );
+
+    cy.get("[data-testid='suggestion-item']").first().click();
+    cy.get("[data-testid='address-input']").should(
+      "have.value",
+      "5 Rue de Champagne 42400 Saint-Chamond"
+    );
+
+    const expectedKey = "recentLocations";
+    const expectedValue = JSON.stringify([
+      {
+        name: "Saint-Chamond",
+        address: "5 Rue de Champagne 42400",
+        coordinates: {
+          latitude: 45.475614,
+          longitude: 4.527323,
+        },
+      },
+    ]);
+
+    cy.window().then((win) => {
+      const actualValue = win.localStorage.getItem(expectedKey);
+      expect(actualValue).to.eq(expectedValue);
+    });
+
+    cy.reload();
+    cy.get("[data-testid='open-popup-button']").click();
+
+    cy.get("[data-testid='address-input']").should(
+      "have.attr",
+      "data-valid",
+      "true"
+    );
+    cy.get("[data-testid='recent-location']")
+      .should("be.visible")
+      .and("contain.text", "Saint-Chamond");
+    cy.get("[data-testid='location-header-text']").should(
+      "contain",
+      "Saint-Chamond"
+    );
+  });
+
   it("Ajoute une adresse automatiquement via le bouton de géolocalisation", () => {
     cy.window().then((win) => {
       cy.stub(win.navigator.geolocation, "getCurrentPosition").callsFake(

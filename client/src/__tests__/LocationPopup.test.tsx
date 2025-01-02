@@ -1,119 +1,150 @@
+import {
+  DEFAULT_LOCATION,
+  MOCK_NEW_LOCATION,
+  mockGeolocation,
+  mockUseSuggestions,
+} from "@/__mocks__/locationMocks";
 import LocationPopup from "@/components/LocationPopup/LocationPopup";
-import { RootState } from "@/store";
+import { useGeolocation } from "@/hooks/useGeolocation";
 import locationReducer, {
-  closeLocationPopup,
+  addRecentLocation,
+  removeRecentLocation,
   setUserLocation,
 } from "@/store/slices/locationSlice";
 import { configureStore } from "@reduxjs/toolkit";
-import "@testing-library/jest-dom";
 import { fireEvent, render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import { Provider } from "react-redux";
 
-describe("LocationPopup Component", () => {
-  const initialState = {
-    location: {
-      name: "Paris",
-      address: "1 Rue de la Paix, Paris",
-      coordinates: { latitude: 48.8566, longitude: 2.3522 },
-      recentLocations: [
-        {
-          name: "Lyon",
-          address: "Place Bellecour, Lyon",
-          coordinates: { latitude: 45.764, longitude: 4.8357 },
+// Configuration des mocks
+jest.mock("@/hooks/useSuggestions", () => ({
+  useSuggestions: jest.fn(() => mockUseSuggestions),
+}));
+
+jest.mock("@/hooks/useGeolocation", () => ({
+  useGeolocation: jest.fn(() => mockGeolocation),
+}));
+
+describe("LocationPopup", () => {
+  type Store = ReturnType<typeof configureStore>;
+
+  let store: Store;
+  let onCloseMock: jest.Mock;
+
+  const setupStore = (recentLocations = [DEFAULT_LOCATION]) => {
+    return configureStore({
+      reducer: { location: locationReducer },
+      preloadedState: {
+        location: {
+          name: null,
+          address: null,
+          coordinates: null,
+          recentLocations,
+          isLocationPopupOpen: true,
         },
-      ],
-      isLocationPopupOpen: true,
-    },
+      },
+    });
   };
 
-  // Déclarations des variables nécessaires pour le store et le spy sur dispatch
-  let store: ReturnType<typeof configureStore>;
-  let dispatchSpy: jest.SpyInstance;
+  const renderLocationPopup = (store: Store) => {
+    return render(
+      <Provider store={store}>
+        <LocationPopup isOpen={true} onClose={onCloseMock} />
+      </Provider>,
+    );
+  };
 
-  // Initialisation avant chaque test
   beforeEach(() => {
-    // Configuration du store
-    store = configureStore({
-      reducer: { location: locationReducer },
-      preloadedState: initialState,
+    onCloseMock = jest.fn();
+    store = setupStore();
+    jest.spyOn(store, "dispatch");
+
+    (useGeolocation as jest.Mock).mockReturnValue(mockGeolocation);
+  });
+
+  describe("Affichage", () => {
+    it("affiche les localisations récentes", () => {
+      renderLocationPopup(store);
+
+      expect(screen.getByText("Localisations récentes")).toBeInTheDocument();
+      expect(screen.getByText(DEFAULT_LOCATION.name)).toBeInTheDocument();
+      expect(screen.getByText(DEFAULT_LOCATION.address)).toBeInTheDocument();
     });
 
-    // spy pour observer les appels de dispatch
-    dispatchSpy = jest.spyOn(store, "dispatch");
-  });
+    it("affiche un message quand aucune localisation récente n'est disponible", () => {
+      const emptyStore = setupStore([]);
+      renderLocationPopup(emptyStore);
 
-  // Test : Vérifie que le popup s'affiche avec le contenu par défaut
-  test("renders the popup with default content", () => {
-    render(
-      <Provider store={store}>
-        <LocationPopup
-          isOpen={initialState.location.isLocationPopupOpen}
-          onClose={() => store.dispatch(closeLocationPopup())}
-        />
-      </Provider>,
-    );
+      expect(
+        screen.getByText("Aucune localisation récente disponible."),
+      ).toBeInTheDocument();
+    });
 
-    expect(
-      screen.getByText(/Choisissez votre localisation/i),
-    ).toBeInTheDocument();
-  });
+    it("ne montre pas les suggestions si aucune adresse n'est saisie", () => {
+      renderLocationPopup(store);
 
-  // Test : Vérifie que la localisation est mise à jour lorsque l'action setUserLocation est dispatchée
-  test("updates the location when setUserLocation is dispatched", () => {
-    render(
-      <Provider store={store}>
-        <LocationPopup
-          isOpen={initialState.location.isLocationPopupOpen}
-          onClose={() => store.dispatch(closeLocationPopup())}
-        />
-      </Provider>,
-    );
+      const input = screen.getByTestId("address-input");
+      fireEvent.change(input, { target: { value: "" } });
 
-    // Dispatch une nouvelle localisation pour simuler un changement d'état
-    store.dispatch(
-      setUserLocation({
-        name: "Lyon",
-        address: "Place Bellecour, Lyon",
-        coordinates: { latitude: 45.764, longitude: 4.8357 },
-      }),
-    );
-
-    // Récupère l'état actuel et le typage explicite
-    const state = store.getState() as RootState;
-
-    // Vérifie que l'état Redux a été mis à jour correctement
-    expect(state.location.name).toBe("Lyon");
-    expect(state.location.address).toBe("Place Bellecour, Lyon");
-    expect(state.location.coordinates).toEqual({
-      latitude: 45.764,
-      longitude: 4.8357,
+      expect(screen.queryByText("Suggestions")).not.toBeInTheDocument();
     });
   });
 
-  // Test : Vérifie que l'action closeLocationPopup est dispatchée lors de la fermeture du popup
-  test("dispatches closeLocationPopup action when onClose is triggered", () => {
-    render(
-      <Provider store={store}>
-        <LocationPopup
-          isOpen={initialState.location.isLocationPopupOpen}
-          onClose={() => store.dispatch(closeLocationPopup())}
-        />
-      </Provider>,
-    );
+  describe("Interactions utilisateur", () => {
+    it("se ferme lors de l'appui sur la touche Échap", async () => {
+      renderLocationPopup(store);
+      await userEvent.keyboard("{Escape}");
+      expect(onCloseMock).toHaveBeenCalled();
+    });
 
-    // Vérifie que l'état initial du popup est ouvert
-    const stateBefore = store.getState() as RootState;
-    expect(stateBefore.location.isLocationPopupOpen).toBe(true);
+    it("se ferme lors du clic sur le bouton de fermeture", () => {
+      renderLocationPopup(store);
+      fireEvent.click(screen.getByTestId("close-button"));
+      expect(onCloseMock).toHaveBeenCalled();
+    });
 
-    // Clic sur le bouton de fermeture
-    const closeButton = screen.getByRole("button", { name: /close/i });
-    fireEvent.click(closeButton); // Déclenche l'événement de clic
+    it("active la géolocalisation via le bouton dédié", () => {
+      renderLocationPopup(store);
+      const { locate } = useGeolocation();
 
-    // Vérifie que l'action closeLocationPopup a bien été dispatchée
-    expect(dispatchSpy).toHaveBeenCalledWith(closeLocationPopup());
+      fireEvent.click(screen.getByTestId("automatic-location-button"));
+      expect(locate).toHaveBeenCalledTimes(1);
+    });
+  });
 
-    // Vérifie que l'état du popup a été mis à jour à false fermeture
-    const stateAfter = store.getState() as RootState;
-    expect(stateAfter.location.isLocationPopupOpen).toBe(false);
+  describe("Gestion des localisations", () => {
+    it("ajoute une nouvelle localisation via la sélection d'une suggestion", async () => {
+      renderLocationPopup(store);
+
+      // Simulation de la saisie et sélection d'une suggestion
+      const input = screen.getByTestId("address-input");
+      fireEvent.change(input, {
+        target: { value: "5 Rue de Champagne 42400 Saint-Chamond" },
+      });
+
+      const suggestionList = await screen.findByTestId("suggestion-list");
+      expect(suggestionList).toBeVisible();
+
+      const [suggestionItem] = screen.getAllByTestId("suggestion-item");
+      fireEvent.click(suggestionItem);
+
+      // Vérification des actions Redux
+      expect(store.dispatch).toHaveBeenCalledWith(
+        setUserLocation(MOCK_NEW_LOCATION),
+      );
+      expect(store.dispatch).toHaveBeenCalledWith(
+        addRecentLocation(MOCK_NEW_LOCATION),
+      );
+    });
+
+    it("supprime une localisation récente", () => {
+      renderLocationPopup(store);
+
+      fireEvent.click(screen.getByTestId("remove-location"));
+
+      expect(store.dispatch).toHaveBeenCalledWith(
+        removeRecentLocation(DEFAULT_LOCATION.coordinates),
+      );
+    });
   });
 });
