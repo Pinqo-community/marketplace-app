@@ -7,16 +7,19 @@ describe("LocationPopup Component", () => {
     cy.clearLocalStorage();
   });
 
-  it("Ouvre la popup de localisation", () => {
-    cy.get("[data-testid='open-popup-button']").click();
+  it("Verifie que l'utilisateur ne peut pas fermer la popup sans avoir saisie une adresse", () => {
+    cy.get("[data-testid='close-button']").click();
+    cy.get("[data-testid='location-popup']").should("exist");
+  });
+
+  it("Vérifie que la popup de localisation est ouverte si aucune localisation dans le localstorage", () => {
     cy.get("[data-testid='location-popup']").should("exist");
     cy.contains("Choisissez votre localisation").should("be.visible");
   });
 
-  it("Ouvre la popup rapidement en moins de 1000ms", () => {
+  it("Vérifie que la popup de localisation est ouverte en moins de 1000ms", () => {
     const start = performance.now();
 
-    cy.get("[data-testid='open-popup-button']").click();
     cy.get("[data-testid='location-popup']").should("exist");
 
     const end = performance.now();
@@ -26,7 +29,6 @@ describe("LocationPopup Component", () => {
   });
 
   it("Charge les suggestions en moins de 500ms après une saisie", () => {
-    cy.get("[data-testid='open-popup-button']").click();
     cy.get("[data-testid='address-input']").type("5 Rue de Champagne");
 
     const start = performance.now();
@@ -41,8 +43,6 @@ describe("LocationPopup Component", () => {
   });
 
   it("Réagit au clic sur un bouton en moins de 100ms", () => {
-    cy.get("[data-testid='open-popup-button']").click();
-
     const start = performance.now();
 
     cy.get("[data-testid='automatic-location-button']").click();
@@ -54,7 +54,6 @@ describe("LocationPopup Component", () => {
   });
 
   it("Sauvegarde l'adresse dans le localStorage", () => {
-    cy.get("[data-testid='open-popup-button']").click();
     cy.get("[data-testid='address-input']").type(
       "5 Rue de Champagne 42400 Saint-Chamond"
     );
@@ -113,7 +112,6 @@ describe("LocationPopup Component", () => {
       );
     });
 
-    cy.get("[data-testid='open-popup-button']").click();
     cy.get("[data-testid='automatic-location-button']").click();
     cy.get("[data-testid='location-loading']").should("be.visible");
 
@@ -147,7 +145,6 @@ describe("LocationPopup Component", () => {
       );
     });
 
-    cy.get("[data-testid='open-popup-button']").click();
     cy.get("[data-testid='automatic-location-button']").click();
     cy.get("[data-testid='address-input']", { timeout: 10000 }).should(
       "be.empty"
@@ -160,7 +157,6 @@ describe("LocationPopup Component", () => {
   });
 
   it("Ajoute manuellement une adresse et la sélectionne dans la liste de suggestions", () => {
-    cy.get("[data-testid='open-popup-button']").click();
     cy.get("[data-testid='address-input']").type(
       "5 Rue de Champagne 42400 Saint-Chamond"
     );
@@ -187,7 +183,6 @@ describe("LocationPopup Component", () => {
   });
 
   it("N'ajoute pas d'adresse invalide lorsqu'aucune suggestion n'est sélectionnée", () => {
-    cy.get("[data-testid='open-popup-button']").click();
     cy.get("[data-testid='address-input']").type("Adresse inconnue");
     cy.get("[data-testid='address-input']").should(
       "have.attr",
@@ -197,7 +192,6 @@ describe("LocationPopup Component", () => {
   });
 
   it("Empêche les doublons dans les adresses récentes", () => {
-    cy.get("[data-testid='open-popup-button']").click();
     const address = "5 Rue de Champagne 42400 Saint-Chamond";
     cy.get("[data-testid='address-input']").type(address);
     cy.get("[data-testid='suggestion-item']").first().click();
@@ -211,7 +205,6 @@ describe("LocationPopup Component", () => {
   });
 
   it("Supprime une adresse récente de la liste", () => {
-    cy.get("[data-testid='open-popup-button']").click();
     const address = "5 Rue de Champagne 42400 Saint-Chamond";
     cy.get("[data-testid='address-input']").type(address);
     cy.get("[data-testid='suggestion-item']").first().click();
@@ -231,7 +224,13 @@ describe("LocationPopup Component", () => {
   });
 
   it("Ferme la popup lorsque l'utilisateur appuie sur echap", () => {
-    cy.get("[data-testid='open-popup-button']").click();
+    const address = "5 Rue de Champagne 42400 Saint-Chamond";
+    cy.get("[data-testid='address-input']").type(address);
+    cy.get("[data-testid='suggestion-item']").first().click();
+
+    cy.get("[data-testid='address-input']").clear().type(address);
+    cy.get("[data-testid='suggestion-item']").first().click();
+
     cy.get("[data-testid='location-popup']").trigger("keydown", {
       key: "Escape",
     });
@@ -239,7 +238,12 @@ describe("LocationPopup Component", () => {
   });
 
   it("Ferme la popup lorsqu'on clique à l'extérieur", () => {
-    cy.get("[data-testid='open-popup-button']").click();
+    const address = "5 Rue de Champagne 42400 Saint-Chamond";
+    cy.get("[data-testid='address-input']").type(address);
+    cy.get("[data-testid='suggestion-item']").first().click();
+
+    cy.get("[data-testid='address-input']").clear().type(address);
+    cy.get("[data-testid='suggestion-item']").first().click();
 
     cy.get("[data-testid='overlay']").click({ force: true });
 
@@ -247,7 +251,12 @@ describe("LocationPopup Component", () => {
   });
 
   it("Ferme la popup lorsqu'on clique sur le bouton de fermeture", () => {
-    cy.get("[data-testid='open-popup-button']").click();
+    const address = "5 Rue de Champagne 42400 Saint-Chamond";
+    cy.get("[data-testid='address-input']").type(address);
+    cy.get("[data-testid='suggestion-item']").first().click();
+
+    cy.get("[data-testid='address-input']").clear().type(address);
+    cy.get("[data-testid='suggestion-item']").first().click();
 
     cy.get("[data-testid='close-button']").click();
 
@@ -255,8 +264,6 @@ describe("LocationPopup Component", () => {
   });
 
   it("Cycle utilisateur complet dans la popup de localisation", () => {
-    cy.get("[data-testid='open-popup-button']").click();
-
     cy.get("[data-testid='location-popup']").should("exist");
 
     cy.window().then((win) => {
