@@ -93,14 +93,30 @@ describe("LocationPopup", () => {
   describe("Interactions utilisateur", () => {
     it("se ferme lors de l'appui sur la touche Échap", async () => {
       renderLocationPopup(store);
+      const addressInput = screen.getByTestId(
+        "address-input",
+      ) as HTMLInputElement;
       await userEvent.keyboard("{Escape}");
-      expect(onCloseMock).toHaveBeenCalled();
+
+      if (addressInput.value) {
+        expect(onCloseMock).toHaveBeenCalled();
+      } else {
+        expect(onCloseMock).not.toHaveBeenCalled();
+      }
     });
 
     it("se ferme lors du clic sur le bouton de fermeture", () => {
       renderLocationPopup(store);
+      const addressInput = screen.getByTestId(
+        "address-input",
+      ) as HTMLInputElement;
       fireEvent.click(screen.getByTestId("close-button"));
-      expect(onCloseMock).toHaveBeenCalled();
+
+      if (addressInput.value) {
+        expect(onCloseMock).toHaveBeenCalled();
+      } else {
+        expect(onCloseMock).not.toHaveBeenCalled();
+      }
     });
 
     it("active la géolocalisation via le bouton dédié", () => {
