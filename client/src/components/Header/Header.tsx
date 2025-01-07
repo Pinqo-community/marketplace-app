@@ -128,7 +128,15 @@ const Header: React.FC = () => {
       </div>
       <LocationPopup
         isOpen={isLocationPopupOpen}
-        onClose={() => dispatch(closeLocationPopup())}
+        onClose={() => {
+          if (
+            userLocation?.coordinates ||
+            userLocation?.address ||
+            userLocation?.name
+          ) {
+            dispatch(closeLocationPopup());
+          }
+        }}
       />
     </header>
   );

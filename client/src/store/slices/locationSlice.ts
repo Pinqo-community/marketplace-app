@@ -39,7 +39,10 @@ const locationSlice = createSlice({
       state.isLocationPopupOpen = true;
     },
     closeLocationPopup: (state) => {
-      state.isLocationPopupOpen = false;
+      // Ne ferme pas la popup si aucune localisation n'est renseignée
+      if (state.coordinates || state.address || state.name) {
+        state.isLocationPopupOpen = false;
+      }
     },
     setUserLocation: (
       state,

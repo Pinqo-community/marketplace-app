@@ -6,11 +6,14 @@ import Loader from "@/shared/Loader";
 import { RootState } from "@/store";
 import {
   addRecentLocation,
+  openLocationPopup,
   removeRecentLocation,
   setUserLocation,
 } from "@/store/slices/locationSlice";
 import { BasePopupProps } from "@/types/BasePopup";
 import { RecentLocation, Suggestion } from "@/types/Location";
+import { isUserLocation } from "@/types/typeValidators";
+import { loadFromLocalStorage } from "@/utils/localStorageUtils";
 import { parseAddress } from "@/utils/locationUtils";
 import classNames from "classnames/bind";
 import { AnimatePresence, motion } from "framer-motion";
@@ -21,12 +24,11 @@ import { LocationButton } from "../Button/Buttons";
 import styles from "./LocationPopup.module.scss";
 import SearchIcon from "./SearchIcon";
 import SuggestionList from "./SuggestionList";
-import { isUserLocation } from "@/types/typeValidators";
-import { loadFromLocalStorage } from "@/utils/localStorageUtils";
 
 const LocationPopup = ({ isOpen, onClose }: BasePopupProps) => {
   const [address, setAddress] = useState("");
   const [isValidAddress, setIsValidAddress] = useState(false);
+  const [showWarning, setShowWarning] = useState(false);
   const { suggestions, fetchSuggestions, clearSuggestions } = useSuggestions();
   const {
     coordinates,
@@ -49,6 +51,7 @@ const LocationPopup = ({ isOpen, onClose }: BasePopupProps) => {
     setAddress(suggestion.label);
     clearSuggestions();
     setIsValidAddress(true);
+    setShowWarning(false);
 
     const location = {
       ...parseAddress(suggestion.label),
@@ -70,6 +73,26 @@ const LocationPopup = ({ isOpen, onClose }: BasePopupProps) => {
   };
 
   /* -------------------------------------------------------------------------- */
+  /*                     Gestion de la fermeture de la popup                    */
+  /* -------------------------------------------------------------------------- */
+
+  const handleClose = () => {
+    if (!isValidAddress) {
+      setShowWarning(true);
+    } else {
+      onClose();
+    }
+  };
+
+  useEffect(() => {
+    // Vérifie dans le localStorage si une localisation est enregistrée
+    const savedLocation = localStorage.getItem("userLocation");
+    if (!savedLocation) {
+      dispatch(openLocationPopup());
+    }
+  }, []);
+
+  /* -------------------------------------------------------------------------- */
   /*                  Récupère l'adresse depuis le localStorage                 */
   /* -------------------------------------------------------------------------- */
 
@@ -77,6 +100,7 @@ const LocationPopup = ({ isOpen, onClose }: BasePopupProps) => {
     if (coordinates && geoAddress) {
       setAddress(geoAddress);
       setIsValidAddress(true);
+      setShowWarning(false);
     } else {
       const userLocation = loadFromLocalStorage("userLocation", isUserLocation);
       if (userLocation) {
@@ -105,7 +129,7 @@ const LocationPopup = ({ isOpen, onClose }: BasePopupProps) => {
   return (
     <BasePopup
       isOpen={isOpen}
-      onClose={onClose}
+      onClose={handleClose}
       title="Choisissez votre localisation"
     >
       <AnimatePresence mode="wait">
@@ -138,7 +162,7 @@ const LocationPopup = ({ isOpen, onClose }: BasePopupProps) => {
             placeholder="Entrez votre adresse, code postal, ville..."
             className={cx("searchInput", {
               valid: isValidAddress,
-              invalid: !isValidAddress && address !== "",
+              invalid: (!isValidAddress && address !== "") || showWarning,
             })}
           />
 
