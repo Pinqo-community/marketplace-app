@@ -1,7 +1,9 @@
+import { RootState } from "@/store";
 import { BasePopupProps } from "@/types/BasePopup";
 import { AnimatePresence, motion } from "framer-motion";
 import { X } from "lucide-react";
 import { useEffect } from "react";
+import { useSelector } from "react-redux";
 import styles from "./BasePopup.module.scss";
 
 const BasePopup: React.FC<BasePopupProps> = ({
@@ -10,9 +12,14 @@ const BasePopup: React.FC<BasePopupProps> = ({
   title,
   children,
 }) => {
-  // Gestion du clic en dehors
+  const userLocation = useSelector((state: RootState) => state.location);
+
+  // Ne fermer que si localisation renseignée
   const handleOutsideClick = (e: React.MouseEvent<HTMLDivElement>) => {
-    if ((e.target as HTMLElement).dataset.overlay) {
+    if (
+      (e.target as HTMLElement).dataset.overlay &&
+      userLocation?.coordinates
+    ) {
       onClose();
     }
   };
