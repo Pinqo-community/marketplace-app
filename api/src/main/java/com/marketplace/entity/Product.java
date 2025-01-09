@@ -25,7 +25,10 @@ public class Product{
     private Long id;
     private String name;
     private String description;
+
+    @Column(length = 500)
     private String photo;
+
     private BigDecimal unitPrice;
     private String nutritionalValue;
     private String listOfIngredients;

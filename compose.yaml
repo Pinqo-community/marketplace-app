@@ -11,7 +11,7 @@ services:
       GOOGLE_SECRET_CLIENT: ${GOOGLE_SECRET_CLIENT}
       FACEBOOK_CLIENT_ID: ${FACEBOOK_CLIENT_ID}
       FACEBOOK_SECRET_CLIENT: ${FACEBOOK_SECRET_CLIENT}
-      PEXELS_API_KEY: ${PEXELS_API_KEY}
+      UNSPLASH_API_KEY: ${UNSPLASH_API_KEY}
       DB_HOST: db
       DB_PORT: 5432
     build:
@@ -67,6 +67,7 @@ services:
       DB_PASSWORD: ${DB_PASSWORD}
       DB_HOST: db
       DB_PORT: 5432
+      UNSPLASH_API_KEY: ${UNSPLASH_API_KEY}
     depends_on:
       - db
     networks:

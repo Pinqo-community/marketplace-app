@@ -5,7 +5,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.marketplace.entity.Product;
 import com.marketplace.repository.ProductRepository;
 import net.datafaker.Faker;
+import org.slf4j.Logger;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Profile;
@@ -16,6 +18,8 @@ import org.springframework.http.HttpMethod;
 import org.springframework.web.client.RestTemplate;
 
 import java.math.BigDecimal;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Locale;
 import java.util.stream.IntStream;
 
@@ -31,24 +35,42 @@ public class ProductDataInitializer implements CommandLineRunner {
 
     private final ProductRepository productRepository;
     private final RestTemplate restTemplate;
+    private static final Logger logger = LoggerFactory.getLogger(ProductDataInitializer.class);
 
-   @Value("${pexels.api.key}")
+   @Value("${unsplash.api.key}")
     private String apiKey;
 
     @Override
     public void run(String... args) {
-        if (productRepository.count() == 0) {
+       if (productRepository.count() == 0) {
+            Faker faker = new Faker( Locale.FRANCE);
 
-            Faker faker = new Faker( Locale.ENGLISH);
+            List<String> localProductNames = Arrays.asList(
+                    "Miel d'acacia", "Fromage de chèvre", "Pomme bio", "Pain complet",
+                    "Confiture de framboises", "Herbes aromatiques fraîches", "Carottes du potager", "Poulet fermier",
+                    "Huile d'olive artisanale", "Sirop d'érable biologique", "Yaourt fermier au lait entier",
+                    "Tisanes aux plantes médicinales"," Graines de sésame ",
+                    "Charcuterie artisanale fumée","Œufs de poules élevées en plein air",
+                    "Beurre fermier au lait cru", "Fraises","Ratatouille aux légumes bio",
+                    "Courgettes","Jus de pommes artisanal", "Huile de noix extra vierge",
+                    "Cassoulet", "Pomme de Terre", "Tomate Bio",
+                    "Laitue batavia"
+            );
+
+           List<String> imageUrls = fetchImagesFromUnsplashCollection("1155327", localProductNames.size());
 
             IntStream.range(0, 60).forEach(i -> {
                 int stockQuantity = faker.number().numberBetween(1, 500);
                 int maxQuantityByPurchase = faker.number().numberBetween(1, stockQuantity);
                 int stepQuantity = faker.options().option(1, 2, 3, 5, 10);
 
+                String imageUrl = imageUrls.get(i % imageUrls.size());
+                String productName = localProductNames.get(faker.random().nextInt(localProductNames.size()));
 
-                String productName = faker.commerce().productName();
-                String imageUrl = fetchImageFromPexels(productName);
+                String listOfIngredients = String.join(", ", IntStream.range(0, 3)
+                        .mapToObj(j -> faker.food().ingredient())
+                        .distinct()
+                        .toList());
 
                 Product product = Product.builder()
                         .name(productName)
@@ -56,7 +78,7 @@ public class ProductDataInitializer implements CommandLineRunner {
                         .photo(imageUrl)
                         .unitPrice(BigDecimal.valueOf(faker.number().randomDouble(2, 1, 100)))
                         .nutritionalValue(String.join(", ", faker.food().spice()))
-                        .listOfIngredients(String.join(", ", faker.food().ingredient()))
+                        .listOfIngredients(listOfIngredients)
                         .stockQuantity(stockQuantity)
                         .maxQuantityByPurchase(maxQuantityByPurchase)
                         .stepQuantity(stepQuantity)
@@ -68,51 +90,53 @@ public class ProductDataInitializer implements CommandLineRunner {
 
             });
             System.out.println("60 fake products have been added to the database.");
-
-
-        }
+       }
     }
 
     /**
-     * Fetches an image URL from the Pexels API based on the given query.
-     *
-     * @param query The search query (e.g., product name) to find a relevant image.
-     * @return The URL of the image if found, or a default placeholder URL if any error occurs.
+     * @param collectionId Collection ID from Unsplash
+     * @param totalImages Number of images to fetch
+     * @return List of image URLs
      */
-    protected String fetchImageFromPexels(String query) {
-        String url = "https://api.pexels.com/v1/search?query=" + query + "&per_page=1";
-
+    protected List<String> fetchImagesFromUnsplashCollection(String collectionId, int totalImages) {
+        String url = "https://api.unsplash.com/collections/" + collectionId + "/photos?per_page=" + totalImages;
         try {
-            // Set up headers with the API key
+            /* Set up headers with the API key */
             HttpHeaders headers = new HttpHeaders();
-            headers.set("Authorization", apiKey);
-            // Create an HTTP entity with the headers(API request)
-            HttpEntity<String> entity = new HttpEntity<>(headers);
-            String response = restTemplate.exchange(url, HttpMethod.GET, entity, String.class).getBody();
+            headers.set("Authorization", "Client-ID " + apiKey);
 
-            // Parse the JSON response using Jackson
+            /* Create an HTTP entity with the headers(API request) */
+            HttpEntity<String> entity = new HttpEntity<>(headers);
+            System.out.println("Querying Unsplash with URL: " + url);
+
+            /* Fetch the response */
+            String response = restTemplate.exchange(url, HttpMethod.GET, entity, String.class).getBody();
+            System.out.println("Response from Unsplash: " + response);
+
+            /* Parse the JSON response using Jackson */
             if (response != null) {
                 ObjectMapper objectMapper = new ObjectMapper();
                 JsonNode rootNode = objectMapper.readTree(response);
 
-                // Navigate to the URL of the first image
-                JsonNode photosNode = rootNode.path("photos");
-                if (photosNode.isArray() && photosNode.size() > 0) {
-                    JsonNode photoNode = photosNode.get(0).path("src").path("original");
-                    if (!photoNode.isMissingNode()) {
-                        return photoNode.asText();
-                    }
-                }
+                List<String> imageUrls = IntStream.range(0, rootNode.size())
+                        .mapToObj(i -> {
+                            String rawUrl = rootNode.get(i).path("urls").path("small").asText("https://via.placeholder.com/300");
+                            return rawUrl + "&w=300&h=300";
+                        })
+                        .toList();
+
+                System.out.println("Fetched " + imageUrls.size() + " images from Unsplash.");
+                return imageUrls;
             }
-            // Return a placeholder image if the response is invalid
-            return "https://via.placeholder.com/300";
         } catch (Exception e) {
-            return "https://via.placeholder.com/300";
+            logger.error("An error occurred while fetching images from Unsplash: {}", e.getMessage(), e);
+            return List.of("https://via.placeholder.com/300");
         }
+
+        /* Return an empty list if the request fails */
+        return List.of();
     }
 }
-
-
 
 
 
