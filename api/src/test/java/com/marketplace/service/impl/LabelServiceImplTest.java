@@ -32,7 +32,7 @@ public class LabelServiceImplTest
 
     @Nested
     @DisplayName("Create Label")
-    @Tag("Tests for createLabel method")
+    @Tag("CreateLabelTest")
     class CreateLabelTest {
 
         @Test
@@ -73,7 +73,7 @@ public class LabelServiceImplTest
     }
 
     @Nested
-    @Tag("Tests for updateLabel method")
+    @Tag("UpdateLabelTest")
     @DisplayName("Update Label")
     class UpdateLabelTest {
             @Test
@@ -114,7 +114,7 @@ public class LabelServiceImplTest
 
     @Nested
     @DisplayName("Get All Labels")
-    @Tag("Tests for getAllLabels method")
+    @Tag("GetAllLabelsTest")
     class GetAllLabelsTest {
 
         @Test
@@ -138,7 +138,7 @@ public class LabelServiceImplTest
 
     @Nested
     @DisplayName("Get Label By Id")
-    @Tag("Tests for getLabelById method")
+    @Tag("GetLabelByIdTest")
     class GetLabelByIdTest {
             @Test
             @DisplayName("Should return label by id")
@@ -167,7 +167,7 @@ public class LabelServiceImplTest
 
     @Nested
     @DisplayName("Delete Label")
-    @Tag("Tests for deleteLabel method")
+    @Tag("DeleteLabelTest")
     class DeleteLabelTest {
         @Test
         @DisplayName("Should delete label")
