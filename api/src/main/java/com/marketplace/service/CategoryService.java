@@ -1,7 +1,6 @@
 package com.marketplace.service;
 
 import com.marketplace.dto.category.CategoryCreateDto;
-import com.marketplace.dto.category.CategoryResponseDto;
 import com.marketplace.dto.category.CategoryUpdateDto;
 import com.marketplace.entity.Category;
 
