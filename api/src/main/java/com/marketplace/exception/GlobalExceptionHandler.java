@@ -89,7 +89,7 @@ public class GlobalExceptionHandler {
         );
     }
 
-    @ExceptionHandler({IllegalArgumentException.class, UserAlreadyExistsException.class})
+    @ExceptionHandler({IllegalArgumentException.class, UserAlreadyExistsException.class, AlreadyExistsException.class})
     @ResponseStatus(HttpStatus.CONFLICT)
     public ResponseEntity<ExceptionResponse>handleIllegalArgumentException(Exception ex, WebRequest request) {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(
@@ -113,16 +113,7 @@ public class GlobalExceptionHandler {
         );
     }
 
-    @ExceptionHandler
-    public ResponseEntity<ExceptionResponse> handleAlreadyExistsException(AlreadyExistsException ex, WebRequest request) {
-        return ResponseEntity.status(HttpStatus.CONFLICT).body(
-                new ExceptionResponse(
-                        HttpStatus.CONFLICT.value(),
-                        ex.getMessage(),
-                        ((ServletWebRequest) request).getRequest().getRequestURI()
-                )
-        );
-    }
+
 
     @ExceptionHandler
     public ResponseEntity<ExceptionResponse> handleInternalException(Exception ex, WebRequest request) {
