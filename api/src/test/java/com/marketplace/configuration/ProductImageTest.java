@@ -1,6 +1,6 @@
 package com.marketplace.configuration;
 
-import org.junit.jupiter.api.Assertions;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -10,7 +10,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.test.util.ReflectionTestUtils;
-import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
@@ -23,44 +22,39 @@ import static org.junit.jupiter.api.Assertions.*;
 public class ProductImageTest {
 
     @Test
-    @DisplayName("Test Fetch Multiple Images From Unsplash Collection")
-    public void testFetchImagesFromUnsplashCollection() {
-        String apiKey = System.getenv("UNSPLASH_API_KEY");
-        assertNotNull(apiKey, "API Key should be set in the environment variables.");
+    @DisplayName("Test Fetch Images From Unsplash with Mocked API")
+    public void testFetchImagesFromUnsplashWithMock() {
+        // Mock du RestTemplate
+        RestTemplate mockRestTemplate = Mockito.mock(RestTemplate.class);
 
-        ProductDataInitializer initializer = new ProductDataInitializer(null, new RestTemplate());
-        ReflectionTestUtils.setField(initializer, "apiKey", apiKey);
+        // Instance de ProductDataInitializer avec le RestTemplate mocké
+        ProductDataInitializer initializer = new ProductDataInitializer(null, mockRestTemplate);
 
-        List<String> images = initializer.fetchImagesFromUnsplashCollection("1155327", 10);
+        // Mock de la réponse de l'API
+        String mockResponse = """
+        [
+            {"urls": {"small": "https://image-url-1.com"}},
+            {"urls": {"small": "https://image-url-2.com"}}
+        ]
+    """;
+
+        Mockito.when(mockRestTemplate.exchange(
+                Mockito.anyString(),
+                Mockito.eq(HttpMethod.GET),
+                Mockito.any(HttpEntity.class),
+                Mockito.eq(String.class)
+        )).thenReturn(new org.springframework.http.ResponseEntity<>(mockResponse, org.springframework.http.HttpStatus.OK));
+
+        // Appel de la méthode testée
+        List<String> images = initializer.fetchImagesFromUnsplashCollection("1165522", 2);
 
         // Assertions
         assertNotNull(images, "Image list should not be null.");
-        assertFalse(images.isEmpty(), "Image list should contain images.");
-        assertTrue(images.size() <= 10, "Image list size should not exceed the requested number.");
-        assertFalse(images.contains("https://via.placeholder.com/300"), "Image list should not contain placeholder URLs.");
+        assertEquals(2, images.size(), "Image list should contain two images.");
+        assertEquals("https://image-url-1.com&w=300&h=300", images.get(0));
+        assertEquals("https://image-url-2.com&w=300&h=300", images.get(1));
     }
 
-    @Test
-    @DisplayName("Test Fetch Image From Unsplash with Valid API Key")
-    public void testFetchImageFromUnsplash_withValidApiKey() {
-        String apiKey = System.getenv("UNSPLASH_API_KEY");
-        assertNotNull(apiKey, "API Key should be set in the environment variables.");
-
-        ProductDataInitializer initializer = new ProductDataInitializer(null, new RestTemplate());
-        ReflectionTestUtils.setField(initializer, "apiKey", apiKey);
-
-        try {
-
-            List<String> images = initializer.fetchImagesFromUnsplashCollection("1155327", 5);
-
-            assertNotNull(images, "Image list should not be null.");
-            assertFalse(images.isEmpty(), "Image list should not be empty.");
-            assertFalse(images.contains("https://via.placeholder.com/300"), "Image list should not contain placeholder URLs.");
-
-        } catch (HttpClientErrorException e) {
-            Assertions.fail("API call failed with status: " + e.getStatusCode() + " and message: " + e.getMessage());
-        }
-    }
 
     @Test
     @DisplayName("Test Fetch Images From Unsplash Collection with Error")
