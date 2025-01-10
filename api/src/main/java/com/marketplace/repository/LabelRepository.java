@@ -10,7 +10,5 @@ public interface LabelRepository extends JpaRepository<Label, Long> {
 
     boolean existsByNameIgnoreCase(String name);
 
-    @NonNull
-    List<Label> findAll();
 
 }

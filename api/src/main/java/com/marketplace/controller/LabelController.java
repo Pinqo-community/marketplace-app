@@ -17,6 +17,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+
 @Tag(name = "Labels", description = "Label management in the marketplace")
 @RestController
 @RequestMapping("/labels")

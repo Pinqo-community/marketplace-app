@@ -6,7 +6,6 @@ import com.marketplace.dto.LabelDto;
 import com.marketplace.exception.AlreadyExistsException;
 import com.marketplace.exception.NotFoundException;
 import com.marketplace.service.LabelService;
-import com.marketplace.utils.mapper.LabelMapper;
 import org.junit.jupiter.api.*;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -122,6 +121,21 @@ class LabelControllerTest {
                             .content(objectMapper.writeValueAsString(baseLabelDto)))
                     .andExpect(status().isConflict())
                     .andExpect(jsonPath("$.message").value("Le nom du label existe déjà"));
+        }
+
+        @Test
+        @DisplayName("Should return 400 Bad Request when label name is null or empty")
+        void createLabel_InvalidRequest_ReturnsBadRequest() throws Exception {
+            // Arrange
+            LabelDto invalidRequest = new LabelDto(null, "", "Description label");
+
+            // Act & Assert
+            mockMvc.perform(post("/labels")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsString(invalidRequest)))
+                    .andExpect(status().isBadRequest())
+                    .andExpect(jsonPath("$.errors").isArray())
+                    .andExpect(jsonPath("$.errors[0].message").value("Le nom du label est obligatoire"));
         }
     }
 

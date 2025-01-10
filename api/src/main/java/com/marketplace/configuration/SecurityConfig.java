@@ -40,7 +40,6 @@ public class SecurityConfig {
 
     private static final String[] API_URLS_WHITELIST = {
             "/auth/**",
-            "/labels/**"
     };
 
     @Bean
@@ -52,8 +51,8 @@ public class SecurityConfig {
                         req
                                 .requestMatchers(SWAGGER_WHITELIST).permitAll()
                                 .requestMatchers(API_URLS_WHITELIST).permitAll()
-                                .requestMatchers(HttpMethod.GET, "/categories/**").permitAll()
-                                .requestMatchers("/categories/**").hasRole("ADMIN")
+                                .requestMatchers(HttpMethod.GET, "/categories/**", "/labels/**").permitAll()
+                                .requestMatchers("/categories/**", "/labels/**").hasRole("ADMIN")
                                 .anyRequest().authenticated()
                 )
                 .oauth2Login(oauth -> oauth.authorizationEndpoint(endpoint -> endpoint

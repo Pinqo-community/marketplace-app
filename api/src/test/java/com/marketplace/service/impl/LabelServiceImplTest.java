@@ -21,7 +21,7 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-@Tag("LabelService")
+@Tag("LabelServiceImplTest")
 @ExtendWith(MockitoExtension.class)
 public class LabelServiceImplTest
 {
@@ -70,16 +70,6 @@ public class LabelServiceImplTest
             // Act & Assert
             AlreadyExistsException exception = assertThrows(AlreadyExistsException.class, () -> labelService.createLabel(request));
             assertEquals("Le nom du label existe déjà", exception.getMessage());
-        }
-
-        @Test
-        @DisplayName("Should throw IllegalArgumentException when label name is null")
-        void createLabel_InvalidRequest_NullName_ThrowsIllegalArgumentException() {
-            // Arrange
-            LabelDto request = new LabelDto(1L, null, "Description label");
-            // Act & Assert
-            IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> labelService.createLabel(request));
-            assertEquals("Le nom du label est obligatoire et ne peut pas être nul", exception.getMessage());
         }
     }
 
