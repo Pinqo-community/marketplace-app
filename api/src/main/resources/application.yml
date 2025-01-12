@@ -35,7 +35,14 @@ spring:
   profiles:
     default: dev
 
+  springdoc:
+    api-docs:
+      enabled: true
+    swagger-ui:
+      enabled: true
+
 server:
+  port: 8080
   servlet:
     context-path: /api/v1/
 
