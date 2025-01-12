@@ -58,6 +58,10 @@ describe("LocationPopup Component", () => {
       "5 Rue de Champagne 42400 Saint-Chamond"
     );
 
+    cy.get("[data-testid='suggestion-list']", { timeout: 500 }).should(
+      "be.visible"
+    );
+
     cy.get("[data-testid='suggestion-item']").first().click();
     cy.get("[data-testid='address-input']").should(
       "have.value",
