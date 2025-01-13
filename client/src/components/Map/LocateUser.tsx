@@ -1,11 +1,12 @@
 import { RootState } from "@/store";
+import { openLocationPopup } from "@/store/slices/locationSlice";
 import { LocateUserProps } from "@/types/types";
+import { getBoundsFromCoordinates } from "@/utils/mapUtils";
 import L from "leaflet";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useMap } from "react-leaflet";
 import { useDispatch, useSelector } from "react-redux";
 import styles from "./LocateUser.module.scss";
-import { openLocationPopup } from "@/store/slices/locationSlice";
 
 const LocateUser: React.FC<LocateUserProps> = ({ defaultPosition }) => {
   /* -------------------------------------------------------------------------- */
@@ -63,6 +64,22 @@ const LocateUser: React.FC<LocateUserProps> = ({ defaultPosition }) => {
       addMarker(coordinates.latitude, coordinates.longitude, true);
     }
   }, [map, coordinates, addMarker]);
+
+  /* -------------------------------------------------------------------------- */
+  /*                              Update Bounds                                 */
+  /* -------------------------------------------------------------------------- */
+
+  useEffect(() => {
+    if (coordinates) {
+      const bounds = getBoundsFromCoordinates(
+        coordinates.latitude,
+        coordinates.longitude,
+        50,
+      );
+      map.flyTo([coordinates.latitude, coordinates.longitude], 13);
+      map.setMaxBounds(bounds);
+    }
+  }, [coordinates, map]);
 
   /* -------------------------------------------------------------------------- */
   /*                                   Render                                   */
