@@ -1,12 +1,11 @@
 package com.marketplace.service.impl;
 
-import com.marketplace.dto.LoginRequest;
 import com.marketplace.dto.category.CategoryCreateDto;
 import com.marketplace.dto.category.CategoryUpdateDto;
 import com.marketplace.entity.Category;
 import com.marketplace.exception.AlreadyExistsException;
 import com.marketplace.exception.NotFoundException;
-import com.marketplace.exception.WrongCredentialException;
+
 import com.marketplace.repository.CategoryRepository;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
