@@ -1,11 +1,10 @@
-package com.marketplace.Service.impl;
+package com.marketplace.service.impl;
 
 import com.marketplace.dto.ProductDto;
 import com.marketplace.entity.Product;
 import com.marketplace.exception.IllegalArgumentException;
 import com.marketplace.exception.NotFoundException;
 import com.marketplace.repository.ProductRepository;
-import com.marketplace.service.impl.ProductServiceImpl;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Tag;
