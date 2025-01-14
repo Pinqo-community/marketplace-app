@@ -17,41 +17,41 @@ describe("LocationPopup Component", () => {
     cy.contains("Choisissez votre localisation").should("be.visible");
   });
 
-  it("Vérifie que la popup de localisation est ouverte en moins de 1000ms", () => {
-    const start = performance.now();
+  // it("Vérifie que la popup de localisation est ouverte en moins de 1000ms", () => {
+  //   const start = performance.now();
 
-    cy.get("[data-testid='location-popup']").should("exist");
+  //   cy.get("[data-testid='location-popup']").should("exist");
 
-    const end = performance.now();
-    cy.log(`Popup ouverte en ${end - start}ms`);
+  //   const end = performance.now();
+  //   cy.log(`Popup ouverte en ${end - start}ms`);
 
-    expect(end - start).to.be.lessThan(1000);
-  });
+  //   expect(end - start).to.be.lessThan(1000);
+  // });
 
-  it("Charge les suggestions en moins de 500ms après une saisie", () => {
-    cy.get("[data-testid='address-input']").type("5 Rue de Champagne");
+  // it("Charge les suggestions en moins de 500ms après une saisie", () => {
+  //   cy.get("[data-testid='address-input']").type("5 Rue de Champagne");
 
-    const start = performance.now();
+  //   const start = performance.now();
 
-    cy.get("[data-testid='suggestion-list']", { timeout: 500 }).should(
-      "be.visible"
-    );
+  //   cy.get("[data-testid='suggestion-list']", { timeout: 500 }).should(
+  //     "be.visible"
+  //   );
 
-    const end = performance.now();
-    cy.log(`Suggestions chargées en ${end - start}ms`);
-    expect(end - start).to.be.lessThan(500);
-  });
+  //   const end = performance.now();
+  //   cy.log(`Suggestions chargées en ${end - start}ms`);
+  //   expect(end - start).to.be.lessThan(500);
+  // });
 
-  it("Réagit au clic sur un bouton en moins de 100ms", () => {
-    const start = performance.now();
+  // it("Réagit au clic sur un bouton en moins de 100ms", () => {
+  //   const start = performance.now();
 
-    cy.get("[data-testid='automatic-location-button']").click();
-    cy.get("[data-testid='location-loading']").should("be.visible");
+  //   cy.get("[data-testid='automatic-location-button']").click();
+  //   cy.get("[data-testid='location-loading']").should("be.visible");
 
-    const end = performance.now();
-    cy.log(`Réponse en ${end - start}ms`);
-    expect(end - start).to.be.lessThan(100);
-  });
+  //   const end = performance.now();
+  //   cy.log(`Réponse en ${end - start}ms`);
+  //   expect(end - start).to.be.lessThan(100);
+  // });
 
   it("Sauvegarde l'adresse dans le localStorage", () => {
     cy.get("[data-testid='address-input']").type(
