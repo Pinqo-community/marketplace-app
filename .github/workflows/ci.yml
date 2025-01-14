@@ -73,6 +73,12 @@ jobs:
           start: npm run dev
           wait-on: "http://localhost:5173"
           wait-on-timeout: 120
+        env:
+          CYPRESS_MOCK_GEOLOCATION: true
+          CYPRESS_DEFAULT_LOCATION: '{"latitude": 45.475614, "longitude": 4.527323}'
+          CYPRESS_RESPONSE_TIMEOUT: 30000
+          CYPRESS_DEFAULT_COMMAND_TIMEOUT: 10000
+          NODE_ENV: test
 
       - name: Build project
         run: npm run build
