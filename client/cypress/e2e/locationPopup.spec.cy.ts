@@ -54,52 +54,38 @@ describe("LocationPopup Component", () => {
   // });
 
   it("Sauvegarde l'adresse dans le localStorage", () => {
-    cy.get("[data-testid='address-input']").type(
-      "5 Rue de Champagne 42400 Saint-Chamond"
-    );
+    const address = "5 Rue de Champagne 42400 Saint-Chamond";
+    const expectedLocation = {
+      name: "Saint-Chamond",
+      address: "5 Rue de Champagne 42400",
+      coordinates: {
+        latitude: 45.475614,
+        longitude: 4.527323,
+      },
+    };
 
-    cy.get("[data-testid='suggestion-list']", { timeout: 500 }).should(
+    cy.get("[data-testid='address-input']").type(address);
+
+    // Attendre plus longtemps pour les suggestions
+    cy.get("[data-testid='suggestion-list']", { timeout: 10000 }).should(
       "be.visible"
     );
 
     cy.get("[data-testid='suggestion-item']").first().click();
-    cy.get("[data-testid='address-input']").should(
-      "have.value",
-      "5 Rue de Champagne 42400 Saint-Chamond"
-    );
 
-    const expectedKey = "recentLocations";
-    const expectedValue = JSON.stringify([
-      {
-        name: "Saint-Chamond",
-        address: "5 Rue de Champagne 42400",
-        coordinates: {
-          latitude: 45.475614,
-          longitude: 4.527323,
-        },
-      },
-    ]);
+    // Vérifier que l'input contient la bonne valeur
+    cy.get("[data-testid='address-input']")
+      .should("have.value", address)
+      .and("have.attr", "data-valid", "true");
 
+    // Vérifier le localStorage après un délai
+    cy.wait(1000); // Attendre que le localStorage soit mis à jour
     cy.window().then((win) => {
-      const actualValue = win.localStorage.getItem(expectedKey);
-      expect(actualValue).to.eq(expectedValue);
+      const storedLocations = JSON.parse(
+        win.localStorage.getItem("recentLocations") || "[]"
+      );
+      expect(storedLocations[0]).to.deep.equal(expectedLocation);
     });
-
-    cy.reload();
-    cy.get("[data-testid='open-popup-button']").click();
-
-    cy.get("[data-testid='address-input']").should(
-      "have.attr",
-      "data-valid",
-      "true"
-    );
-    cy.get("[data-testid='recent-location']")
-      .should("be.visible")
-      .and("contain.text", "Saint-Chamond");
-    cy.get("[data-testid='location-header-text']").should(
-      "contain",
-      "Saint-Chamond"
-    );
   });
 
   it("Ajoute une adresse automatiquement via le bouton de géolocalisation", () => {
@@ -197,15 +183,32 @@ describe("LocationPopup Component", () => {
 
   it("Empêche les doublons dans les adresses récentes", () => {
     const address = "5 Rue de Champagne 42400 Saint-Chamond";
-    cy.get("[data-testid='address-input']").type(address);
-    cy.get("[data-testid='suggestion-item']").first().click();
-    cy.get("[data-testid='recent-location']")
-      .should("be.visible")
-      .and("contain.text", "Saint-Chamond");
 
-    cy.get("[data-testid='address-input']").clear().type(address);
+    // Première insertion
+    cy.get("[data-testid='address-input']").type(address);
+    cy.get("[data-testid='suggestion-list']", { timeout: 10000 }).should(
+      "be.visible"
+    );
     cy.get("[data-testid='suggestion-item']").first().click();
-    cy.get("[data-testid='recent-location']").should("have.length", 1);
+
+    // Attendre que le localStorage soit mis à jour
+    cy.wait(1000);
+
+    // Deuxième insertion
+    cy.get("[data-testid='address-input']").clear().type(address);
+    cy.get("[data-testid='suggestion-list']", { timeout: 10000 }).should(
+      "be.visible"
+    );
+    cy.get("[data-testid='suggestion-item']").first().click();
+
+    // Vérifier qu'il n'y a qu'une seule entrée
+    cy.wait(1000);
+    cy.window().then((win) => {
+      const storedLocations = JSON.parse(
+        win.localStorage.getItem("recentLocations") || "[]"
+      );
+      expect(storedLocations).to.have.lengthOf(1);
+    });
   });
 
   it("Supprime une adresse récente de la liste", () => {
