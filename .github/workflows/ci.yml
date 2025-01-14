@@ -72,6 +72,7 @@ jobs:
           build: npm run build
           start: npm run dev
           wait-on: "http://localhost:5173"
+          wait-on-timeout: 120
 
       - name: Build project
         run: npm run build
