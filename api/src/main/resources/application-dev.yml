@@ -1,3 +1,0 @@
-app:
-  client:
-    allowed-urls: "http://localhost:5173"

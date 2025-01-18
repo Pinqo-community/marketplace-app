@@ -2,66 +2,117 @@ plugins {
 	id 'java'
 	id 'org.springframework.boot' version '3.3.4'
 	id 'io.spring.dependency-management' version '1.1.6'
-	id 'jacoco'
 }
 
-group = 'com.marketplace'
-version = '0.0.1-SNAPSHOT'
+allprojects {
+	group = 'com.marketplace'
+	version = '0.0.1-SNAPSHOT'
 
-apply from: 'jacoco.gradle'
+	apply plugin: 'java'
+	apply plugin: 'org.springframework.boot'
+	apply plugin: 'io.spring.dependency-management'
 
-java {
-	toolchain {
-		languageVersion = JavaLanguageVersion.of(21)
+	java.sourceCompatibility(JavaVersion.VERSION_21)
+
+	configurations {
+		compileOnly.extendsFrom annotationProcessor
+		testCompileOnly.extendsFrom annotationProcessor
+		testAnnotationProcessor.extendsFrom annotationProcessor
+		developmentOnly
+		runtimeClasspath.extendsFrom(developmentOnly)
+	}
+
+	repositories {
+		mavenCentral()
+	}
+
+	dependencies {
+		// Spring Boot Starters
+		implementation 'org.springframework.boot:spring-boot-starter-web'
+		implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+		implementation 'org.springframework.boot:spring-boot-starter-mail'
+		implementation 'org.springframework.boot:spring-boot-starter-validation'
+
+		// Database
+		implementation 'org.postgresql:postgresql'
+
+		// Swagger/OpenAPI
+		implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.3.0'
+
+		// Lombok
+		implementation 'org.projectlombok:lombok'
+		compileOnly 'org.projectlombok:lombok'
+		annotationProcessor 'org.projectlombok:lombok'
+
+		// MapStruct
+		implementation 'org.mapstruct:mapstruct:1.6.2'
+		annotationProcessor 'org.mapstruct:mapstruct-processor:1.6.2'
+		implementation 'org.projectlombok:lombok-mapstruct-binding:0.2.0'
+
+		// Development tools
+
+		// Test dependencies
+		testImplementation 'org.springframework.boot:spring-boot-starter-test'
+		testImplementation 'org.junit.platform:junit-platform-launcher'
+		testImplementation 'com.h2database:h2'
+	}
+
+	test {
+		useJUnitPlatform()
+	}
+
+	bootJar.enabled = false
+	jar.enabled = true
+}
+
+project(":marketplace-api") {
+	bootJar.enabled = false
+	jar.enabled = true
+}
+
+project(":marketplace-auth") {
+	bootJar.enabled = false
+	jar.enabled = true
+
+	dependencies {
+		implementation project(':marketplace-api')
+		implementation 'org.springframework.boot:spring-boot-starter-security'
+		implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
+		implementation 'io.jsonwebtoken:jjwt:0.12.6'
+		testImplementation 'org.springframework.security:spring-security-test'
 	}
 }
 
-configurations {
-	developmentOnly
-	runtimeClasspath {
-		extendsFrom developmentOnly
-	}
-	compileOnly {
-		extendsFrom annotationProcessor
+project(":marketplace-core") {
+	bootJar.enabled = false
+	jar.enabled = true
+
+	dependencies {
+		implementation project(':marketplace-api')
 	}
 }
 
-repositories {
-	mavenCentral()
-}
+project(":marketplace-bootstrap") {
+	bootJar {
+		enabled = true
+		mainClass = 'com.marketplace.bootstrap.Application'
+	}
+	jar.enabled = false
 
-dependencies {
-	// Spring Boot Starters
-	implementation 'org.springframework.boot:spring-boot-starter-web'
-	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-	implementation 'org.springframework.boot:spring-boot-starter-mail'
-	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
-	implementation 'org.springframework.boot:spring-boot-starter-security'
-	implementation 'org.springframework.boot:spring-boot-starter-validation'
+	sourceSets {
+		test {
+			java {
+				srcDirs = ['src/test/java']
+			}
+		}
+	}
 
-	// JWT
-	implementation 'io.jsonwebtoken:jjwt:0.12.6'
-
-	// Database
-	implementation 'org.postgresql:postgresql'
-
-	// Swagger/OpenAPI
-	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.3.0'
-
-	// Lombok
-	compileOnly 'org.projectlombok:lombok'
-	annotationProcessor 'org.projectlombok:lombok'
-
-	// MapStruct
-	implementation 'org.mapstruct:mapstruct:1.6.2'
-	annotationProcessor 'org.mapstruct:mapstruct-processor:1.6.2'
-	implementation 'org.projectlombok:lombok-mapstruct-binding:0.2.0'
-
-	// Development tools
-	developmentOnly 'org.springframework.boot:spring-boot-devtools'
-
-	// Test dependencies
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-	testImplementation 'org.springframework.security:spring-security-test'
-	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+	dependencies {
+		implementation project(':marketplace-api')
+		implementation project(':marketplace-auth')
+		implementation project(':marketplace-core')
+		testRuntimeOnly 'com.h2database:h2'
+		testImplementation platform('org.junit:junit-bom:5.10.0')
+		testImplementation 'org.junit.jupiter:junit-jupiter'
+	}
 }

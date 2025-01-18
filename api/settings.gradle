@@ -1,1 +1,5 @@
 rootProject.name = 'marketplace-backend'
+include 'marketplace-bootstrap'
+include 'marketplace-core'
+include 'marketplace-auth'
+include 'marketplace-api'
