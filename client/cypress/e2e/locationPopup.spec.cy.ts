@@ -183,24 +183,20 @@ describe("LocationPopup Component", () => {
   it("Empêche les doublons dans les adresses récentes", () => {
     const address = "5 Rue de Champagne 42400 Saint-Chamond";
 
-    // Première insertion
     cy.get("[data-testid='address-input']").type(address);
     cy.get("[data-testid='suggestion-list']", { timeout: 10000 }).should(
       "be.visible"
     );
     cy.get("[data-testid='suggestion-item']").first().click();
 
-    // Attendre que le localStorage soit mis à jour
     cy.wait(1000);
 
-    // Deuxième insertion
     cy.get("[data-testid='address-input']").clear().type(address);
     cy.get("[data-testid='suggestion-list']", { timeout: 10000 }).should(
       "be.visible"
     );
     cy.get("[data-testid='suggestion-item']").first().click();
 
-    // Vérifier qu'il n'y a qu'une seule entrée
     cy.wait(1000);
     cy.window().then((win) => {
       const storedLocations = JSON.parse(
