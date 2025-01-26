@@ -86,8 +86,7 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
         String[] urls = clientUrl.split(",");
         List<String> authorizedRedirectUris = new ArrayList<>();
         for (String url : urls) {
-//            authorizedRedirectUris.add(url.trim() + "/oauth/redirect");
-            authorizedRedirectUris.add(url.trim() + "/api/v1/auth/oauth");
+            authorizedRedirectUris.add(url.trim() + "/oauth/redirect");
         }
 
         return authorizedRedirectUris.stream().anyMatch(authorizedRedirectUri -> {

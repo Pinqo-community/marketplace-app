@@ -139,20 +139,4 @@ public class AuthController {
             log.info("POST /auth/refresh-token - DONE");
         }
     }
-
-    // TODO: remove this operation. It is just for testing google authentication
-    @GetMapping("/oauth")
-    public void testOauth(HttpServletRequest request) {
-        StringBuilder requestDetails = new StringBuilder("\n=== Détails de la Requête ===\n");
-
-        requestDetails.append("URL: ").append(request.getRequestURL()).append("\n");
-
-        requestDetails.append("\n=== Query Parameters ===\n");
-        request.getParameterMap().forEach((key, values) -> {
-            requestDetails.append(key).append(": ");
-            requestDetails.append(String.join(", ", values)).append("\n");
-        });
-
-        System.out.println(requestDetails.toString());
-    }
 }
