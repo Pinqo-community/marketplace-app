@@ -4,7 +4,6 @@ import com.marketplace.api.dto.auth.JwtResponse;
 import com.marketplace.api.dto.auth.LoginRequest;
 import com.marketplace.api.dto.auth.RefreshTokenRequest;
 import com.marketplace.api.dto.auth.RegisterRequest;
-import com.marketplace.api.dto.exception.ExceptionResponse;
 import com.marketplace.api.service.AuthService;
 import com.marketplace.web.configuration.WebMvcBaseTest;
 import org.junit.jupiter.api.Nested;
@@ -15,9 +14,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MvcResult;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
