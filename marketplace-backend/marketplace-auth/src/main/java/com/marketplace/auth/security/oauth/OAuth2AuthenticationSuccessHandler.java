@@ -21,9 +21,14 @@ import org.springframework.web.util.UriComponentsBuilder;
 import java.io.IOException;
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Handler for successful OAuth2 authentication.
+ * Manages redirection and token generation after successful authentication.
+ */
 @Component
 @RequiredArgsConstructor
 public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
@@ -34,8 +39,20 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
     @Value("${app.client.allowed-urls}")
     private String clientUrl;
 
+    /**
+     * Handles successful authentication by determining target URL and redirecting.
+     *
+     * @param request current HTTP request
+     * @param response current HTTP response
+     * @param authentication authentication object containing principal
+     * @throws IOException if an I/O error occurs
+     * @throws ServletException if a servlet error occurs
+     */
     @Override
-    public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
+    public void onAuthenticationSuccess(
+            HttpServletRequest request,
+            HttpServletResponse response,
+            Authentication authentication) throws IOException, ServletException {
         String targetUrl = determineTargetUrl(request, response, authentication);
 
         if (response.isCommitted()) {
@@ -47,51 +64,87 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
         getRedirectStrategy().sendRedirect(request, response, targetUrl);
     }
 
+    /**
+     * Determines the target URL for redirection after successful authentication.
+     * Generates JWT tokens and adds them as query parameters.
+     *
+     * @param request current HTTP request
+     * @param response current HTTP response
+     * @param authentication authentication object containing principal
+     * @return target URL with tokens
+     * @throws RuntimeException if redirect URI is unauthorized or user cannot be accessed
+     */
     @Override
-    protected String determineTargetUrl(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
-        Optional<String> redirectUri = CookieUtils.getCookie(request, HttpCookieOAuth2AuthorizationRequestRepository.REDIRECT_URI_PARAM_COOKIE_NAME).map(Cookie::getValue);
+    protected String determineTargetUrl(
+            HttpServletRequest request,
+            HttpServletResponse response,
+            Authentication authentication) {
+        Optional<String> redirectUri = CookieUtils.getCookie(request,
+                        HttpCookieOAuth2AuthorizationRequestRepository.REDIRECT_URI_PARAM_COOKIE_NAME)
+                .map(Cookie::getValue);
 
         if (redirectUri.isPresent() && !isAuthorizedRedirectUri(redirectUri.get())) {
-            throw new RuntimeException("Sorry! We've got an Unauthorized Redirect URI and can't proceed with the authentication");
+            throw new RuntimeException(
+                    "Sorry! We've got an Unauthorized Redirect URI and can't proceed with the authentication");
         }
 
         String targetUrl = redirectUri.orElseThrow();
-
-        Object principal = authentication.getPrincipal();
-        UserDTO user = null;
-        if (principal instanceof OidcUser) {
-            OidcUser oidcUser = (OidcUser) principal;
-            user = userService.getUserByEmail(oidcUser.getEmail());
-        } else if (principal instanceof OAuth2User) {
-            OAuth2User oAuth2User = (OAuth2User) principal;
-            user = userService.getUserByEmail(oAuth2User.getAttributes().get("email").toString());
-        }
-
-        if (user == null) {
-            throw new RuntimeException("A problem has occured while trying to access the user");
-        }
-
+        UserDTO user = getUserFromAuthentication(authentication);
         JwtResponse token = jwtService.generateJwtToken(user);
 
-        return UriComponentsBuilder.fromUriString(targetUrl).queryParam("access_token", token.accessToken()).queryParam("refresh_token", token.refreshToken()).build().toUriString();
+        return UriComponentsBuilder.fromUriString(targetUrl)
+                .queryParam("access_token", token.accessToken())
+                .queryParam("refresh_token", token.refreshToken())
+                .build()
+                .toUriString();
     }
 
+    /**
+     * Clears authentication attributes and cookies.
+     *
+     * @param request current HTTP request
+     * @param response current HTTP response
+     */
     protected void clearAuthenticationAttributes(HttpServletRequest request, HttpServletResponse response) {
         super.clearAuthenticationAttributes(request);
         httpCookieOAuth2AuthorizationRequestRepository.removeAuthorizationRequestCookies(request, response);
     }
 
+    /**
+     * Validates if the redirect URI is authorized.
+     *
+     * @param uri redirect URI to validate
+     * @return true if URI is authorized, false otherwise
+     */
     private boolean isAuthorizedRedirectUri(String uri) {
         URI clientRedirectUri = URI.create(uri);
-        String[] urls = clientUrl.split(",");
-        List<String> authorizedRedirectUris = new ArrayList<>();
-        for (String url : urls) {
-            authorizedRedirectUris.add(url.trim() + "/oauth/redirect");
-        }
+        List<String> authorizedRedirectUris = Arrays.stream(clientUrl.split(","))
+                .map(String::trim)
+                .map(url -> url + "/oauth/redirect")
+                .toList();
 
-        return authorizedRedirectUris.stream().anyMatch(authorizedRedirectUri -> {
-            URI authorizedURI = URI.create(authorizedRedirectUri);
-            return authorizedURI.getHost().equalsIgnoreCase(clientRedirectUri.getHost()) && authorizedURI.getPort() == clientRedirectUri.getPort();
-        });
+        return authorizedRedirectUris.stream()
+                .map(URI::create)
+                .anyMatch(authorizedURI ->
+                        authorizedURI.getHost().equalsIgnoreCase(clientRedirectUri.getHost())
+                                && authorizedURI.getPort() == clientRedirectUri.getPort());
+    }
+
+    /**
+     * Extracts user information from authentication object.
+     *
+     * @param authentication authentication object containing principal
+     * @return user DTO
+     * @throws RuntimeException if user cannot be accessed
+     */
+    private UserDTO getUserFromAuthentication(Authentication authentication) {
+        Object principal = authentication.getPrincipal();
+        if (principal instanceof OidcUser) {
+            return userService.getUserByEmail(((OidcUser) principal).getEmail());
+        } else if (principal instanceof OAuth2User) {
+            return userService.getUserByEmail(((OAuth2User) principal)
+                    .getAttributes().get("email").toString());
+        }
+        throw new RuntimeException("A problem has occurred while trying to access the user");
     }
 }

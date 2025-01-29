@@ -16,6 +16,9 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 
+/**
+ * Implementation of CategoryService interface for managing category operations.
+ */
 @Service
 @Slf4j
 @RequiredArgsConstructor
@@ -23,6 +26,11 @@ public class CategoryServiceImpl implements CategoryService {
     private final CategoryRepository categoryRepository;
     private final CategoryMapper categoryMapper;
 
+    /**
+     * Retrieves all categories.
+     *
+     * @return list of category response DTOs
+     */
     public List<CategoryResponseDto> findAll() {
         log.atDebug().log("Enter findAll()");
 
@@ -34,6 +42,13 @@ public class CategoryServiceImpl implements CategoryService {
         return response;
     }
 
+    /**
+     * Retrieves category by ID.
+     *
+     * @param id category identifier
+     * @return category response DTO
+     * @throws NotFoundException if category not found
+     */
     public CategoryResponseDto findById(Long id) {
         log.atDebug().log("Enter findById(id={})", id);
 
@@ -47,11 +62,18 @@ public class CategoryServiceImpl implements CategoryService {
         return response;
     }
 
+    /**
+     * Creates a new category.
+     *
+     * @param categoryCreateDto category creation data
+     * @return created category response DTO
+     * @throws AlreadyExistsException if category name already exists
+     */
     public CategoryResponseDto create(CategoryCreateDto categoryCreateDto) {
         log.atDebug().log("Enter create(categoryCreateDto={})", categoryCreateDto);
 
         if (categoryRepository.existsByNameIgnoreCase(categoryCreateDto.name())) {
-                throw new AlreadyExistsException("Il existe déja une catégorie avec ce nom : " + categoryCreateDto.name());
+            throw new AlreadyExistsException("Il existe déja une catégorie avec ce nom : " + categoryCreateDto.name());
         }
 
         Category category = Category.builder()
@@ -59,7 +81,6 @@ public class CategoryServiceImpl implements CategoryService {
                 .build();
 
         Category categorySaved = categoryRepository.save(category);
-
         CategoryResponseDto response = categoryMapper.toResponse(categorySaved);
 
         log.atDebug().log("Leave create() - return {}", response);
@@ -67,6 +88,14 @@ public class CategoryServiceImpl implements CategoryService {
         return response;
     }
 
+    /**
+     * Updates an existing category.
+     *
+     * @param categoryUpdateDto category update data
+     * @param id category identifier
+     * @return updated category response DTO
+     * @throws NotFoundException if category not found
+     */
     public CategoryResponseDto update(CategoryUpdateDto categoryUpdateDto, Long id) {
         log.atDebug().log("Enter update(categoryUpdateDto={}, id={})", categoryUpdateDto, id);
 
@@ -86,6 +115,12 @@ public class CategoryServiceImpl implements CategoryService {
         return response;
     }
 
+    /**
+     * Deletes a category by ID.
+     *
+     * @param id category identifier
+     * @throws NotFoundException if category not found
+     */
     public void deleteById(Long id) {
         log.atDebug().log("Enter deleteById(id={})", id);
 

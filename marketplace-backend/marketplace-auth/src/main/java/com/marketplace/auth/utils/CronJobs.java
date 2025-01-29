@@ -10,6 +10,10 @@ import org.springframework.stereotype.Component;
 import java.time.Instant;
 import java.util.Date;
 
+/**
+ * Component handling scheduled maintenance tasks.
+ * Manages periodic cleanup operations for the application.
+ */
 @Component
 @EnableScheduling
 @RequiredArgsConstructor
@@ -17,10 +21,14 @@ import java.util.Date;
 public class CronJobs {
     private final InvalidRefreshTokenRepository invalidRefreshTokenRepository;
 
-    @Scheduled(fixedRate = 24 * 60 * 60 * 1000, initialDelay = 0) // Running the job once per day
+    /**
+     * Cleanup task that removes expired refresh tokens from the database.
+     * Runs automatically once every 24 hours.
+     */
+    @Scheduled(fixedRate = 24 * 60 * 60 * 1000, initialDelay = 0)
     public void cleanupExpiredTokens() {
-        log.debug("Enter cleanupExpiredTokens()");
+        log.atDebug().log("Starting expired tokens cleanup");
         invalidRefreshTokenRepository.deleteAllExpiredBefore(Date.from(Instant.now()));
-        log.debug("Leave cleanupExpiredTokens()");
+        log.atDebug().log("Completed expired tokens cleanup");
     }
 }

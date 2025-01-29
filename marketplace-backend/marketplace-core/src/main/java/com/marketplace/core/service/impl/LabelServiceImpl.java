@@ -14,68 +14,106 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+/**
+ * Implementation of LabelService interface for managing label operations.
+ */
 @Slf4j
 @Service
 @Transactional
 @RequiredArgsConstructor
 public class LabelServiceImpl implements LabelService {
-
     private final LabelRepository labelRepository;
     private final LabelMapper labelMapper;
 
+    /**
+     * Creates a new label.
+     *
+     * @param labelDto label data
+     * @return created label DTO
+     * @throws AlreadyExistsException if label name already exists
+     */
     @Override
     public LabelDto createLabel(LabelDto labelDto) {
-        log.info("Received request to create a new label");
-        if (labelRepository.existsByNameIgnoreCase(labelDto.getName()))  {
+        log.atInfo().log("Creating new label: {}", labelDto);
+
+        if (labelRepository.existsByNameIgnoreCase(labelDto.getName())) {
             throw new AlreadyExistsException("Le nom du label existe déjà");
         }
-        log.info("Creating label: {}", labelDto);
+
         Label newlabel = labelMapper.toEntity(labelDto);
-        log.info("New label created with id {}", newlabel.getId());
         Label savedLabel = labelRepository.save(newlabel);
+
+        log.atInfo().log("Label created with id: {}", savedLabel.getId());
         return labelMapper.toDto(savedLabel);
     }
 
+    /**
+     * Updates an existing label.
+     *
+     * @param labelDto updated label data
+     * @param id label identifier
+     * @return updated label DTO
+     * @throws NotFoundException if label not found
+     */
     @Override
     public LabelDto updateLabel(LabelDto labelDto, Long id) {
-        log.info("Received request to update label with id {}", id);
+        log.atInfo().log("Updating label with id: {}", id);
+
         Label updatedLabel = labelRepository.findById(id)
                 .map(existingLabel -> {
-                    log.info("Label with id {} found", id);
                     existingLabel.setName(labelDto.getName());
                     existingLabel.setDescription(labelDto.getDescription());
                     return labelRepository.save(existingLabel);
                 })
                 .orElseThrow(() -> new NotFoundException("Il n'existe pas de label avec cet id"));
-        log.info("Label with id {} updated", id);
-        return labelMapper.toDto(updatedLabel);
 
+        log.atInfo().log("Label updated successfully");
+        return labelMapper.toDto(updatedLabel);
     }
 
-
+    /**
+     * Retrieves all labels.
+     *
+     * @return list of label DTOs
+     */
     @Override
     public List<LabelDto> getAllLabels() {
-        log.info("Received request to get all labels");
+        log.atInfo().log("Retrieving all labels");
         List<Label> labels = labelRepository.findAll();
-        log.info("Returning labels");
         return labelMapper.toDtoList(labels);
     }
 
+    /**
+     * Retrieves label by ID.
+     *
+     * @param id label identifier
+     * @return label DTO
+     * @throws NotFoundException if label not found
+     */
     @Override
     public LabelDto getLabelById(long id) {
-        log.info("Received request to get label with id {}", id);
+        log.atInfo().log("Retrieving label with id: {}", id);
+
         Label label = labelRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Il n'existe pas de label avec cet id"));
 
         return labelMapper.toDto(label);
     }
 
+    /**
+     * Deletes a label.
+     *
+     * @param id label identifier
+     * @throws NotFoundException if label not found
+     */
     @Override
     public void deleteLabel(long id) {
-        log.info("Received request to delete label with id {}", id);
+        log.atInfo().log("Deleting label with id: {}", id);
+
         labelRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Il n'existe pas de label avec cet id"));
+
         labelRepository.deleteById(id);
-        log.info("Label with id {} deleted sucessfully", id);
+        log.atInfo().log("Label deleted successfully");
     }
 }

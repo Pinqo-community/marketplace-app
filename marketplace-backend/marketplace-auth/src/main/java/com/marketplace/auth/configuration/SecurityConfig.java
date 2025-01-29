@@ -16,6 +16,10 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+/**
+ * Security configuration for the application.
+ * Configures web security, authentication, authorization, and OAuth2 settings.
+ */
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
@@ -43,6 +47,20 @@ public class SecurityConfig {
             "/auth/**",
     };
 
+    /**
+     * Configures security filter chain with authentication and authorization rules.
+     * Sets up:
+     * - CSRF protection
+     * - Session management
+     * - URL-based security rules
+     * - OAuth2 login configuration
+     * - Exception handling
+     * - JWT filter
+     *
+     * @param http HttpSecurity instance to configure
+     * @return configured SecurityFilterChain
+     * @throws Exception if configuration fails
+     */
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http

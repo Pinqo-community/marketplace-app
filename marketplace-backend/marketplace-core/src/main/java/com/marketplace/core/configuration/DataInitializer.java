@@ -9,11 +9,21 @@ import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
 
+/**
+ * Database initializer component.
+ * Responsible for populating initial role data in the database on application startup.
+ */
 @Component
 @RequiredArgsConstructor
 public class DataInitializer implements CommandLineRunner {
     private final RoleRepository roleRepository;
 
+    /**
+     * Executes the data initialization process.
+     * Creates default roles in the database if they don't already exist.
+     *
+     * @param args command line arguments passed to the application
+     */
     @Override
     public void run(String... args) {
         Arrays.stream(RoleType.values()).forEach(role -> {

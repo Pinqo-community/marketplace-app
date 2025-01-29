@@ -8,6 +8,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+/**
+ * Implementation of BuyerService interface for managing buyer operations.
+ */
 @Service
 @Transactional
 @Slf4j
@@ -15,9 +18,16 @@ import org.springframework.stereotype.Service;
 public class BuyerServiceImpl implements BuyerService {
     private final BuyerRepository buyerRepository;
 
+    /**
+     * Creates a new buyer.
+     *
+     * @param firstname buyer's first name
+     * @param lastname buyer's last name
+     * @return created buyer entity
+     */
     @Override
     public Buyer createBuyer(String firstname, String lastname) {
-        log.debug("Enter createBuyer(firstname = {}, lastname = {})", firstname, lastname);
+        log.atDebug().log("Enter createBuyer(firstname = {}, lastname = {})", firstname, lastname);
 
         Buyer buyer = buyerRepository.save(
                 Buyer.builder()
@@ -26,7 +36,7 @@ public class BuyerServiceImpl implements BuyerService {
                         .build()
         );
 
-        log.debug("Leave createBuyer() - return {}", buyer);
+        log.atDebug().log("Leave createBuyer() - return {}", buyer);
 
         return buyer;
     }

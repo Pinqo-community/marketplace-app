@@ -22,8 +22,7 @@ import java.util.List;
 
 
 /**
- * Controller for managing products in the marketplace.
- * Provides endpoints for creating, retrieving, updating, and deleting products.
+ * REST controller for product management operations.
  */
 @Tag(name = "Products", description = "Product management in the marketplace")
 @RestController
@@ -35,44 +34,47 @@ public class ProductController {
     private final ProductService productService;
 
     /**
-     * Creates a new product in the marketplace.
+     * Creates a new product.
      *
-     * @param productDto The product data transfer object containing product details.
-     * @return A ResponseEntity with the created product and HTTP status 201.
+     * @param productDto product details
+     * @return ResponseEntity with created product
      */
     @PostMapping
     @Operation(summary = "Create a product", description = "Add a new product in the marketplace")
     @ApiResponse(responseCode = "201", description = "Successfully created product")
     public ResponseEntity<ProductDto> createProduct(@RequestBody @Valid ProductDto productDto) {
         try {
-            log.info("POST /products - START: Creating a new product");
+            log.atInfo().log("POST /products - START");
             ProductDto savedProductDto = productService.createProduct(productDto);
-            log.info("POST /products - Product created successfully");
+            log.atInfo().log("POST /products - Product created successfully");
             return new ResponseEntity<>(savedProductDto, HttpStatus.CREATED);
         } finally {
-            log.info("POST /products - END: new product created");
+            log.atInfo().log("POST /products - END");
         }
     }
 
-
+    /**
+     * Retrieves all available products.
+     *
+     * @return ResponseEntity with list of available products
+     */
     @GetMapping("/available")
     @Operation(summary = "Get available products", description = "Retrieve products with stock > 0 and active = true for customers.")
     @ApiResponse(responseCode = "200", description = "Available products retrieved successfully.")
     public ResponseEntity<List<ProductDto>> getAvailableProducts() {
         try {
-            log.atInfo().log("GET /products - START: Retrieving products");
-
+            log.atInfo().log("GET /products - START");
             return ResponseEntity.ok(productService.getAvailableProducts());
         } finally {
-            log.atInfo().log("GET /products/available - DONE");
+            log.atInfo().log("GET /products/available - END");
         }
     }
 
     /**
-     * Retrieves a product by its unique identifier.
+     * Retrieves product by ID.
      *
-     * @param id The unique identifier of the product.
-     * @return A ResponseEntity with the product and HTTP status 200, or status 404 if not found.
+     * @param id product identifier
+     * @return ResponseEntity with found product
      */
     @GetMapping("/{id}")
     @Operation(summary = "Get a product by ID", description = "Retrieves a product based on its identifier.")
@@ -85,37 +87,43 @@ public class ProductController {
     public ResponseEntity<ProductDto> getProductById(
             @Parameter(description = "Unique product identifier", required = true) @PathVariable("id") Long id) {
         try {
-            log.info("GET /products/{} - START: Retrieving product", id);
+            log.atInfo().log("GET /products/{} - START", id);
             return ResponseEntity.ok(productService.getProductById(id));
         } finally {
-            log.info("GET /products/{} - END: product recovered", id);
+            log.atInfo().log("GET /products/{} - END", id);
         }
     }
 
+    /**
+     * Retrieves products by active status.
+     *
+     * @param active status filter
+     * @return ResponseEntity with filtered products
+     */
+    @GetMapping("/status")
     @Operation(summary = "Retrieve products by status", description = "Retrieve products filtered by their active/inactive status for producers.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Products retrieved successfully",
                     content = {@Content(mediaType = "application/json",
                             schema = @Schema(implementation = Product.class))}),
-                    @ApiResponse(responseCode = "400", description = "Invalid input parameter")
-            })
-    @GetMapping("/status")
+            @ApiResponse(responseCode = "400", description = "Invalid input parameter")
+    })
     public ResponseEntity<List<ProductDto>> getProductsByStatus(@RequestParam(name = "active", required = true) Boolean active) {
         try {
-            log.info("GET /products/status?active={} - START: Retrieving products", active);
+            log.atInfo().log("GET /products/status?active={} - START", active);
             List<ProductDto> products = productService.getProductsByStatus(active);
             return ResponseEntity.ok(products);
         } finally {
-            log.info("GET /products/status?active={} - END: products successfully retrieved", active);
+            log.atInfo().log("GET /products/status?active={} - END", active);
         }
     }
 
     /**
-     * Updates an existing product's information.
+     * Updates product by ID.
      *
-     * @param id         The unique identifier of the product to update.
-     * @param productDto The product data transfer object containing updated product details.
-     * @return A ResponseEntity with the updated product and HTTP status 200, or status 404 if not found.
+     * @param id product identifier
+     * @param productDto updated product details
+     * @return ResponseEntity with updated product
      */
     @PutMapping("/{id}")
     @Operation(summary = "Update a product", description = "The ID in the URL is mandatory and overrides any ID provided in the request body.")
@@ -124,22 +132,21 @@ public class ProductController {
             @ApiResponse(responseCode = "404", description = "No product found.")
     })
     public ResponseEntity<ProductDto> updateProduct(
-            @Parameter(description = "Unique product identifier", required = true)
-            @PathVariable("id") Long id,
+            @Parameter(description = "Unique product identifier", required = true) @PathVariable("id") Long id,
             @Valid @RequestBody ProductDto productDto) {
         try {
-            log.info("PUT /products/{} - START:  Updating product", id);
+            log.atInfo().log("PUT /products/{} - START", id);
             return ResponseEntity.ok(productService.updateProduct(id, productDto));
         } finally {
-            log.info("PUT /products/{} - END: Product updated successfully", id);
+            log.atInfo().log("PUT /products/{} - END", id);
         }
     }
 
     /**
-     * Deletes a product by its unique identifier.
+     * Deletes product by ID.
      *
-     * @param id The unique identifier of the product to delete.
-     * @return A ResponseEntity with HTTP status 204 if the deletion was successful, or status 404 if not found.
+     * @param id product identifier
+     * @return ResponseEntity with no content
      */
     @DeleteMapping("/{id}")
     @Operation(summary = "Delete a product", description = "Deletes a product based on its ID.")
@@ -148,18 +155,14 @@ public class ProductController {
             @ApiResponse(responseCode = "404", description = "No product found")
     })
     public ResponseEntity<HttpStatus> deleteProduct(
-            @Parameter(description = "Unique product identifier", required = true)
-            @PathVariable("id") Long id) {
+            @Parameter(description = "Unique product identifier", required = true) @PathVariable("id") Long id) {
         try {
-            log.info("DELETE /products/{} - Deleting product", id);
-            log.info("Controller: Attempting to delete product with ID {}", id);
+            log.atInfo().log("DELETE /products/{} - START", id);
             productService.deleteProduct(id);
-            log.info("DELETE /products/{} - Product deleted successfully", id);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         } finally {
-            log.info("DELETE /products/{} - DONE", id);
+            log.atInfo().log("DELETE /products/{} - END", id);
         }
-
     }
 }
 

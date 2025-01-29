@@ -9,14 +9,29 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+/**
+ * Application configuration for authentication-related beans.
+ */
 @Configuration
 public class AppConfig {
 
+    /**
+     * Creates password encoder bean for secure password handling.
+     *
+     * @return BCrypt password encoder instance
+     */
     @Bean
     PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
+    /**
+     * Creates authentication manager bean with DAO authentication provider.
+     *
+     * @param userDetailsService service for retrieving user details
+     * @param passwordEncoder encoder for password validation
+     * @return configured authentication manager
+     */
     @Bean
     public AuthenticationManager authenticationManager(
             UserDetailsService userDetailsService,

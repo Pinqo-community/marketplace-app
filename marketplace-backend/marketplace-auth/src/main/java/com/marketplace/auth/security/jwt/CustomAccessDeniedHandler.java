@@ -13,18 +13,33 @@ import org.springframework.stereotype.Component;
 import java.io.IOException;
 import java.time.LocalDateTime;
 
+/**
+ * Custom handler for access denied exceptions.
+ * Provides formatted JSON response when a user attempts to access a resource without proper authorization.
+ */
 @Component
 @RequiredArgsConstructor
 public class CustomAccessDeniedHandler implements AccessDeniedHandler {
     private final ObjectMapper objectMapper;
 
+    /**
+     * Handles access denied scenarios by returning a structured JSON response.
+     *
+     * @param request HTTP request that triggered the access denied
+     * @param response HTTP response to be modified
+     * @param exception the access denied exception
+     * @throws IOException if an input or output error occurs
+     */
     @Override
-    public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException exception) throws IOException {
+    public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException exception)
+            throws IOException {
         ExceptionResponse errorResponse = new ExceptionResponse(
                 HttpServletResponse.SC_FORBIDDEN,
                 LocalDateTime.now(),
                 "Access denied : You don't have the required permissions for this action",
-                request.getAttribute("originalUrl") != null ? (String) request.getAttribute("originalUrl") : request.getRequestURI(),
+                request.getAttribute("originalUrl") != null ?
+                        (String) request.getAttribute("originalUrl") :
+                        request.getRequestURI(),
                 null
         );
 

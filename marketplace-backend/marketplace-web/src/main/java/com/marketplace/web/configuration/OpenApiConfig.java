@@ -10,10 +10,25 @@ import io.swagger.v3.oas.models.security.SecurityScheme;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+/**
+ * Configuration class for OpenAPI documentation.
+ * Sets up Swagger UI and API documentation with JWT authentication support.
+ */
 @Configuration
 public class OpenApiConfig {
 
-    // TODO: Ajouter un contact
+    // TODO: Add contact information and license details to OpenAPI documentation
+
+    /**
+     * Configures OpenAPI documentation settings.
+     * Includes:
+     * - Basic API information (title, description, version)
+     * - Contact information
+     * - License details
+     * - JWT security scheme configuration
+     *
+     * @return Configured OpenAPI instance
+     */
     @Bean
     public OpenAPI openAPI() {
         return new OpenAPI()

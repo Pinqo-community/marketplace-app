@@ -21,6 +21,9 @@ import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 
+/**
+ * Implementation of UserService interface for managing user operations.
+ */
 @Service
 @Transactional
 @Slf4j
@@ -31,17 +34,26 @@ public class UserServiceImpl implements UserService {
     private final BuyerService buyerService;
     private final UserMapper userMapper;
 
+    /**
+     * Creates a new user with associated buyer profile.
+     *
+     * @param userInfos user creation data
+     * @return created user DTO
+     * @throws NotFoundException if email already exists
+     * @throws RuntimeException if role assignment fails
+     */
     @Override
     public UserDTO createUser(UserInfos userInfos) {
-        log.debug("Enter createUser(userInfos = {})", userInfos);
+        log.atDebug().log("Enter createUser(userInfos: {})", userInfos);
 
         if (userRepository.existsByEmail(userInfos.getEmail())) {
-            log.error("Email already exists");
+            log.atError().log("Email already exists");
             throw new NotFoundException("Cet email est déjà utilisé");
         }
 
         Set<Role> roles = new HashSet<>();
-        roles.add(roleRepository.findByName(RoleType.ROLE_USER).orElseThrow(() -> new RuntimeException("Un problème est survenu dans la création de l'utilisateur")));
+        roles.add(roleRepository.findByName(RoleType.ROLE_USER)
+                .orElseThrow(() -> new RuntimeException("Un problème est survenu dans la création de l'utilisateur")));
 
         Buyer buyer = buyerService.createBuyer(userInfos.getFirstName(), userInfos.getLastName());
 
@@ -56,38 +68,61 @@ public class UserServiceImpl implements UserService {
 
         UserDTO userDto = userMapper.toDto(userRepository.save(newUser));
 
-        log.debug("Leave createUser() - return {}", userDto);
+        log.atDebug().log("Leave createUser() - return {}", userDto);
 
         return userDto;
     }
 
+    /**
+     * Finds user by email.
+     *
+     * @param email user email
+     * @return optional containing user DTO if found
+     */
     @Override
     public Optional<UserDTO> findByEmail(String email) {
-        return userRepository.findByEmail(email).map(userMapper::toDto);
+        log.atDebug().log("Enter findByEmail(email: {})", email);
+        Optional<UserDTO> result = userRepository.findByEmail(email).map(userMapper::toDto);
+        log.atDebug().log("Leave findByEmail() - return {}", result);
+        return result;
     }
 
+    /**
+     * Retrieves user by email.
+     *
+     * @param email user email
+     * @return user DTO
+     * @throws NotFoundException if user not found
+     */
     @Override
     public UserDTO getUserByEmail(String email) {
-        log.debug("Enter getUserByEmail(email = {})", email);
+        log.atDebug().log("Enter getUserByEmail(email: {})", email);
 
         UserDTO userDto = userRepository.findByEmail(email)
                 .map(userMapper::toDto)
                 .orElseThrow(() -> new NotFoundException("User not found"));
 
-        log.debug("Leave getUserByEmail() - return {}", userDto);
+        log.atDebug().log("Leave getUserByEmail() - return {}", userDto);
 
         return userDto;
     }
 
+    /**
+     * Retrieves user by ID.
+     *
+     * @param id user identifier
+     * @return user DTO
+     * @throws NotFoundException if user not found
+     */
     @Override
     public UserDTO getUserById(Long id) {
-        log.debug("Enter getUserById(id = {})", id);
+        log.atDebug().log("Enter getUserById(id: {})", id);
 
         UserDTO userDto = userRepository.findById(id)
                 .map(userMapper::toDto)
                 .orElseThrow(() -> new NotFoundException("User not found"));
 
-        log.debug("Leave getUserById() - return {}", userDto);
+        log.atDebug().log("Leave getUserById() - return {}", userDto);
 
         return userDto;
     }

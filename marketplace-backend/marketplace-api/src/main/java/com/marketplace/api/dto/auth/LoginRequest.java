@@ -9,6 +9,7 @@ public record LoginRequest(
         @NotBlank(message = "L'email est requis")
         @NotEmpty(message = "L'email est requis")
         String email,
+
         @Schema(description = "password", example="Password123!")
         @NotBlank(message = "Le mot de passe est requis")
         @NotEmpty(message = "Le mot de passe est requis")

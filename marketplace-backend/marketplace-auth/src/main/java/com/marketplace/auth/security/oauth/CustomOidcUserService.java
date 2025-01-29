@@ -14,16 +14,27 @@ import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
+/**
+ * Custom service for handling OIDC authentication process.
+ * Extends OidcUserService to provide custom user loading logic.
+ */
 @Service
 @RequiredArgsConstructor
 @Slf4j
 public class CustomOidcUserService extends OidcUserService {
     private final UserService userService;
 
+    /**
+     * Loads OIDC user details and creates or validates local user account.
+     *
+     * @param userRequest OIDC user request containing authentication details
+     * @return authenticated OidcUser
+     * @throws AlreadyExistsException if email exists with different provider
+     */
     @Override
     @Transactional
     public OidcUser loadUser(OidcUserRequest userRequest) {
-        log.debug("Enter loadUser(userRequest = {})", userRequest);
+        log.atDebug().log("Enter loadUser(userRequest: {})", userRequest);
 
         OidcUser oidcUser = super.loadUser(userRequest);
         String provider = userRequest.getClientRegistration().getRegistrationId();
@@ -31,7 +42,7 @@ public class CustomOidcUserService extends OidcUserService {
         Optional<UserDTO> user = userService.findByEmail(oidcUser.getEmail());
 
         if (user.isPresent() && !user.get().provider().equals(provider)) {
-            log.error("An account already exists with this email");
+            log.atError().log("Account already exists with different provider");
             throw new AlreadyExistsException("Un compte existe déjà avec cet email");
         }
 
@@ -40,8 +51,7 @@ public class CustomOidcUserService extends OidcUserService {
             userService.createUser(oidcUserInfos);
         }
 
-        log.debug("Leave loadUser() - return {}", oidcUser);
-
+        log.atDebug().log("Leave loadUser() - return {}", oidcUser);
         return oidcUser;
     }
 }

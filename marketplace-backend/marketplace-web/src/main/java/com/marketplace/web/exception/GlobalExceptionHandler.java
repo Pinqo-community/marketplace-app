@@ -22,6 +22,14 @@ import java.util.stream.Collectors;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
+
+    /**
+     * Handles validation errors from request body and parameters.
+     *
+     * @param ex the validation exception
+     * @param request the current request
+     * @return ResponseEntity with BAD_REQUEST status and validation error details
+     */
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ExceptionResponse> handleValidationErrors(MethodArgumentNotValidException ex, WebRequest request) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
@@ -41,6 +49,13 @@ public class GlobalExceptionHandler {
         );
     }
 
+    /**
+     * Handles missing required request parameters.
+     *
+     * @param ex the missing parameter exception
+     * @param request the current request
+     * @return ResponseEntity with BAD_REQUEST status and missing parameter details
+     */
     @ExceptionHandler(MissingServletRequestParameterException.class)
     public ResponseEntity<ExceptionResponse> handleMissingServletRequestParameter(MissingServletRequestParameterException ex, WebRequest request) {
         String paramName = ex.getParameterName();
@@ -56,6 +71,13 @@ public class GlobalExceptionHandler {
         );
     }
 
+    /**
+     * Handles type mismatch in request parameters.
+     *
+     * @param ex the type mismatch exception
+     * @param request the current request
+     * @return ResponseEntity with BAD_REQUEST status and type mismatch details
+     */
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
     public ResponseEntity<ExceptionResponse> handleTypeMismatchException(MethodArgumentTypeMismatchException ex, WebRequest request) {
         String paramName = ex.getPropertyName();
@@ -70,6 +92,13 @@ public class GlobalExceptionHandler {
         );
     }
 
+    /**
+     * Handles authentication and token validation errors.
+     *
+     * @param ex the authentication exception
+     * @param request the current request
+     * @return ResponseEntity with UNAUTHORIZED status
+     */
     @ExceptionHandler({WrongCredentialException.class, InvalidTokenException.class})
     public ResponseEntity<ExceptionResponse> handleWrongCredentialException(Exception ex, WebRequest request) {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(
@@ -80,19 +109,14 @@ public class GlobalExceptionHandler {
                 )
         );
     }
-    //
-//    @ExceptionHandler(UnavailableProductException.class)
-//    @ResponseStatus(HttpStatus.GONE)
-//    public ResponseEntity<ExceptionResponse>handleUnavailableProductException(UnavailableProductException ex, WebRequest request) {
-//        return ResponseEntity.status(HttpStatus.GONE).body(
-//                new ExceptionResponse(
-//                        HttpStatus.GONE.value(),
-//                        ex.getMessage(),
-//                        ((ServletWebRequest) request).getRequest().getRequestURI()
-//                )
-//        );
-//    }
-//
+
+    /**
+     * Handles illegal arguments and duplicate entity exceptions.
+     *
+     * @param ex the exception
+     * @param request the current request
+     * @return ResponseEntity with CONFLICT status
+     */
     @ExceptionHandler({IllegalArgumentException.class, AlreadyExistsException.class})
     @ResponseStatus(HttpStatus.CONFLICT)
     public ResponseEntity<ExceptionResponse>handleIllegalArgumentException(Exception ex, WebRequest request) {
@@ -105,6 +129,13 @@ public class GlobalExceptionHandler {
         );
     }
 
+    /**
+     * Handles resource not found exceptions.
+     *
+     * @param ex the not found exception
+     * @param request the current request
+     * @return ResponseEntity with NOT_FOUND status
+     */
     @ExceptionHandler(NotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ResponseEntity<ExceptionResponse> handleNotFoundException(NotFoundException ex, WebRequest request) {
@@ -117,6 +148,13 @@ public class GlobalExceptionHandler {
         );
     }
 
+    /**
+     * Handles all unhandled exceptions.
+     *
+     * @param ex the exception
+     * @param request the current request
+     * @return ResponseEntity with INTERNAL_SERVER_ERROR status
+     */
     @ExceptionHandler
     public ResponseEntity<ExceptionResponse> handleInternalException(Exception ex, WebRequest request) {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
