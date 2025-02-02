@@ -1,0 +1,55 @@
+@use "@/scss/global";
+@use "@/scss/variables" as *;
+@use "@/scss/mixins" as *;
+
+.popup {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: fixed;
+  padding: space(md);
+  inset: 0;
+  z-index: z(modal);
+  background-color: rgb(0 0 0 / 40%);
+}
+
+.content {
+  position: relative;
+  width: 100%;
+  box-shadow: shadow(popup);
+  background-color: color(neutral, background);
+  overflow: hidden;
+  border-radius: radius(xl);
+  max-width: 36rem;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: space(lg);
+  padding-bottom: 0;
+  background-color: color(neutral, background);
+
+  @include media-under(sm) {
+    padding: space(md);
+    padding-bottom: 0;
+  }
+}
+
+.title {
+  color: color(neutral, text);
+
+  @include media-under(sm) {
+    font-size: font-size(lg);
+  }
+}
+
+.close {
+  color: #6b7280;
+  transition: color transition(normal);
+
+  &:hover {
+    color: color(neutral, text);
+  }
+}

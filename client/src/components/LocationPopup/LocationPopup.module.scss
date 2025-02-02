@@ -1,0 +1,193 @@
+@use "@/scss/global";
+@use "@/scss/variables" as *;
+@use "@/scss/mixins" as *;
+/* -------------------------------------------------------------------------- */
+/*                                 Search Bar                                 */
+/* -------------------------------------------------------------------------- */
+
+.searchContainer {
+  padding: space(lg);
+  padding-top: space(md);
+
+  @include media-under(sm) {
+    padding: space(md);
+    padding-top: space(sm);
+  }
+}
+
+.searchWrapper {
+  position: relative;
+
+  .icon {
+    position: absolute;
+    top: 50%;
+    left: 1rem;
+    transition: color 0.2s ease-in-out;
+    transform: translateY(-50%);
+    pointer-events: none;
+  }
+
+  .searchInput {
+    width: 100%;
+    padding: space(sm) space(md) space(sm) 45px;
+    border: 1px solid #f3f4f6;
+    border-radius: radius(lg);
+    background-color: rgb(240 253 244 / 30%);
+    color: color(neutral, text);
+    transition: all transition(fast) ease-in-out;
+
+    @include media-under(sm) {
+      padding: space(xs) space(sm) space(xs) 45px;
+    }
+
+    &:focus {
+      outline: none;
+      border-color: transparent;
+      box-shadow: 0 0 0 2px #0000002b;
+    }
+
+    &::placeholder {
+      color: color(neutral, placeholder-color);
+    }
+
+    &.valid {
+      box-shadow: 0 0 0 2px color(primary, base);
+    }
+
+    &.invalid {
+      box-shadow: 0 0 0 2px #ff008f;
+    }
+  }
+
+  &:focus-within {
+    .icon {
+      color: color(primary, base);
+    }
+  }
+}
+
+.locationOptions {
+  padding: 0 space(lg) space(lg);
+
+  @include media-under(sm) {
+    padding: 0 space(md) space(md);
+  }
+}
+/* -------------------------------------------------------------------------- */
+/*                               Recent Location                              */
+/* -------------------------------------------------------------------------- */
+
+.recentLocations {
+  margin-top: space(xs);
+
+  .title {
+    color: #4b5563;
+    font-weight: 400;
+    font-size: font-size(sm);
+    margin-bottom: space(xs);
+  }
+
+  .removeButton {
+    padding: space(xs);
+    color: #6b72809c;
+    transition: all transition(fast) ease;
+    margin-right: space(xs);
+    opacity: 0;
+    visibility: hidden;
+
+    @include media-under(sm) {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    &:hover {
+      color: status(danger);
+    }
+  }
+
+  .locationButton {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: space(sm);
+    transition: background-color transition(fast) ease;
+    border-radius: radius(xl);
+    margin-bottom: space(xs);
+
+    @include media-under(sm) {
+      padding: space(xs);
+    }
+
+    &:hover {
+      background-color: color(secondary, light);
+
+      .removeButton {
+        opacity: 1;
+        visibility: visible;
+      }
+    }
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+}
+
+.locationContent {
+  display: flex;
+  align-items: center;
+  gap: space(sm);
+
+  .icon {
+    width: 20px;
+    height: 20px;
+    color: #6b7280;
+  }
+}
+
+.locationInfo {
+  text-align: left;
+
+  .locationName {
+    color: color(neutral, text);
+    font-weight: 400;
+  }
+
+  .locationAddress {
+    color: #6b7280;
+    font-size: font-size(xs);
+  }
+}
+
+.noLocations {
+  padding: space(md);
+  color: #6b7280;
+  font-size: font-size(xs);
+  text-align: center;
+
+  @include media-under(sm) {
+    padding: space(sm);
+  }
+}
+/* -------------------------------------------------------------------------- */
+/*                                   Loading                                  */
+/* -------------------------------------------------------------------------- */
+
+.loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  padding: space(md);
+  flex-direction: column;
+  inset: 0;
+  z-index: z(tooltip);
+  background-color: rgb(255 255 255 / 40%);
+  backdrop-filter: blur(4px);
+
+  .text {
+    margin-top: space(md);
+    color: #5e5e5e;
+  }
+}

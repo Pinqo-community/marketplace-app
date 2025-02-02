@@ -3,11 +3,12 @@ name: CI/CD Pipeline
 on:
   push:
     branches:
-      - '**'
+      - "**"
   pull_request:
     branches:
       - main
       - develop
+  workflow_dispatch:
 
 jobs:
   backend:
@@ -22,8 +23,8 @@ jobs:
       - name: Set up JDK 21
         uses: actions/setup-java@v4
         with:
-          java-version: '21'
-          distribution: 'temurin'
+          java-version: "21"
+          distribution: "temurin"
           cache: gradle
 
       - name: Grant execute permission for gradlew
@@ -50,22 +51,48 @@ jobs:
     defaults:
       run:
         working-directory: ./client
-
     steps:
       - uses: actions/checkout@v4
-
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '18'
-          cache: 'npm'
-          cache-dependency-path: './client/package-lock.json'
-
+          node-version: "18"
+          cache: "npm"
+          cache-dependency-path: "./client/package-lock.json"
       - name: Install dependencies
         run: npm ci
 
+      - name: Run Jest tests
+        run: npm test
+
+      - name: Run Cypress tests
+        uses: cypress-io/github-action@v6
+        with:
+          working-directory: ./client
+          build: npm run build
+          start: npm run dev
+          wait-on: "http://localhost:5173"
+          wait-on-timeout: 120
+        env:
+          CYPRESS_MOCK_GEOLOCATION: true
+          CYPRESS_DEFAULT_LOCATION: '{"latitude": 45.475614, "longitude": 4.527323}'
+          CYPRESS_responseTimeout: 30000
+          CYPRESS_defaultCommandTimeout: 30000
+          CYPRESS_requestTimeout: 30000
+          NODE_ENV: test
+
       - name: Build project
         run: npm run build
+
+      - name: Upload test coverage
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: frontend-coverage
+          path: |
+            ./client/coverage
+            ./client/cypress/videos
+            ./client/cypress/screenshots
 
   project-check:
     needs: [backend, frontend]

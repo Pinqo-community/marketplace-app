@@ -1,13 +1,20 @@
 import logo from "@/assets/images/logo.svg";
 import { useScroll } from "@/hooks/useScroll";
+import { RootState } from "@/store";
 import classNames from "classnames";
 import { motion } from "framer-motion";
 import { Bell, ChevronDown, HelpCircle, MapPin } from "lucide-react";
 import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { CartButton, MenuButton, UserButton } from "../Button/Buttons";
+import LocationPopup from "../LocationPopup/LocationPopup";
 import styles from "./Header.module.scss";
 import SearchBar from "./SearchBar";
+import {
+  closeLocationPopup,
+  openLocationPopup,
+} from "@/store/slices/locationSlice";
 
 const Header: React.FC = () => {
   /* -------------------------------------------------------------------------- */
@@ -19,6 +26,11 @@ const Header: React.FC = () => {
   const [isOpened, setIsOpened] = useState(false);
   const isTopBarVisible = scrollPosition < 50;
   const shouldShowTopBar = isTopBarVisible || isScrolledUp;
+  const userLocation = useSelector((state: RootState) => state.location);
+  const dispatch = useDispatch();
+  const isLocationPopupOpen = useSelector(
+    (state: RootState) => state.location.isLocationPopupOpen,
+  );
 
   /* -------------------------------------------------------------------------- */
   /*                                  Function                                  */
@@ -48,16 +60,23 @@ const Header: React.FC = () => {
         className={styles.topBanner}
       >
         <div className={styles.leftContainer}>
-          <button type="button" className={styles.button}>
+          <button
+            data-testid="open-popup-button"
+            type="button"
+            className={styles.button}
+            onClick={() => dispatch(openLocationPopup())}
+          >
             <MapPin size={16} className={styles.icon} />
-            <span>Paris 11e</span>
+            <span data-testid="location-header-text" className={styles.text}>
+              {userLocation.name || "Ajouter ma localisation"}
+            </span>
           </button>
 
           <div className={styles.separator}></div>
 
           <button type="button" className={styles.button}>
             <Bell size={16} className={styles.icon} />
-            <span>Nouveautés</span>
+            <span className={styles.text}>Nouveautés</span>
           </button>
         </div>
         <div
@@ -107,6 +126,18 @@ const Header: React.FC = () => {
           <CartButton />
         </nav>
       </div>
+      <LocationPopup
+        isOpen={isLocationPopupOpen}
+        onClose={() => {
+          if (
+            userLocation?.coordinates ||
+            userLocation?.address ||
+            userLocation?.name
+          ) {
+            dispatch(closeLocationPopup());
+          }
+        }}
+      />
     </header>
   );
 };

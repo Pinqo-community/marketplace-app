@@ -2,7 +2,6 @@
 import "leaflet/dist/leaflet.css";
 import { MapContainer, TileLayer } from "react-leaflet";
 
-
 // Assets and styles
 import "leaflet.markercluster/dist/leaflet.markercluster";
 import styles from "./Map.module.scss";
@@ -601,7 +600,7 @@ const Map: React.FC = () => {
           url={`https://tile.jawg.io/jawg-lagoon/{z}/{x}/{y}{r}.png?access-token=${jawgApiKey}`}
         />
         <ClusterMarkers producers={producers} />
-        <LocateUser mapRef={mapRef} defaultPosition={defaultPosition} />
+        <LocateUser defaultPosition={defaultPosition} />
       </MapContainer>
     </div>
   );

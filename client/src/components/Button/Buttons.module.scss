@@ -84,7 +84,7 @@
 }
 
 .opened .line {
-  stroke: status(error);
+  stroke: status(danger);
 }
 
 .line1,
@@ -124,4 +124,88 @@
       transform: rotate(180deg);
     }
   }
+}
+/* -------------------------------------------------------------------------- */
+/*                               LocationButton                               */
+/* -------------------------------------------------------------------------- */
+/* -------------------------------------------------------------------------- */
+/*                             Automatic Location                             */
+/* -------------------------------------------------------------------------- */
+
+.automaticLocationButton {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: space(md);
+  transition: background-color transition(fast) ease;
+  background-color: #f0fdf4;
+  border-radius: radius(xl);
+  gap: space(md);
+
+  &:hover {
+    background-color: #e3ffec;
+  }
+
+  @include media-under(sm) {
+    padding: space(sm);
+  }
+}
+
+.automaticLocationButton.error {
+  background-color: #f3f3f3a2;
+
+  &:hover {
+    background-color: #f0f0f0;
+  }
+
+  .iconContainer {
+    background-color: #ebebeb;
+  }
+
+  .icon {
+    color: #3b3b3b;
+  }
+}
+
+.iconContainer {
+  padding: space(sm);
+  background-color: #dcfce7;
+  border-radius: radius(circle);
+  transition: background-color transition(fast) ease;
+
+  @include media-under(sm) {
+    padding: space(xs);
+  }
+
+  .automaticLocationButton:hover & {
+    background-color: #bbf7d0;
+
+    .error & {
+      background-color: #ebebeb;
+    }
+  }
+
+  .automaticLocationButton.error:hover & {
+    background-color: #ddd;
+  }
+
+  .icon {
+    width: 24px;
+    height: 24px;
+    color: color(primary, base);
+
+    @include media-under(sm) {
+      width: 20px;
+      height: 20px;
+    }
+  }
+}
+
+.textContainer {
+  text-align: left;
+}
+
+.subtitle {
+  color: #6b7280;
+  font-size: font-size(xs);
 }
