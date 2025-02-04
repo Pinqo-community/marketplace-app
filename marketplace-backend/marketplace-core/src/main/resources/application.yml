@@ -1,3 +1,7 @@
 spring:
   application:
     name: marketplace-core
+
+unsplash:
+  api:
+    key: ${UNSPLASH_API_KEY}
