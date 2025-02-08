@@ -2,6 +2,8 @@ module.exports = {
   extends: ["stylelint-config-standard-scss"],
   plugins: ["stylelint-order"],
   rules: {
+    "at-rule-no-unknown": null,
+    "scss/at-rule-no-unknown": true,
     "selector-max-id": 1,
     "block-no-empty": true,
     "color-no-invalid-hex": true,
