@@ -32,9 +32,6 @@
   gap: space(md);
   margin-bottom: space(lg);
 }
-/* -------------------------------------------------------------------------- */
-/*                                    Input                                   */
-/* -------------------------------------------------------------------------- */
 
 .inputWrapper {
   display: flex;
@@ -56,7 +53,6 @@
 .input {
   @include font-style($size: font-size(md));
 
-  width: 100%;
   padding: space(sm) space(md);
   border: 1px solid color(neutral, border);
   border-radius: radius(md);
@@ -76,43 +72,8 @@
   }
 }
 
-.inputContainer {
-  display: flex;
-  align-items: center;
-  position: relative;
-}
-
-.inputIcon {
-  position: absolute;
-  left: space(sm);
-  color: color(neutral, placeholder-color);
-  pointer-events: none;
-}
-
-.withIcon {
-  padding-left: 40px;
-}
-
-.togglePassword {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: absolute;
-  right: space(sm);
-  padding: space(xs);
-  border: none;
-  background: none;
-  color: color(neutral, placeholder-color);
-  transition: color transition(fast);
-  cursor: pointer;
-}
-
 .errorMessage {
   @include font-style($size: font-size(sm), $color: status(danger, base));
-}
-
-.errorCenter {
-  text-align: center;
 }
 
 .checkboxContainer {
@@ -121,10 +82,19 @@
   justify-content: space-between;
 }
 
-.checkboxColumn {
+.checkboxLabel {
+  @include font-style($size: font-size(sm));
+
   display: flex;
-  align-items: baseline;
-  flex-direction: column;
+  align-items: center;
+  gap: space(xs);
+  cursor: pointer;
+
+  input[type="checkbox"] {
+    width: space(sm);
+    height: space(sm);
+    accent-color: color(primary, base);
+  }
 }
 
 .forgotPassword {
@@ -137,9 +107,6 @@
     text-decoration: underline;
   }
 }
-/* -------------------------------------------------------------------------- */
-/*                                   Button                                   */
-/* -------------------------------------------------------------------------- */
 
 .authButton {
   @include font-style($weight: font-weight(semibold), $color: color(neutral, white));
@@ -149,23 +116,9 @@
   background-color: color(primary, base);
   border-radius: radius(md);
   transition: background-color transition(fast);
-  gap: space(xs);
-
-  .loader {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: space(xs);
-  }
 
   &:hover {
     background-color: color(primary, dark);
-  }
-
-  &:disabled {
-    background-color: color(neutral, separator-color);
-    color: color(neutral, dark-gray);
-    cursor: not-allowed;
   }
 }
 
@@ -224,37 +177,5 @@
 
   &:hover {
     filter: brightness(0.98);
-  }
-}
-/* -------------------------------------------------------------------------- */
-/*                                 Page OAuth                                 */
-/* -------------------------------------------------------------------------- */
-
-.auth {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 100vh;
-  padding: space(xl);
-  flex-direction: column;
-  gap: space(sm);
-  text-align: center;
-
-  @include media-under(sm) {
-    padding: space(md);
-  }
-
-  h1 {
-    @include font-style($size: font-size(xl), $weight: font-weight(semibold));
-  }
-
-  .loader {
-    animation: spin 1s linear infinite;
-
-    @keyframes spin {
-      100% {
-        transform: rotate(360deg);
-      }
-    }
   }
 }
