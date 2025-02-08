@@ -2,8 +2,11 @@ import { FcGoogle } from "react-icons/fc";
 import { FaFacebook } from "react-icons/fa";
 import styles from "./LoginPage.module.scss";
 import MainLayout from "@/layouts/MainLayout";
+import { useNavigate } from "react-router-dom";
 
 const LoginPage: React.FC = () => {
+  const navigate = useNavigate();
+
   return (
     <MainLayout>
       <div className={styles.container}>
@@ -15,17 +18,20 @@ const LoginPage: React.FC = () => {
             type="password"
             placeholder="Mot de passe"
           />
-          <label className={styles.checkboxLabel}>
-            <input type="checkbox" />
-            Se souvenir de moi
-          </label>
-          <a className={styles.forgotPassword} href="">
-            Mot de passe oublié ?
-          </a>
+          <div className={styles.checkboxContainer}>
+            <label className={styles.checkboxLabel}>
+              <input type="checkbox" />
+              Se souvenir de moi
+            </label>
+            <a className={styles.forgotPassword} href="">
+              Mot de passe oublié ?
+            </a>
+          </div>
         </div>
         <button className={styles.loginButton}>Se connecter</button>
         <p className={styles.signupText}>
-          Pas encore de compte ? <a href="">S'inscrire</a>
+          Pas encore de compte ?{" "}
+          <a onClick={() => navigate("/signup")}>S'inscrire</a>
         </p>
 
         <div className={styles.separator}>
