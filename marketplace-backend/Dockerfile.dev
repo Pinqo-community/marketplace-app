@@ -1,0 +1,36 @@
+FROM maven:3.9.6-eclipse-temurin-21
+
+WORKDIR /app
+
+# Set permissions right after setting WORKDIR
+RUN chown -R root:root /app && chmod -R 777 /app
+
+# Copy the parent pom.xml first
+COPY pom.xml .
+
+# Copy all module pom.xml files while maintaining directory structure
+COPY marketplace-auth/pom.xml marketplace-auth/
+COPY marketplace-core/pom.xml marketplace-core/
+COPY marketplace-api/pom.xml marketplace-api/
+COPY marketplace-web/pom.xml marketplace-web/
+
+# Download dependencies
+RUN mvn dependency:go-offline -B
+
+# Copy source code
+COPY marketplace-auth/src marketplace-auth/src
+COPY marketplace-core/src marketplace-core/src
+COPY marketplace-api/src marketplace-api/src
+COPY marketplace-web/src marketplace-web/src
+
+COPY .mvn .mvn
+COPY mvnw .
+RUN chmod +x mvnw
+
+EXPOSE 8080
+
+CMD ["mvn", "spring-boot:run", \
+     "-pl", "marketplace-web", \
+     "-Dspring-boot.run.profiles=dev", \
+     "-Dspring.devtools.restart.enabled=true", \
+     "-Dspring.devtools.livereload.enabled=true"]

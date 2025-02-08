@@ -1,5 +1,10 @@
 services:
   backend:
+    build:
+      context: ./marketplace-backend
+      dockerfile: Dockerfile.dev
+    ports:
+      - "8080:8080"
     environment:
       DB_NAME: ${DB_NAME}
       DB_USER: ${DB_USER}
@@ -9,22 +14,16 @@ services:
       GOOGLE_SECRET_CLIENT: ${GOOGLE_SECRET_CLIENT}
       FACEBOOK_CLIENT_ID: ${FACEBOOK_CLIENT_ID}
       FACEBOOK_SECRET_CLIENT: ${FACEBOOK_SECRET_CLIENT}
+      UNSPLASH_API_KEY: ${UNSPLASH_API_KEY}
       DB_HOST: db
       DB_PORT: 5432
-    build:
-      context: ./api
-      dockerfile: Dockerfile.dev
-    command: >
-      ./gradlew bootRun --no-daemon -Dspring-boot.run.profiles=dev -Dspring.devtools.restart.enabled=true -Dspring.devtools.livereload.enable=true
-    ports:
-      - "8080:8080"
-    container_name: marketplace-backend
     volumes:
-      - ./api:/app:rw,cached, rshared
+      - ./marketplace-backend:/app:rw,cached,rshared
       - type: bind
-        source: ./api/gradlew
-        target: /app/gradlew
+        source: ./marketplace-backend/mvnw
+        target: /app/mvnw
         read_only: false
+      - ~/.m2:/root/.m2:cached
     depends_on:
       - db
     networks:
@@ -53,11 +52,10 @@ services:
 
   backend-tests:
     build:
-      context: ./api
+      context: ./marketplace-backend
       dockerfile: Dockerfile.dev
     container_name: marketplace-backend-tests
-    command: >
-     ./gradlew clean test --refresh-dependencies --no-daemon
+    command: mvn clean test
     environment:
       DB_NAME: ${DB_NAME}
       DB_USER: ${DB_USER}
@@ -69,8 +67,8 @@ services:
     networks:
       - app-network
     volumes:
-      - ./api:/app:cached
-      - gradle-cache-tests:/home/gradle/.gradle:rw
+      - ./marketplace-backend:/app:cached
+      - maven-repo:/root/.m2:cached
 
   db:
     image: postgres:15
@@ -88,8 +86,8 @@ services:
       - app-network
 
 volumes:
-  gradle-cache-backend:
-  gradle-cache-tests:
+  maven-repo:
+  maven-repo-tests:
   postgres_data:
 
 networks:
