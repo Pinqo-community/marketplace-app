@@ -33,6 +33,23 @@
   margin-bottom: space(lg);
 }
 
+.inputWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: space(xs);
+}
+
+.nameWrapper {
+  display: flex;
+  gap: space(md);
+  width: 100%;
+
+  .inputWrapper {
+    flex: 1;
+    min-width: 0;
+  }
+}
+
 .input {
   @include font-style($size: font-size(md));
 
@@ -49,6 +66,20 @@
   &::placeholder {
     color: color(neutral, placeholder-color);
   }
+
+  &.inputError {
+    border-color: status(danger, base);
+  }
+}
+
+.errorMessage {
+  @include font-style($size: font-size(sm), $color: status(danger, base));
+}
+
+.checkboxContainer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
 .checkboxLabel {
@@ -66,16 +97,9 @@
   }
 }
 
-.checkboxContainer {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
 .forgotPassword {
   @include font-style($size: font-size(sm), $color: color(primary, base));
 
-  text-align: right;
   transition: color transition(fast);
 
   &:hover {
@@ -84,7 +108,7 @@
   }
 }
 
-.loginButton {
+.authButton {
   @include font-style($weight: font-weight(semibold), $color: color(neutral, white));
 
   width: 100%;
@@ -98,7 +122,7 @@
   }
 }
 
-.signupText {
+.switchAuthText {
   @include font-style($size: font-size(sm));
 
   text-align: center;
@@ -143,24 +167,12 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: space(sm);
   width: 100%;
   padding: space(sm);
-  border-radius: radius(md);
+  border: 1px solid color(neutral, border);
   transition: filter transition(fast);
-}
-
-.googleBtn {
-  border: 1px solid color(neutral, border);
-  background-color: color(neutral, white);
-
-  &:hover {
-    filter: brightness(0.98);
-  }
-}
-
-.facebookBtn {
-  border: 1px solid color(neutral, border);
+  gap: space(sm);
+  border-radius: radius(md);
   background-color: color(neutral, white);
 
   &:hover {
