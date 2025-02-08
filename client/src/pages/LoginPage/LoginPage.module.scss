@@ -7,13 +7,14 @@
 .container {
   max-width: 480px;
   margin: space(xxl) auto;
-  margin-top: 0;
+  margin-top: 9rem;
   padding: space(xl);
   border-radius: radius(lg);
-  box-shadow: shadow(raised);
+  box-shadow: 0 0 10px rgb(0 0 0 / 10%);
 
   @include media-under(sm) {
-    margin: space(md);
+    margin: space(md) auto;
+    margin-top: 9rem;
     padding: space(lg);
   }
 }
@@ -22,7 +23,7 @@
   @include font-style($size: font-size(xxl), $weight: font-weight(bold), $color: color(secondary, base));
 
   text-align: center;
-  margin-bottom: space(xl);
+  margin-bottom: space(md);
 }
 
 .formGroup {
@@ -63,6 +64,12 @@
     height: space(sm);
     accent-color: color(primary, base);
   }
+}
+
+.checkboxContainer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
 .forgotPassword {
@@ -111,7 +118,7 @@
   display: flex;
   align-items: center;
   gap: space(md);
-  margin: space(xl) 0;
+  margin: space(md) 0;
   color: color(neutral, separator-color);
 
   &::before,
