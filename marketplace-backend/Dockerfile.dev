@@ -2,6 +2,9 @@ FROM maven:3.9.6-eclipse-temurin-21
 
 WORKDIR /app
 
+# Set permissions right after setting WORKDIR
+RUN chown -R root:root /app && chmod -R 777 /app
+
 # Copy the parent pom.xml first
 COPY pom.xml .
 
