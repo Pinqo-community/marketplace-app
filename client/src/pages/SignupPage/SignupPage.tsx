@@ -1,24 +1,8 @@
-import styles from "@/components/Auth/Auth.module.scss";
-import AuthButton from "@/components/Auth/AuthButton";
-import { AuthInput } from "@/components/Auth/AuthInput";
-import { AuthLayout } from "@/components/Auth/AuthLayout";
-import { SocialButtons } from "@/components/Auth/SocialButtons";
-import { Checkbox } from "@/components/Checkbox/Checkbox";
-import { register } from "@/services/authService";
-import { validateEmail, validatePassword } from "@/utils/validationUtils";
-import { AxiosError } from "axios";
 import { useState } from "react";
-import { useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
-
-interface FormData {
-  email: string;
-  password: string;
-  confirmPassword: string;
-  firstName: string;
-  lastName: string;
-  terms: boolean;
-}
+import { FcGoogle } from "react-icons/fc";
+import { FaFacebook } from "react-icons/fa";
+import MainLayout from "@/layouts/MainLayout";
+import styles from "./SignupPage.module.scss";
 
 interface FormErrors {
   email?: string;
@@ -30,7 +14,7 @@ interface FormErrors {
 }
 
 const SignupPage: React.FC = () => {
-  const [formData, setFormData] = useState<FormData>({
+  const [formData, setFormData] = useState({
     email: "",
     password: "",
     confirmPassword: "",
@@ -39,34 +23,28 @@ const SignupPage: React.FC = () => {
     terms: false,
   });
 
-  const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState<FormErrors>({});
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
+
+  const validateEmail = (email: string): boolean => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
+
+  const validatePassword = (password: string): boolean => {
+    // 8 caractères, une majuscule, une minuscule, un chiffre
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/;
+    return passwordRegex.test(password);
+  };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type, checked } = e.target;
-
-    // Validation spécifique pour le prénom et le nom
-    if (name === "firstName" || name === "lastName") {
-      const isValid = /^[A-Za-zÀ-ÿ\s-]*$/.test(value);
-      if (!isValid) return;
-    }
-
     setFormData((prev) => ({
       ...prev,
       [name]: type === "checkbox" ? checked : value,
     }));
   };
 
-  const handleTermsChange = (checked: boolean) => {
-    setFormData((prev) => ({
-      ...prev,
-      terms: checked,
-    }));
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const newErrors: FormErrors = {};
 
@@ -79,6 +57,7 @@ const SignupPage: React.FC = () => {
         "Le mot de passe doit contenir au moins 8 caractères, une majuscule, une minuscule et un chiffre";
     }
 
+    // Validation confirmation mot de passe
     if (formData.password !== formData.confirmPassword) {
       newErrors.confirmPassword = "Les mots de passe ne correspondent pas";
     }
@@ -98,90 +77,128 @@ const SignupPage: React.FC = () => {
     setErrors(newErrors);
 
     if (Object.keys(newErrors).length === 0) {
-      try {
-        setLoading(true);
-        await register(dispatch, {
-          firstname: formData.firstName,
-          lastname: formData.lastName,
-          email: formData.email,
-          password: formData.password,
-        });
-        navigate("/");
-      } catch (err) {
-        const error = err as AxiosError<{ message?: string }>;
-        setErrors({
-          email:
-            error.response?.data?.message ||
-            "Erreur lors de l'inscription, réessayez.",
-        });
-      } finally {
-        setLoading(false);
-      }
+      // Soumission du formulaire
+      console.log("Formulaire soumis :", formData);
     }
   };
 
   return (
-    <AuthLayout title="S'inscrire">
-      <form onSubmit={handleSubmit} className={styles.formGroup}>
-        <div className={styles.nameWrapper}>
-          <AuthInput
-            type="text"
-            name="firstName"
-            placeholder="Prénom"
-            value={formData.firstName}
-            onChange={handleChange}
-            error={errors.firstName}
-          />
-          <AuthInput
-            type="text"
-            name="lastName"
-            placeholder="Nom"
-            value={formData.lastName}
-            onChange={handleChange}
-            error={errors.lastName}
-          />
+    <MainLayout>
+      <div className={styles.container}>
+        <h1 className={styles.title}>S'inscrire</h1>
+        <form onSubmit={handleSubmit} className={styles.formGroup}>
+          <div className={styles.nameWrapper}>
+            <div className={styles.inputWrapper}>
+              <input
+                className={`${styles.input} ${errors.firstName ? styles.inputError : ""}`}
+                type="text"
+                name="firstName"
+                placeholder="Prénom"
+                value={formData.firstName}
+                onChange={handleChange}
+              />
+              {errors.firstName && (
+                <span className={styles.errorMessage}>{errors.firstName}</span>
+              )}
+            </div>
+            <div className={styles.inputWrapper}>
+              <input
+                className={`${styles.input} ${errors.lastName ? styles.inputError : ""}`}
+                type="text"
+                name="lastName"
+                placeholder="Nom"
+                value={formData.lastName}
+                onChange={handleChange}
+              />
+              {errors.lastName && (
+                <span className={styles.errorMessage}>{errors.lastName}</span>
+              )}
+            </div>
+          </div>
+          <div className={styles.inputWrapper}>
+            <input
+              className={`${styles.input} ${errors.email ? styles.inputError : ""}`}
+              type="email"
+              name="email"
+              placeholder="Email"
+              value={formData.email}
+              onChange={handleChange}
+            />
+            {errors.email && (
+              <span className={styles.errorMessage}>{errors.email}</span>
+            )}
+          </div>
+
+          <div className={styles.inputWrapper}>
+            <input
+              className={`${styles.input} ${errors.password ? styles.inputError : ""}`}
+              type="password"
+              name="password"
+              placeholder="Mot de passe"
+              value={formData.password}
+              onChange={handleChange}
+            />
+            {errors.password && (
+              <span className={styles.errorMessage}>{errors.password}</span>
+            )}
+          </div>
+
+          <div className={styles.inputWrapper}>
+            <input
+              className={`${styles.input} ${errors.confirmPassword ? styles.inputError : ""}`}
+              type="password"
+              name="confirmPassword"
+              placeholder="Confirmer le mot de passe"
+              value={formData.confirmPassword}
+              onChange={handleChange}
+            />
+            {errors.confirmPassword && (
+              <span className={styles.errorMessage}>
+                {errors.confirmPassword}
+              </span>
+            )}
+          </div>
+
+          <div className={styles.checkboxContainer}>
+            <label className={styles.checkboxLabel}>
+              <input
+                type="checkbox"
+                name="terms"
+                checked={formData.terms}
+                onChange={handleChange}
+              />
+              J'accepte les conditions d'utilisation
+            </label>
+            {errors.terms && (
+              <span className={styles.errorMessage}>{errors.terms}</span>
+            )}
+          </div>
+
+          <button type="submit" className={styles.signupButton}>
+            S'inscrire
+          </button>
+        </form>
+
+        <p className={styles.loginText}>
+          Déjà inscrit ? <a href="">Se connecter</a>
+        </p>
+
+        <div className={styles.separator}>
+          <span>ou</span>
         </div>
-        <AuthInput
-          type="email"
-          name="email"
-          placeholder="Email"
-          value={formData.email}
-          onChange={handleChange}
-          error={errors.email}
-        />
-        <AuthInput
-          type="password"
-          name="password"
-          placeholder="Mot de passe"
-          value={formData.password}
-          onChange={handleChange}
-          error={errors.password}
-        />
-        <AuthInput
-          type="password"
-          name="confirmPassword"
-          placeholder="Confirmer le mot de passe"
-          value={formData.confirmPassword}
-          onChange={handleChange}
-          error={errors.confirmPassword}
-        />
-        <div className={`${styles.checkboxContainer} ${styles.checkboxColumn}`}>
-          <Checkbox
-            checked={formData.terms}
-            onChange={handleTermsChange}
-            label="J'accepte les conditions d'utilisation"
-          />
-          {errors.terms && (
-            <span className={styles.errorMessage}>{errors.terms}</span>
-          )}
+
+        <div className={styles.socialLogin}>
+          <button className={styles.googleBtn}>
+            <FcGoogle size={20} />
+            S'inscrire avec Google
+          </button>
+          <button className={styles.facebookBtn}>
+            <FaFacebook size={20} color="#1877F2" />
+            S'inscrire avec Facebook
+          </button>
         </div>
-        <AuthButton loading={loading} text="S'inscrire" />
-      </form>
-      <p className={styles.switchAuthText}>
-        Déjà inscrit ? <a onClick={() => navigate("/login")}>Se connecter</a>
-      </p>
-      <SocialButtons type="signup" />
-    </AuthLayout>
+      </div>
+    </MainLayout>
   );
 };
 
