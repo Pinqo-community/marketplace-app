@@ -1,0 +1,177 @@
+@use "@/scss/global";
+@use "@/scss/variables" as *;
+@use "@/scss/mixins" as *;
+@use "@/scss/shared" as *;
+@use "sass:map";
+
+.container {
+  max-width: 480px;
+  margin: space(xxl) auto;
+  margin-top: 9rem;
+  padding: space(xl);
+  border-radius: radius(lg);
+  box-shadow: 0 0 10px rgb(0 0 0 / 10%);
+
+  @include media-under(sm) {
+    margin: space(md) auto;
+    margin-top: 9rem;
+    padding: space(lg);
+  }
+}
+
+.title {
+  @include font-style($size: font-size(xxl), $weight: font-weight(bold), $color: color(secondary, base));
+
+  text-align: center;
+  margin-bottom: space(md);
+}
+
+.formGroup {
+  display: flex;
+  flex-direction: column;
+  gap: space(md);
+  margin-bottom: space(lg);
+}
+
+.inputWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: space(xs);
+}
+
+.nameWrapper {
+  display: flex;
+  gap: space(md);
+  width: 100%;
+
+  .inputWrapper {
+    flex: 1;
+    min-width: 0;
+    width: 100%;
+  }
+}
+
+.input {
+  @include font-style($size: font-size(md));
+
+  padding: space(sm) space(md);
+  border: 1px solid color(neutral, border);
+  border-radius: radius(md);
+  transition: border-color transition(fast);
+
+  &:focus {
+    border-color: color(primary, base);
+    outline: none;
+  }
+
+  &::placeholder {
+    color: color(neutral, placeholder-color);
+  }
+
+  &.inputError {
+    border-color: status(danger, base);
+  }
+}
+
+.errorMessage {
+  @include font-style($size: font-size(sm), $color: status(danger, base));
+}
+
+.checkboxLabel {
+  @include font-style($size: font-size(sm));
+
+  display: flex;
+  align-items: center;
+  gap: space(xs);
+  cursor: pointer;
+
+  input[type="checkbox"] {
+    width: space(sm);
+    height: space(sm);
+    accent-color: color(primary, base);
+  }
+}
+
+.signupButton {
+  @include font-style($weight: font-weight(semibold), $color: color(neutral, white));
+
+  width: 100%;
+  padding: space(sm);
+  background-color: color(primary, base);
+  border-radius: radius(md);
+  transition: background-color transition(fast);
+
+  &:hover {
+    background-color: color(primary, dark);
+  }
+}
+
+.loginText {
+  @include font-style($size: font-size(sm));
+
+  text-align: center;
+  margin-top: space(lg);
+
+  a {
+    color: color(primary, base);
+    font-weight: font-weight(semibold);
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
+
+.separator {
+  display: flex;
+  align-items: center;
+  gap: space(md);
+  margin: space(md) 0;
+  color: color(neutral, separator-color);
+
+  &::before,
+  &::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background-color: currentcolor;
+  }
+}
+
+.socialLogin {
+  display: flex;
+  flex-direction: column;
+  gap: space(sm);
+}
+
+.googleBtn,
+.facebookBtn {
+  @include font-style($weight: font-weight(semibold));
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: space(sm);
+  width: 100%;
+  padding: space(sm);
+  border-radius: radius(md);
+  transition: filter transition(fast);
+}
+
+.googleBtn {
+  border: 1px solid color(neutral, border);
+  background-color: color(neutral, white);
+
+  &:hover {
+    filter: brightness(0.98);
+  }
+}
+
+.facebookBtn {
+  border: 1px solid color(neutral, border);
+  background-color: color(neutral, white);
+
+  &:hover {
+    filter: brightness(0.98);
+  }
+}
