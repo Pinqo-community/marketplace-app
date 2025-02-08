@@ -1,91 +1,55 @@
-import styles from "@/components/Auth/Auth.module.scss";
-import AuthButton from "@/components/Auth/AuthButton";
-import { AuthInput } from "@/components/Auth/AuthInput";
-import { AuthLayout } from "@/components/Auth/AuthLayout";
-import { SocialButtons } from "@/components/Auth/SocialButtons";
-import { Checkbox } from "@/components/Checkbox/Checkbox";
-import { login } from "@/services/authService";
-import { AxiosError } from "axios";
-import { useState } from "react";
-import { useDispatch } from "react-redux";
+import { FcGoogle } from "react-icons/fc";
+import { FaFacebook } from "react-icons/fa";
+import styles from "./LoginPage.module.scss";
+import MainLayout from "@/layouts/MainLayout";
 import { useNavigate } from "react-router-dom";
 
 const LoginPage: React.FC = () => {
   const navigate = useNavigate();
-  const dispatch = useDispatch();
-
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
-
-  const handleLogin = async (e: React.FormEvent) => {
-    e.preventDefault();
-
-    const trimmedEmail = email.trim();
-    const trimmedPassword = password.trim();
-
-    if (!trimmedEmail || !trimmedPassword) {
-      setError("Veuillez remplir tous les champs");
-      return;
-    }
-
-    setError(""); // Reset des erreurs
-    setLoading(true);
-
-    try {
-      await login(dispatch, { email: trimmedEmail, password: trimmedPassword });
-      navigate("/"); // Redirection
-    } catch (err) {
-      const error = err as AxiosError<{ message?: string }>;
-      setError(
-        error.response?.data?.message ||
-          "Échec de la connexion. Vérifiez vos identifiants.",
-      );
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const [rememberMe, setRememberMe] = useState(false);
 
   return (
-    <AuthLayout title="Se connecter">
-      <form onSubmit={handleLogin}>
+    <MainLayout>
+      <div className={styles.container}>
+        <h1 className={styles.title}>Se connecter</h1>
         <div className={styles.formGroup}>
-          <AuthInput
-            type="text"
-            name="email"
-            placeholder="Email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            error={error}
-          />
-          <AuthInput
+          <input className={styles.input} type="text" placeholder="Email" />
+          <input
+            className={styles.input}
             type="password"
-            name="password"
             placeholder="Mot de passe"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            error={error}
           />
           <div className={styles.checkboxContainer}>
-            <Checkbox
-              checked={rememberMe}
-              onChange={setRememberMe}
-              label="Se souvenir de moi"
-            />
-            <a className={styles.forgotPassword}>Mot de passe oublié ?</a>
+            <label className={styles.checkboxLabel}>
+              <input type="checkbox" />
+              Se souvenir de moi
+            </label>
+            <a className={styles.forgotPassword} href="">
+              Mot de passe oublié ?
+            </a>
           </div>
         </div>
-        <AuthButton loading={loading} text="Se connecter" />
-      </form>
-      <p className={styles.switchAuthText}>
-        Pas encore de compte ?{" "}
-        <a onClick={() => navigate("/signup")}>S'inscrire</a>
-      </p>
-      <SocialButtons type="login" />
-    </AuthLayout>
+        <button className={styles.loginButton}>Se connecter</button>
+        <p className={styles.signupText}>
+          Pas encore de compte ?{" "}
+          <a onClick={() => navigate("/signup")}>S'inscrire</a>
+        </p>
+
+        <div className={styles.separator}>
+          <span>ou</span>
+        </div>
+
+        <div className={styles.socialLogin}>
+          <button className={styles.googleBtn}>
+            <FcGoogle size={20} />
+            Se connecter avec Google
+          </button>
+          <button className={styles.facebookBtn}>
+            <FaFacebook size={20} color="#1877F2" />
+            Se connecter avec Facebook
+          </button>
+        </div>
+      </div>
+    </MainLayout>
   );
 };
 
