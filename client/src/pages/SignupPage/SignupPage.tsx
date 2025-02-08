@@ -3,6 +3,7 @@ import { FcGoogle } from "react-icons/fc";
 import { FaFacebook } from "react-icons/fa";
 import MainLayout from "@/layouts/MainLayout";
 import styles from "./SignupPage.module.scss";
+import { useNavigate } from "react-router-dom";
 
 interface FormErrors {
   email?: string;
@@ -24,6 +25,8 @@ const SignupPage: React.FC = () => {
   });
 
   const [errors, setErrors] = useState<FormErrors>({});
+
+  const navigate = useNavigate();
 
   const validateEmail = (email: string): boolean => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -180,7 +183,7 @@ const SignupPage: React.FC = () => {
         </form>
 
         <p className={styles.loginText}>
-          Déjà inscrit ? <a href="">Se connecter</a>
+          Déjà inscrit ? <a onClick={() => navigate("/login")}>Se connecter</a>
         </p>
 
         <div className={styles.separator}>
