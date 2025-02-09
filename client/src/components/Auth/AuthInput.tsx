@@ -1,4 +1,5 @@
 import styles from "./Auth.module.scss";
+import { motion, AnimatePresence } from "framer-motion";
 
 interface AuthInputProps {
   type: string;
@@ -17,7 +18,7 @@ export const AuthInput: React.FC<AuthInputProps> = ({
   onChange,
   error,
 }) => (
-  <div className={styles.inputWrapper}>
+  <motion.div className={styles.inputWrapper} layout>
     <input
       className={`${styles.input} ${error ? styles.inputError : ""}`}
       type={type}
@@ -26,6 +27,20 @@ export const AuthInput: React.FC<AuthInputProps> = ({
       value={value}
       onChange={onChange}
     />
-    {error && <span className={styles.errorMessage}>{error}</span>}
-  </div>
+    <AnimatePresence mode="wait">
+      {error && (
+        <motion.span
+          className={styles.errorMessage}
+          initial={{ height: 0, opacity: 0 }}
+          animate={{ height: "auto", opacity: 1 }}
+          exit={{ height: 0, opacity: 0 }}
+          transition={{
+            duration: 0.1,
+          }}
+        >
+          {error}
+        </motion.span>
+      )}
+    </AnimatePresence>
+  </motion.div>
 );
