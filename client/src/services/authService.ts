@@ -2,7 +2,20 @@ import api from "@/api/api";
 import { AppDispatch } from "@/store";
 import { loginSuccess, logout } from "@/store/slices/authSlice";
 
-export const register = async (dispatch: AppDispatch, userData: any) => {
+interface AuthCredentials {
+  email: string;
+  password: string;
+}
+
+interface RegisterData extends AuthCredentials {
+  firstname: string;
+  lastname: string;
+}
+
+export const register = async (
+  dispatch: AppDispatch,
+  userData: RegisterData,
+) => {
   const { data } = await api.post("/auth/register", userData);
   dispatch(
     loginSuccess({
@@ -13,7 +26,10 @@ export const register = async (dispatch: AppDispatch, userData: any) => {
   );
 };
 
-export const login = async (dispatch: AppDispatch, credentials: any) => {
+export const login = async (
+  dispatch: AppDispatch,
+  credentials: AuthCredentials,
+) => {
   const { data } = await api.post("/auth/login", credentials);
   dispatch(
     loginSuccess({

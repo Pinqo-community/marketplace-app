@@ -1,11 +1,12 @@
-import { useNavigate } from "react-router-dom";
-import { AuthLayout } from "@/components/Auth/AuthLayout";
-import { AuthInput } from "@/components/Auth/AuthInput";
-import { SocialButtons } from "@/components/Auth/SocialButtons";
 import styles from "@/components/Auth/Auth.module.scss";
-import { useDispatch } from "react-redux";
-import { useState } from "react";
+import { AuthInput } from "@/components/Auth/AuthInput";
+import { AuthLayout } from "@/components/Auth/AuthLayout";
+import { SocialButtons } from "@/components/Auth/SocialButtons";
 import { login } from "@/services/authService";
+import { AxiosError } from "axios";
+import { useState } from "react";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 const LoginPage: React.FC = () => {
   const navigate = useNavigate();
@@ -23,9 +24,10 @@ const LoginPage: React.FC = () => {
       console.log("Connexion reussi ✅");
 
       navigate("/"); // Envoie l'utilisateur vers la page d'accueil
-    } catch (err: any) {
+    } catch (err) {
+      const error = err as AxiosError<{ message?: string }>;
       setError("Échec de la connexion. Vérifiez vos identifiants.");
-      console.error("Erreur de connexion ❌", err);
+      console.error("Erreur de connexion ❌", error);
     }
   };
 
