@@ -4,6 +4,7 @@ import { AuthLayout } from "@/components/Auth/AuthLayout";
 import { SocialButtons } from "@/components/Auth/SocialButtons";
 import { register } from "@/services/authService";
 import { validateEmail, validatePassword } from "@/utils/validationUtils";
+import { AxiosError } from "axios";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -90,8 +91,8 @@ const SignupPage: React.FC = () => {
         });
         navigate("/"); // Redirige après l'inscription réussie
         console.log("Inscription reussie ✅");
-      } catch (error) {
-        setErrors({ email: "Erreur lors de l'inscription, réessayez." });
+      } catch (err) {
+        const error = err as AxiosError<{ message?: string }>;
         console.error("Erreur lors de l'inscription", error);
         console.log("Réponse de l'API:", error.response?.data);
         setErrors({
