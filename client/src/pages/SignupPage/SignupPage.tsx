@@ -1,10 +1,12 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { AuthLayout } from "@/components/Auth/AuthLayout";
-import { AuthInput } from "@/components/Auth/AuthInput";
-import { SocialButtons } from "@/components/Auth/SocialButtons";
-import { validateEmail, validatePassword } from "@/utils/validationUtils";
 import styles from "@/components/Auth/Auth.module.scss";
+import { AuthInput } from "@/components/Auth/AuthInput";
+import { AuthLayout } from "@/components/Auth/AuthLayout";
+import { SocialButtons } from "@/components/Auth/SocialButtons";
+import { register } from "@/services/authService";
+import { validateEmail, validatePassword } from "@/utils/validationUtils";
+import { useState } from "react";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 interface FormData {
   email: string;
@@ -36,6 +38,7 @@ const SignupPage: React.FC = () => {
 
   const [errors, setErrors] = useState<FormErrors>({});
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type, checked } = e.target;
@@ -45,7 +48,7 @@ const SignupPage: React.FC = () => {
     }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const newErrors: FormErrors = {};
 
@@ -77,7 +80,26 @@ const SignupPage: React.FC = () => {
     setErrors(newErrors);
 
     if (Object.keys(newErrors).length === 0) {
-      console.log("Formulaire soumis :", formData);
+      try {
+        console.log("Données envoyées:", formData);
+        await register(dispatch, {
+          firstname: formData.firstName,
+          lastname: formData.lastName,
+          email: formData.email,
+          password: formData.password,
+        });
+        navigate("/"); // Redirige après l'inscription réussie
+        console.log("Inscription reussie ✅");
+      } catch (error) {
+        setErrors({ email: "Erreur lors de l'inscription, réessayez." });
+        console.error("Erreur lors de l'inscription", error);
+        console.log("Réponse de l'API:", error.response?.data);
+        setErrors({
+          email:
+            error.response?.data?.message ||
+            "Erreur lors de l'inscription, réessayez.",
+        });
+      }
     }
   };
 

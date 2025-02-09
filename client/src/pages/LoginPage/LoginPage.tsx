@@ -20,12 +20,12 @@ const LoginPage: React.FC = () => {
     setError(""); // Reset l'erreur avant chaque tentative
     try {
       await login(dispatch, { email, password });
-      console.log("Connexion reussi");
+      console.log("Connexion reussi ✅");
 
       navigate("/"); // Envoie l'utilisateur vers la page d'accueil
     } catch (err: any) {
       setError("Échec de la connexion. Vérifiez vos identifiants.");
-      console.error("Erreur de connexion", err);
+      console.error("Erreur de connexion ❌", err);
     }
   };
 
