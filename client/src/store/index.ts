@@ -2,13 +2,15 @@ import { categoriesApi } from "@/api/categoriesApi";
 import { productsApi } from "@/api/productsApi";
 import { testimonialsApi } from "@/api/testimonialsApi";
 import { configureStore } from "@reduxjs/toolkit";
-import productsReducer from "./slices/postsSlice";
+import authReducer from "./slices/authSlice";
 import locationReducer from "./slices/locationSlice";
+import productsReducer from "./slices/postsSlice";
 
 const store = configureStore({
   reducer: {
     products: productsReducer,
     location: locationReducer,
+    auth: authReducer,
     [productsApi.reducerPath]: productsApi.reducer,
     [categoriesApi.reducerPath]: categoriesApi.reducer,
     [testimonialsApi.reducerPath]: testimonialsApi.reducer,
