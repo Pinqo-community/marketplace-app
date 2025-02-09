@@ -1,22 +1,15 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-interface User {
-  id: string;
-  email: string;
-  firstname: string;
-  lastname: string;
-}
-
 interface AuthState {
   accessToken: string | null;
   refreshToken: string | null;
-  user: User | null;
+  user: any | null;
 }
 
 const initialState: AuthState = {
   accessToken: null,
   refreshToken: null,
-  user: JSON.parse(localStorage.getItem("user") || "null"),
+  user: null,
 };
 
 const authSlice = createSlice({
@@ -28,7 +21,7 @@ const authSlice = createSlice({
       action: PayloadAction<{
         accessToken: string;
         refreshToken: string;
-        user: User;
+        user: any;
       }>,
     ) => {
       state.accessToken = action.payload.accessToken;

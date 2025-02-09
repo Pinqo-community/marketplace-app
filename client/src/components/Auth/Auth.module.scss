@@ -76,6 +76,10 @@
   @include font-style($size: font-size(sm), $color: status(danger, base));
 }
 
+.errorCenter {
+  text-align: center;
+}
+
 .checkboxContainer {
   display: flex;
   align-items: center;
