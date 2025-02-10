@@ -183,3 +183,35 @@
     filter: brightness(0.98);
   }
 }
+/* -------------------------------------------------------------------------- */
+/*                                 Page OAuth                                 */
+/* -------------------------------------------------------------------------- */
+
+.auth {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  padding: space(xl);
+  flex-direction: column;
+  gap: space(sm);
+  text-align: center;
+
+  @include media-under(sm) {
+    padding: space(md);
+  }
+
+  h1 {
+    @include font-style($size: font-size(xl), $weight: font-weight(semibold));
+  }
+
+  .loader {
+    animation: spin 1s linear infinite;
+
+    @keyframes spin {
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+  }
+}
