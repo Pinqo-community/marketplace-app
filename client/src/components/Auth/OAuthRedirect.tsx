@@ -1,7 +1,10 @@
 import { loginSuccess } from "@/store/slices/authSlice";
+import { motion } from "framer-motion";
+import { Loader2 } from "lucide-react";
 import React, { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
+import styles from "./Auth.module.scss";
 
 const OAuthRedirect: React.FC = () => {
   const location = useLocation();
@@ -29,19 +32,30 @@ const OAuthRedirect: React.FC = () => {
         }),
       );
       navigate("/");
-      console.log("Authentication successful.", accessToken, refreshToken);
+      console.log("Authentication reussie ✅", accessToken, refreshToken);
     } else {
       // Si tokens pas présents ou erreur
       navigate("/login");
       console.error(
-        "Invalid or missing access token or refresh token.",
+        "Tokens manquants ou erreur de connexion ❌",
         accessToken,
         refreshToken,
       );
     }
   }, [location, navigate, dispatch]);
 
-  return <div>Authenticating with OAuth...</div>;
+  return (
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      className={styles.auth}
+    >
+      <Loader2 size={50} className={styles.loader} />
+      <h1>Authentification en cours</h1>
+      <p>Vous allez être redirigé dans un instant...</p>
+    </motion.div>
+  );
 };
 
 export default OAuthRedirect;
