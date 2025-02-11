@@ -2,6 +2,7 @@ import styles from "@/components/Auth/Auth.module.scss";
 import { AuthInput } from "@/components/Auth/AuthInput";
 import { AuthLayout } from "@/components/Auth/AuthLayout";
 import { SocialButtons } from "@/components/Auth/SocialButtons";
+import { Checkbox } from "@/components/Checkbox/Checkbox";
 import { login } from "@/services/authService";
 import { AxiosError } from "axios";
 import { useState } from "react";
@@ -31,6 +32,8 @@ const LoginPage: React.FC = () => {
     }
   };
 
+  const [rememberMe, setRememberMe] = useState(false);
+
   return (
     <AuthLayout title="Se connecter">
       <form onSubmit={handleLogin}>
@@ -55,10 +58,11 @@ const LoginPage: React.FC = () => {
             onChange={(e) => setPassword(e.target.value)}
           />
           <div className={styles.checkboxContainer}>
-            <label className={styles.checkboxLabel}>
-              <input type="checkbox" />
-              Se souvenir de moi
-            </label>
+            <Checkbox
+              checked={rememberMe}
+              onChange={setRememberMe}
+              label="Se souvenir de moi"
+            />
             <a className={styles.forgotPassword}>Mot de passe oublié ?</a>
           </div>
         </div>

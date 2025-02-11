@@ -27,14 +27,15 @@ export const Checkbox: React.FC<CheckboxProps> = ({
   };
 
   const boxVariants = {
+    hover: { scale: 1.05 },
     tap: { scale: 0.95 },
   };
 
   return (
     <motion.label
       className={styles.customCheckbox}
+      whileHover="hover"
       whileTap="tap"
-      data-testid="checkbox-label"
     >
       <motion.div
         className={`${styles.checkboxBox} ${checked ? styles.checked : ""}`}
@@ -45,7 +46,6 @@ export const Checkbox: React.FC<CheckboxProps> = ({
           checked={checked}
           onChange={(e) => onChange(e.target.checked)}
           className={styles.hiddenCheckbox}
-          data-testid="checkbox"
         />
         <motion.div
           className={styles.checkIcon}
