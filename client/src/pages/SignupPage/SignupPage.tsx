@@ -2,6 +2,7 @@ import styles from "@/components/Auth/Auth.module.scss";
 import { AuthInput } from "@/components/Auth/AuthInput";
 import { AuthLayout } from "@/components/Auth/AuthLayout";
 import { SocialButtons } from "@/components/Auth/SocialButtons";
+import { Checkbox } from "@/components/Checkbox/Checkbox";
 import { register } from "@/services/authService";
 import { validateEmail, validatePassword } from "@/utils/validationUtils";
 import { AxiosError } from "axios";
@@ -46,6 +47,13 @@ const SignupPage: React.FC = () => {
     setFormData((prev) => ({
       ...prev,
       [name]: type === "checkbox" ? checked : value,
+    }));
+  };
+
+  const handleTermsChange = (checked: boolean) => {
+    setFormData((prev) => ({
+      ...prev,
+      terms: checked,
     }));
   };
 
@@ -149,16 +157,12 @@ const SignupPage: React.FC = () => {
           onChange={handleChange}
           error={errors.confirmPassword}
         />
-        <div className={styles.checkboxContainer}>
-          <label className={styles.checkboxLabel}>
-            <input
-              type="checkbox"
-              name="terms"
-              checked={formData.terms}
-              onChange={handleChange}
-            />
-            J'accepte les conditions d'utilisation
-          </label>
+        <div className={`${styles.checkboxContainer} ${styles.checkboxColumn}`}>
+          <Checkbox
+            checked={formData.terms}
+            onChange={handleTermsChange}
+            label="J'accepte les conditions d'utilisation"
+          />
           {errors.terms && (
             <span className={styles.errorMessage}>{errors.terms}</span>
           )}
