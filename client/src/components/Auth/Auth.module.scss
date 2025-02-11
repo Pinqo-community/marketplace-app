@@ -121,21 +121,6 @@
   justify-content: space-between;
 }
 
-.checkboxLabel {
-  @include font-style($size: font-size(sm));
-
-  display: flex;
-  align-items: center;
-  gap: space(xs);
-  cursor: pointer;
-
-  input[type="checkbox"] {
-    width: space(sm);
-    height: space(sm);
-    accent-color: color(primary, base);
-  }
-}
-
 .forgotPassword {
   @include font-style($size: font-size(sm), $color: color(primary, base));
 
