@@ -121,6 +121,12 @@
   justify-content: space-between;
 }
 
+.checkboxColumn {
+  display: flex;
+  align-items: baseline;
+  flex-direction: column;
+}
+
 .forgotPassword {
   @include font-style($size: font-size(sm), $color: color(primary, base));
 
