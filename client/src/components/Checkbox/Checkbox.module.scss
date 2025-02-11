@@ -1,0 +1,68 @@
+@use "@/scss/global";
+@use "@/scss/variables" as *;
+@use "@/scss/mixins" as *;
+@use "@/scss/shared" as *;
+@use "sass:map";
+
+.customCheckbox {
+  display: flex;
+  align-items: center;
+  gap: space(xs);
+  cursor: pointer;
+  user-select: none;
+}
+
+.checkboxBox {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  width: 20px;
+  height: 20px;
+  border: 2px solid color(neutral, border);
+  transition:
+    border-color transition(fast),
+    background-color transition(fast);
+  border-radius: radius(sm);
+  background-color: color(neutral, white);
+
+  &.checked {
+    border-color: color(primary, base);
+    background-color: color(primary, base);
+  }
+}
+
+.hiddenCheckbox {
+  position: absolute;
+  width: 0;
+  height: 0;
+  opacity: 0;
+}
+
+.checkboxContainer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.checkIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: color(neutral, white);
+}
+
+.checkboxLabel {
+  @include font-style($size: font-size(sm));
+
+  display: flex;
+  align-items: center;
+  gap: space(xs);
+  cursor: pointer;
+
+  input[type="checkbox"] {
+    width: space(sm);
+    height: space(sm);
+    accent-color: color(primary, base);
+  }
+}
