@@ -27,16 +27,11 @@ export const Checkbox: React.FC<CheckboxProps> = ({
   };
 
   const boxVariants = {
-    hover: { scale: 1.05 },
     tap: { scale: 0.95 },
   };
 
   return (
-    <motion.label
-      className={styles.customCheckbox}
-      whileHover="hover"
-      whileTap="tap"
-    >
+    <motion.label className={styles.customCheckbox} whileTap="tap">
       <motion.div
         className={`${styles.checkboxBox} ${checked ? styles.checked : ""}`}
         variants={boxVariants}
