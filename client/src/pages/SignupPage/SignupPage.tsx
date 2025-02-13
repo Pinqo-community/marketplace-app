@@ -1,4 +1,5 @@
 import styles from "@/components/Auth/Auth.module.scss";
+import AuthButton from "@/components/Auth/AuthButton";
 import { AuthInput } from "@/components/Auth/AuthInput";
 import { AuthLayout } from "@/components/Auth/AuthLayout";
 import { SocialButtons } from "@/components/Auth/SocialButtons";
@@ -38,6 +39,7 @@ const SignupPage: React.FC = () => {
     terms: false,
   });
 
+  const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState<FormErrors>({});
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -90,6 +92,7 @@ const SignupPage: React.FC = () => {
 
     if (Object.keys(newErrors).length === 0) {
       try {
+        setLoading(true);
         console.log("Données envoyées:", formData);
         await register(dispatch, {
           firstname: formData.firstName,
@@ -97,8 +100,8 @@ const SignupPage: React.FC = () => {
           email: formData.email,
           password: formData.password,
         });
-        navigate("/"); // Redirige après l'inscription réussie
-        console.log("Inscription reussie ✅");
+        navigate("/");
+        console.log("Inscription réussie ✅");
       } catch (err) {
         const error = err as AxiosError<{ message?: string }>;
         console.error("Erreur lors de l'inscription", error);
@@ -108,6 +111,8 @@ const SignupPage: React.FC = () => {
             error.response?.data?.message ||
             "Erreur lors de l'inscription, réessayez.",
         });
+      } finally {
+        setLoading(false);
       }
     }
   };
@@ -167,9 +172,7 @@ const SignupPage: React.FC = () => {
             <span className={styles.errorMessage}>{errors.terms}</span>
           )}
         </div>
-        <button type="submit" className={styles.authButton}>
-          S'inscrire
-        </button>
+        <AuthButton loading={loading} text="S'inscrire" />
       </form>
       <p className={styles.switchAuthText}>
         Déjà inscrit ? <a onClick={() => navigate("/login")}>Se connecter</a>
