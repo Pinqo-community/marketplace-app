@@ -54,6 +54,23 @@ public class ProductController {
     }
 
     /**
+     * Retrieve a list of 8 available products
+     *
+     * @return ResponseEntity with list of  8 available products
+     */
+    @GetMapping("/homePage")
+    public ResponseEntity<List<ProductDto>> getHomePageProducts() {
+        try {
+            log.atInfo().log("GET /products/homePage - START");
+            List<ProductDto> products = productService.getAvailableProductsForHomePage();
+            return ResponseEntity.ok(products);
+        } finally {
+            log.atInfo().log("GET /products/homePage - END");
+        }
+    }
+
+
+    /**
      * Retrieves all available products.
      *
      * @return ResponseEntity with list of available products
@@ -63,7 +80,7 @@ public class ProductController {
     @ApiResponse(responseCode = "200", description = "Available products retrieved successfully.")
     public ResponseEntity<List<ProductDto>> getAvailableProducts() {
         try {
-            log.atInfo().log("GET /products - START");
+            log.atInfo().log("GET /products/available - START");
             return ResponseEntity.ok(productService.getAvailableProducts());
         } finally {
             log.atInfo().log("GET /products/available - END");

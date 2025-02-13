@@ -26,6 +26,12 @@ public interface ProductService {
      */
     List<ProductDto> getAvailableProducts();
 
+    /**
+     *Retrieves 8 products with stock > 0 for customers.
+     *
+     * @return A list of 8 available products.
+     */
+    List<ProductDto> getAvailableProductsForHomePage();
 
     /**
      * Retrieves a product by its unique ID.

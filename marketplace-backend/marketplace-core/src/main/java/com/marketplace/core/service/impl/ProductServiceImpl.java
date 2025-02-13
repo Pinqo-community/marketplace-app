@@ -9,6 +9,9 @@ import com.marketplace.core.utils.mapper.ProductMapper;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -69,6 +72,22 @@ public class ProductServiceImpl implements ProductService {
         return response;
     }
 
+    @Override
+    public List<ProductDto> getAvailableProductsForHomePage() {
+        log.atDebug().log("Enter getAvailableProductsForHomePage()");
+
+        Pageable pageable = PageRequest.of(0, 8);
+
+        Page<Product> productsPage = productRepository.findByActiveAndStockQuantityGreaterThan(true, 0, pageable);
+
+        List<Product> products = productsPage.getContent();
+
+        List<ProductDto> response = productMapper.toDtoList(products);
+
+        log.atDebug().log("Leave getAvailableProductsForHomePage() - return {}", response);
+
+        return response;
+    }
 
     /**
      * Retrieves a product entity by its ID.
@@ -151,5 +170,6 @@ public class ProductServiceImpl implements ProductService {
 
         log.atDebug().log("Leave deleteProduct()");
     }
+
 }
 
