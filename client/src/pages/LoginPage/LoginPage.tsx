@@ -1,4 +1,5 @@
 import styles from "@/components/Auth/Auth.module.scss";
+import AuthButton from "@/components/Auth/AuthButton";
 import { AuthInput } from "@/components/Auth/AuthInput";
 import { AuthLayout } from "@/components/Auth/AuthLayout";
 import { SocialButtons } from "@/components/Auth/SocialButtons";
@@ -16,10 +17,12 @@ const LoginPage: React.FC = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(""); // Reset l'erreur avant chaque tentative
+    setLoading(true);
     try {
       await login(dispatch, { email, password });
       console.log("Connexion reussi ✅");
@@ -29,6 +32,8 @@ const LoginPage: React.FC = () => {
       const error = err as AxiosError<{ message?: string }>;
       setError("Échec de la connexion. Vérifiez vos identifiants.");
       console.error("Erreur de connexion ❌", error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -66,9 +71,7 @@ const LoginPage: React.FC = () => {
             <a className={styles.forgotPassword}>Mot de passe oublié ?</a>
           </div>
         </div>
-        <button type="submit" className={styles.authButton}>
-          Se connecter
-        </button>
+        <AuthButton loading={loading} text="Se connecter" />
       </form>
       <p className={styles.switchAuthText}>
         Pas encore de compte ?{" "}
