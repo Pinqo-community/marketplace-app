@@ -21,16 +21,28 @@ const LoginPage: React.FC = () => {
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError(""); // Reset l'erreur avant chaque tentative
-    setLoading(true);
-    try {
-      await login(dispatch, { email, password });
-      console.log("Connexion reussi ✅");
 
-      navigate("/"); // Envoie l'utilisateur vers la page d'accueil
+    const trimmedEmail = email.trim();
+    const trimmedPassword = password.trim();
+
+    if (!trimmedEmail || !trimmedPassword) {
+      setError("Veuillez remplir tous les champs.");
+      return;
+    }
+
+    setError(""); // Reset des erreurs
+    setLoading(true);
+
+    try {
+      await login(dispatch, { email: trimmedEmail, password: trimmedPassword });
+      console.log("Connexion réussie ✅");
+      navigate("/"); // Redirection
     } catch (err) {
       const error = err as AxiosError<{ message?: string }>;
-      setError("Échec de la connexion. Vérifiez vos identifiants.");
+      setError(
+        error.response?.data?.message ||
+          "Échec de la connexion. Vérifiez vos identifiants.",
+      );
       console.error("Erreur de connexion ❌", error);
     } finally {
       setLoading(false);
