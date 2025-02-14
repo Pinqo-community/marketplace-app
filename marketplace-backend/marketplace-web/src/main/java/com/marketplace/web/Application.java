@@ -12,6 +12,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
         "com.marketplace.auth",
         "com.marketplace.core",
         "com.marketplace.api",
+        "com.marketplace.mail",
 })
 @EntityScan(basePackages = {"com.marketplace.core.entity", "com.marketplace.auth.entity"})
 @EnableJpaRepositories(basePackages = {"com.marketplace.core.repository", "com.marketplace.auth.repository"})

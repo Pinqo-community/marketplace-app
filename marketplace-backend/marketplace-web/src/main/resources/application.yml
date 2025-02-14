@@ -2,6 +2,10 @@ spring:
   application:
     name: marketplace-web
 
+  mail:
+    username: ${MAIL_USERNAME}
+    password: ${MAIL_PASSWORD}
+
   security:
     oauth2:
       client:
