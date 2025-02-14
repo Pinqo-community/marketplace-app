@@ -10,6 +10,7 @@ import { motion } from "framer-motion";
 import { Locate, LocateOff, ShoppingCart, User } from "lucide-react";
 import styles from "./Buttons.module.scss";
 import classNames from "classnames/bind";
+import { useNavigate } from "react-router-dom";
 
 const cx = classNames.bind(styles);
 
@@ -17,11 +18,15 @@ const cx = classNames.bind(styles);
 /*                                 UserButton                                 */
 /* -------------------------------------------------------------------------- */
 
-export const UserButton: React.FC = () => (
-  <button className={styles.userButton}>
-    <User size={25} />
-  </button>
-);
+export const UserButton: React.FC = () => {
+  const navigate = useNavigate();
+
+  return (
+    <button className={styles.userButton} onClick={() => navigate("/login")}>
+      <User size={25} />
+    </button>
+  );
+};
 
 /* -------------------------------------------------------------------------- */
 /*                                 CartButton                                 */
