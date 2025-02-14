@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:fragment="styles">
+        <style>
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            }
+
+            body {
+                font-family: Arial, sans-serif;
+                line-height: 1.6;
+                background-color: #f4f4f4;
+                color: #333;
+            }
+
+            .email-container {
+                max-width: 600px;
+                margin: 20px auto;
+                background: #ffffff;
+            }
+
+            .header {
+                background: #ffffff;
+                padding: 15px 20px;
+                border-bottom: 1px solid #eee;
+            }
+
+            .nav-container {
+                display: flex;
+                align-items: center;
+                justify-content: flex-start;
+            }
+
+            .logo-container {
+                display: flex;
+                align-items: center;
+            }
+
+            .logo-text {
+                display: flex;
+                align-items: center;
+                font-size: 28px;
+                letter-spacing: 0.5px;
+                font-weight: bold;
+            }
+
+            .logo-text span:first-child {
+                margin-right: 4px;
+            }
+
+            .logo-text span:last-child {
+                color: #00B67A;
+            }
+
+            .content {
+                padding: 40px 30px;
+                color: #333;
+                text-align: center;
+            }
+
+            .content h2 {
+                color: #00B67A;
+                margin-bottom: 20px;
+                font-size: 1.8em;
+            }
+
+            .content p {
+                margin-bottom: 20px;
+                line-height: 1.8;
+            }
+
+            .btn {
+                display: inline-block;
+                padding: 12px 25px;
+                background: #00B67A;
+                color: white;
+                text-decoration: none;
+                border-radius: 5px;
+                margin: 20px 0;
+                font-weight: bold;
+            }
+
+            .support-text {
+                font-size: 0.9em;
+                color: #666;
+                margin: 20px 0;
+            }
+
+            .support-text a {
+                color: #00B67A;
+                text-decoration: none;
+            }
+
+            .footer {
+                padding: 20px;
+                text-align: center;
+                color: #666;
+                font-size: 0.8em;
+                border-top: 1px solid #eee;
+            }
+
+            .footer-links {
+                margin-top: 10px;
+            }
+
+            .footer-links a {
+                color: #666;
+                text-decoration: none;
+                margin: 0 10px;
+            }
+
+            @media (max-width: 600px) {
+                .nav-container {
+                    flex-direction: column;
+                    gap: 10px;
+                }
+
+                .logo-text {
+                    font-size: 24px;
+                }
+            }
+        </style>
+    </th:block>
+</head>
+</html>
