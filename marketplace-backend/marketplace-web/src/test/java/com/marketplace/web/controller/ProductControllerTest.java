@@ -18,6 +18,7 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.mockito.Mockito.*;
@@ -84,6 +85,36 @@ class ProductControllerTest  extends WebMvcBaseTest {
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$[0].id").value(1L))
                     .andExpect(jsonPath("$[0].name").value("Miel de lavande"));
+        }
+    }
+
+    @Nested
+    class getHomePageProducts {
+        @Test
+        void whenGetHomePage_thenReturn8Products() throws Exception {
+            List<ProductDto> products = new ArrayList<>();
+            for (int i = 1; i <= 8; i++) {
+                products.add(new ProductDto(
+                        (long) i,
+                        "Product " + i,
+                        "Description " + i,
+                        "img_url_" + i,
+                        BigDecimal.valueOf(10.00 + i),
+                        "High",
+                        "Category",
+                        30,
+                        50,
+                        1,
+                        2,
+                        true
+                ));
+            }
+            when(productService.getAvailableProductsForHomePage()).thenReturn(products);
+
+            mockMvc.perform(get("/products/homePage"))
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.length()").value(8))
+                    .andExpect(jsonPath("$[0].id").value(1L));
         }
     }
 

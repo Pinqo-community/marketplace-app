@@ -11,6 +11,10 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 import java.util.Optional;
@@ -82,6 +86,34 @@ class ProductServiceImplTest {
 
             assertThat(result).isEqualTo(dtos);
             verify(productRepository).findByActiveAndStockQuantityGreaterThan(true, 0);
+            verify(productMapper).toDtoList(products);
+        }
+    }
+
+    @Nested
+    class GetAvailableProductsForHomePageTest {
+
+        @Test
+        void whenProductsExist_thenReturnDtosForHomePage() {
+            // Préparation des données de test
+            List<Product> products = List.of(new Product(), new Product()); // vous pouvez simuler 2 produits par exemple
+            List<ProductDto> dtos = List.of(new ProductDto(), new ProductDto());
+
+            // Création d'une instance de Page<Product> avec PageImpl
+            Pageable pageable = PageRequest.of(0, 8);
+            Page<Product> productsPage = new PageImpl<>(products, pageable, products.size());
+
+            // Configuration des comportements du repository et du mapper
+            when(productRepository.findByActiveAndStockQuantityGreaterThan(true, 0, pageable))
+                    .thenReturn(productsPage);
+            when(productMapper.toDtoList(products)).thenReturn(dtos);
+
+            // Exécution de la méthode à tester
+            List<ProductDto> result = productService.getAvailableProductsForHomePage();
+
+            // Vérification du résultat
+            assertThat(result).isEqualTo(dtos);
+            verify(productRepository).findByActiveAndStockQuantityGreaterThan(true, 0, pageable);
             verify(productMapper).toDtoList(products);
         }
     }

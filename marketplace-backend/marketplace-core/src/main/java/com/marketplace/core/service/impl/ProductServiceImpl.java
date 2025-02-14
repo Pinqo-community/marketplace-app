@@ -72,6 +72,10 @@ public class ProductServiceImpl implements ProductService {
         return response;
     }
 
+    /**
+     * Retrieves 8 products with stock > 0 for customers for the homepage
+     * @return a list of available products
+     */
     @Override
     public List<ProductDto> getAvailableProductsForHomePage() {
         log.atDebug().log("Enter getAvailableProductsForHomePage()");

@@ -59,6 +59,8 @@ public class ProductController {
      * @return ResponseEntity with list of  8 available products
      */
     @GetMapping("/homePage")
+    @Operation(summary = " Get available products for home page", description ="Retrieve and display 8 products with stock > 0 and active = true for customers " )
+    @ApiResponse(responseCode = "200", description = "8 available products displayed")
     public ResponseEntity<List<ProductDto>> getHomePageProducts() {
         try {
             log.atInfo().log("GET /products/homePage - START");
