@@ -12,7 +12,10 @@ import Slider from "@/components/Slider/Slider";
 import TestimonialCard from "@/components/Testimonials/TestimonialCard";
 import MainLayout from "@/layouts/MainLayout";
 import Loader from "@/shared/Loader";
+import { RootState } from "@/store";
 import { motion } from "framer-motion";
+import { useEffect } from "react";
+import { useSelector } from "react-redux";
 import "swiper/css";
 import "swiper/css/pagination";
 import styles from "./HomePage.module.scss";
@@ -21,6 +24,11 @@ const HomePage: React.FC = () => {
   /* -------------------------------------------------------------------------- */
   /*                                  References                                */
   /* -------------------------------------------------------------------------- */
+  const user = useSelector((state: RootState) => state.auth.user);
+
+  useEffect(() => {
+    console.log("User depuis Redux après rafraichissement :", user);
+  }, [user]);
 
   /* -------------------------------------------------------------------------- */
   /*                                 API Queries                                */
