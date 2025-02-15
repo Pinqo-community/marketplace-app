@@ -70,6 +70,20 @@ services:
       - ./marketplace-backend:/app:cached
       - maven-repo:/root/.m2:cached
 
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    ports:
+      - "5672:5672"    # Port AMQP
+      - "15672:15672"  # Port interface de gestion
+    environment:
+      - RABBITMQ_DEFAULT_USER=guest
+      - RABBITMQ_DEFAULT_PASS=guest
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+    networks:
+      - app-network
+
   db:
     image: postgres:15
     container_name: marketplace-database
@@ -89,6 +103,7 @@ volumes:
   maven-repo:
   maven-repo-tests:
   postgres_data:
+  rabbitmq_data:
 
 networks:
   app-network:

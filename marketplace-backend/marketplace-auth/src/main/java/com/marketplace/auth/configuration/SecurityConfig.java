@@ -40,12 +40,14 @@ public class SecurityConfig {
             "/swagger-ui.html",
             "/webjars/**",
             "/swagger-resources/**",
-            "/configuration/**"
+            "/configuration/**",
     };
 
     private static final String[] API_URLS_WHITELIST = {
             "/auth/**",
-            "/mail/**"
+            "/mail/**",
+            "/products/**",
+            "/rabbitmq/**"
     };
 
     /**
