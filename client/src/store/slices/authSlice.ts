@@ -3,8 +3,8 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 interface User {
   id: string;
   email: string;
-  firstName: string;
-  lastName: string;
+  firstname: string;
+  lastname: string;
 }
 
 interface AuthState {
@@ -36,7 +36,9 @@ const authSlice = createSlice({
       state.user = action.payload.user;
       localStorage.setItem("accessToken", action.payload.accessToken);
       localStorage.setItem("refreshToken", action.payload.refreshToken);
-      localStorage.setItem("user", JSON.stringify(action.payload.user));
+      // if (action.payload.user) {
+      //   localStorage.setItem("user", JSON.stringify(action.payload.user));
+      // }
     },
     logout: (state) => {
       state.accessToken = null;
