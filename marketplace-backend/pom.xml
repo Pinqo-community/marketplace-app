@@ -16,6 +16,7 @@
     <packaging>pom</packaging>
 
     <modules>
+        <module>marketplace-rabbitmq</module>
         <module>marketplace-mail</module>
         <module>marketplace-core</module>
         <module>marketplace-api</module>
@@ -54,6 +55,11 @@
                 <artifactId>marketplace-mail</artifactId>
                 <version>${project.version}</version>
             </dependency>
+            <dependency>
+                <groupId>com.marketplace</groupId>
+                <artifactId>marketplace-rabbitmq</artifactId>
+                <version>${project.version}</version>
+            </dependency>
 
             <!-- JWT -->
             <dependency>
@@ -80,12 +86,6 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
-
-            <!-- RabbitMQ -->
-<!--            <dependency>-->
-<!--                <groupId>org.springframework.boot</groupId>-->
-<!--                <artifactId>spring-boot-starter-amqp</artifactId>-->
-<!--            </dependency>-->
 
             <!-- MapStruct -->
             <dependency>
