@@ -20,8 +20,8 @@ const OAuthRedirect: React.FC = () => {
       const user = {
         id: params.get("user_id") ?? "",
         email: params.get("email") ?? "",
-        firstName: params.get("first_name") ?? "",
-        lastName: params.get("last_name") ?? "",
+        firstname: params.get("first_name") ?? "",
+        lastname: params.get("last_name") ?? "",
       };
       // Dispatch de l'action loginSuccess pour maj l'état d'authentification
       dispatch(

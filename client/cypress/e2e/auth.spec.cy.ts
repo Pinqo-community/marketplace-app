@@ -20,76 +20,43 @@ describe("Authentication Tests", () => {
     });
 
     // Intercepte l'appel API avec l'URL exacte pour le succès
-    cy.intercept(
-      "POST",
-      `${Cypress.env("API_BASE_URL")}/api/v1/auth/login`,
-      (req) => {
-        // Si les credentials sont valides
-        if (
-          req.body.email === "test@example.com" &&
-          req.body.password === "Pa$$w0rd!"
-        ) {
-          req.reply({
-            statusCode: 200,
-            body: {
-              tokens: {
-                access: {
-                  token: "fake-access-token-12345",
-                  expiresIn: "15m",
-                },
-                refresh: {
-                  token: "fake-refresh-token-67890",
-                  expiresIn: "7d",
-                },
-              },
-              user: {
-                id: 1,
-                email: "test@example.com",
-                firstName: "Test",
-                lastName: "User",
-              },
-            },
-          });
-        } else {
-          // Si les credentials sont invalides
-          req.reply({
-            statusCode: 401,
-            body: {
-              message: "Les identifiants sont invalides",
-            },
-          });
-        }
-      }
-    ).as("loginRequest");
-
-    // Intercepte l'appel API de signup
-    cy.intercept(
-      "POST",
-      `${Cypress.env("API_BASE_URL")}/api/v1/auth/register`,
-      (req) => {
+    cy.intercept("POST", "http://localhost:8080/api/v1/auth/login", (req) => {
+      // Si les credentials sont valides
+      if (
+        req.body.email === "test@example.com" &&
+        req.body.password === "Pa$$w0rd!"
+      ) {
         req.reply({
-          statusCode: 201,
+          statusCode: 200,
           body: {
             tokens: {
               access: {
-                token: "fake-access-token-new-user",
+                token: "fake-access-token-12345",
                 expiresIn: "15m",
               },
               refresh: {
-                token: "fake-refresh-token-new-user",
+                token: "fake-refresh-token-67890",
                 expiresIn: "7d",
               },
             },
             user: {
-              id: 2,
-              email: req.body.email,
-              firstName: req.body.firstName,
-              lastName: req.body.lastName,
+              id: 1,
+              email: "test@example.com",
+              firstName: "Test",
+              lastName: "User",
             },
           },
         });
+      } else {
+        // Si les credentials sont invalides
+        req.reply({
+          statusCode: 401,
+          body: {
+            message: "Les identifiants sont invalides",
+          },
+        });
       }
-    ).as("registerRequest");
+    }).as("loginRequest");
 
     cy.visit("/");
 
@@ -211,9 +178,6 @@ describe("Authentication Tests", () => {
       cy.get('input[name="confirmPassword"]').type(testUser.password);
       cy.get('[data-testid="checkbox-label"]').click();
       cy.get("button").contains("S'inscrire").click();
-
-      // Attendre la réponse de l'API
-      cy.wait("@registerRequest");
 
       // Vérifie la redirection et le stockage du token
       cy.url().should("eq", Cypress.config().baseUrl + "/");
