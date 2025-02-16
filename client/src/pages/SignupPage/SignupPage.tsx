@@ -46,6 +46,13 @@ const SignupPage: React.FC = () => {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type, checked } = e.target;
+
+    // Validation spécifique pour le prénom et le nom
+    if (name === "firstName" || name === "lastName") {
+      const isValid = /^[A-Za-zÀ-ÿ\s-]*$/.test(value);
+      if (!isValid) return;
+    }
+
     setFormData((prev) => ({
       ...prev,
       [name]: type === "checkbox" ? checked : value,
