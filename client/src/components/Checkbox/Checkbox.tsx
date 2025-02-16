@@ -31,7 +31,11 @@ export const Checkbox: React.FC<CheckboxProps> = ({
   };
 
   return (
-    <motion.label className={styles.customCheckbox} whileTap="tap">
+    <motion.label
+      className={styles.customCheckbox}
+      whileTap="tap"
+      data-testid="checkbox-label"
+    >
       <motion.div
         className={`${styles.checkboxBox} ${checked ? styles.checked : ""}`}
         variants={boxVariants}
@@ -41,6 +45,7 @@ export const Checkbox: React.FC<CheckboxProps> = ({
           checked={checked}
           onChange={(e) => onChange(e.target.checked)}
           className={styles.hiddenCheckbox}
+          data-testid="checkbox"
         />
         <motion.div
           className={styles.checkIcon}
