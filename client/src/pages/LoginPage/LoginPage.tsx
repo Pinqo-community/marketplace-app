@@ -26,7 +26,7 @@ const LoginPage: React.FC = () => {
     const trimmedPassword = password.trim();
 
     if (!trimmedEmail || !trimmedPassword) {
-      setError("Veuillez remplir tous les champs.");
+      setError("Veuillez remplir tous les champs");
       return;
     }
 
