@@ -55,17 +55,13 @@ const LoginPage: React.FC = () => {
     <AuthLayout title="Se connecter">
       <form onSubmit={handleLogin}>
         <div className={styles.formGroup}>
-          {error && (
-            <p className={`${styles.errorMessage} ${styles.errorCenter}`}>
-              {error}
-            </p>
-          )}
           <AuthInput
             type="text"
             name="email"
             placeholder="Email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
+            error={error}
           />
           <AuthInput
             type="password"
@@ -73,6 +69,7 @@ const LoginPage: React.FC = () => {
             placeholder="Mot de passe"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            error={error}
           />
           <div className={styles.checkboxContainer}>
             <Checkbox
