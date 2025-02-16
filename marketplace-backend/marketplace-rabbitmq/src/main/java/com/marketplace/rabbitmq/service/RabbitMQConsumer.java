@@ -22,7 +22,7 @@ public class RabbitMQConsumer {
             log.info("Successfully processed email for: {}", emailRequest.to());
         } catch (Exception e) {
             log.error("Failed to process email for: {}", emailRequest.to(), e);
-            // L'email sera automatiquement envoyé vers la DLQ
+            // Send email to DLQ automatically
             throw e;
         }
     }
@@ -31,8 +31,7 @@ public class RabbitMQConsumer {
     public void processDLQ(EmailRequest emailRequest) {
         log.warn("Processing failed email from DLQ for: {}", emailRequest.to());
         try {
-            // Logique de retry ou notification admin
-            emailService.sendEmailSync(emailRequest); // Tentative synchrone
+            emailService.sendEmailSync(emailRequest);
         } catch (Exception e) {
             log.error("Final failure processing email for: {}", emailRequest.to(), e);
             // Ici vous pourriez implémenter une logique de notification admin
