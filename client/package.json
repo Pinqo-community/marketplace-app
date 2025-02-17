@@ -2,7 +2,7 @@
   "name": "app-react",
   "type": "module",
   "private": true,
-  "version": "0.14.0",
+  "version": "0.14.1",
   "scripts": {
     "dev": "vite",
     "test": "jest",
