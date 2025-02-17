@@ -70,7 +70,7 @@ public class SecurityConfig {
                         req
                                 .requestMatchers(SWAGGER_WHITELIST).permitAll()
                                 .requestMatchers(API_URLS_WHITELIST).permitAll()
-                                .requestMatchers(HttpMethod.GET, "/categories/**", "/labels/**").permitAll()
+                                .requestMatchers(HttpMethod.GET, "/products/**", "/categories/**", "/labels/**").permitAll()
                                 .requestMatchers("/categories/**", "/labels/**").hasRole("ADMIN")
                                 .anyRequest().authenticated()
                 )
