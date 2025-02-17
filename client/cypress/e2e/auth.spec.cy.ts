@@ -58,6 +58,35 @@ describe("Authentication Tests", () => {
       }
     }).as("loginRequest");
 
+    // Intercepte l'appel API de signup
+    cy.intercept(
+      "POST",
+      "http://localhost:8080/api/v1/auth/register",
+      (req) => {
+        req.reply({
+          statusCode: 201,
+          body: {
+            tokens: {
+              access: {
+                token: "fake-access-token-new-user",
+                expiresIn: "15m",
+              },
+              refresh: {
+                token: "fake-refresh-token-new-user",
+                expiresIn: "7d",
+              },
+            },
+            user: {
+              id: 2,
+              email: req.body.email,
+              firstName: req.body.firstName,
+              lastName: req.body.lastName,
+            },
+          },
+        });
+      }
+    ).as("registerRequest");
+
     cy.visit("/");
 
     cy.get('[data-testid="location-popup"]').should("be.visible");
@@ -178,6 +207,9 @@ describe("Authentication Tests", () => {
       cy.get('input[name="confirmPassword"]').type(testUser.password);
       cy.get('[data-testid="checkbox-label"]').click();
       cy.get("button").contains("S'inscrire").click();
+
+      // Attendre la réponse de l'API
+      cy.wait("@registerRequest");
 
       // Vérifie la redirection et le stockage du token
       cy.url().should("eq", Cypress.config().baseUrl + "/");
