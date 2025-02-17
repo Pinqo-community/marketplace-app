@@ -35,15 +35,10 @@ public class EmailServiceImpl implements EmailService {
     }
 
     public void sendEmail(EmailRequest request) {
-        try {
-            String htmlContent = buildEmailContent(request.templateName(), request.variables());
-            MimeMessage message = buildMimeMessage(request, htmlContent);
-            mailSender.send(message);
-            log.info("Email sent successfully to: {}", request.to());
-        } catch (MessagingException e) {
-            log.error("Failed to send email", e);
-            throw new EmailSendException("Failed to send email", e);
-        }
+        String htmlContent = buildEmailContent(request.templateName(), request.variables());
+        MimeMessage message = buildMimeMessage(request, htmlContent);
+        mailSender.send(message);
+        log.info("Email sent successfully to: {}", request.to());
     }
 
     private String buildEmailContent(String templateName, Map<String, Object> variables) {
@@ -54,15 +49,20 @@ public class EmailServiceImpl implements EmailService {
         return templateEngine.process("emails/layout", context);
     }
 
-    private MimeMessage buildMimeMessage(EmailRequest request, String htmlContent) throws MessagingException {
-        MimeMessage message = mailSender.createMimeMessage();
-        MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
+    private MimeMessage buildMimeMessage(EmailRequest request, String htmlContent) {
+        try {
+            MimeMessage message = mailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
 
-        helper.setFrom("from@example.com");
-        helper.setTo(request.to());
-        helper.setSubject(request.subject());
-        helper.setText(htmlContent, true);
+            helper.setFrom("from@example.com");
+            helper.setTo(request.to());
+            helper.setSubject(request.subject());
+            helper.setText(htmlContent, true);
 
-        return message;
+            return message;
+        } catch (MessagingException e) {
+            log.error("Failed to build MimeMessage", e);
+            throw new EmailSendException("Failed to build MimeMessage", e);
+        }
     }
 }
