@@ -5,6 +5,9 @@ spring:
   mail:
     username: ${MAIL_USERNAME}
     password: ${MAIL_PASSWORD}
+    host: ${MAIL_HOST}
+    port: ${MAIL_PORT}
+    from: ${MAIL_FROM}
 
   rabbitmq:
     host: localhost

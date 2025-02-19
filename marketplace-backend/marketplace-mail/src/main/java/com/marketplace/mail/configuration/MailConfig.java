@@ -8,6 +8,9 @@ import org.springframework.mail.javamail.JavaMailSenderImpl;
 
 import java.util.Properties;
 
+/**
+ * Configuration class for email services using JavaMailSender.
+ */
 @Configuration
 public class MailConfig {
     @Value("${spring.mail.username}")
@@ -16,11 +19,25 @@ public class MailConfig {
     @Value("${spring.mail.password}")
     private String password;
 
+    @Value("${spring.mail.host}")
+    private String host;
+
+    @Value("${spring.mail.port}")
+    private int port;
+
+    /**
+     * Creates and configures a JavaMailSender instance for sending emails.
+     * The sender is configured with SMTP settings including authentication
+     * and TLS support.
+     *
+     * @return configured JavaMailSender instance
+     * @throws IllegalStateException if required properties are missing
+     */
     @Bean
     public JavaMailSender javaMailSender() {
         JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
-        mailSender.setHost("sandbox.smtp.mailtrap.io");
-        mailSender.setPort(2525);
+        mailSender.setHost(host);
+        mailSender.setPort(port);
         mailSender.setUsername(username);
         mailSender.setPassword(password);
 

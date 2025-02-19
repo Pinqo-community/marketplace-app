@@ -2,6 +2,7 @@ package com.marketplace.rabbitmq.service;
 
 import com.marketplace.api.dto.email.EmailRequest;
 import com.marketplace.api.service.EmailService;
+import com.marketplace.rabbitmq.service.impl.RabbitMQConsumer;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
