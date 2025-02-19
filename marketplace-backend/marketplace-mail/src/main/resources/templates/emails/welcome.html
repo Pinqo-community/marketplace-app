@@ -2,16 +2,50 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <body>
 <div th:fragment="content">
-  <h2>Bienvenue sur Comptoir Local</h2>
-  <p>Bonjour <span th:text="${firstName}">Prénom</span>, et bienvenue dans notre communauté !</p>
-
-  <p>Nous sommes ravis de vous compter parmi nous.</p>
-
-  <a th:href="${accountLink}" class="btn">Accéder à mon compte</a>
-
-  <div class="support-text">
-    Des questions ? Contactez <a href="mailto:support@comptoirlocal.com">support@comptoirlocal.com</a>
-  </div>
+  <table role="presentation" style="width: 100%; border-collapse: collapse; border-spacing: 0;">
+    <tr>
+      <td style="text-align: center;">
+        <h2 style="color: #00B67A; margin-bottom: 20px; font-size: 1.8em;">
+          Bienvenue sur Comptoir Local
+        </h2>
+      </td>
+    </tr>
+    <tr>
+      <td style="text-align: center; padding: 10px 0;">
+        <p style="margin-bottom: 20px; line-height: 1.8;">
+          Bonjour <span th:text="${firstName}">Prénom</span>, et bienvenue dans notre communauté !
+        </p>
+        <p style="margin-bottom: 20px; line-height: 1.8;">
+          Nous sommes ravis de vous compter parmi nous.
+        </p>
+      </td>
+    </tr>
+    <tr>
+      <td style="text-align: center; padding: 20px 0;">
+        <table role="presentation" style="border-collapse: collapse; border-spacing: 0; margin: 0 auto;">
+          <tr>
+            <td style="background-color: #00B67A; border-radius: 5px;">
+              <a th:href="${accountLink}"
+                 style="display: inline-block; padding: 12px 25px; color: white; text-decoration: none; font-weight: bold;">
+                Accéder à mon compte
+              </a>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+    <tr>
+      <td style="text-align: center; padding-top: 20px;">
+        <p style="font-size: 0.9em; color: #666;">
+          Des questions ? Contactez
+          <a href="mailto:support@comptoirlocal.com"
+             style="color: #00B67A; text-decoration: none;">
+            support@comptoirlocal.com
+          </a>
+        </p>
+      </td>
+    </tr>
+  </table>
 </div>
 </body>
 </html>

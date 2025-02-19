@@ -4,24 +4,58 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Comptoir Local</title>
-    <style th:replace="~{emails/fragments/styles :: styles}"></style>
 </head>
-<body>
-<div class="email-container">
-    <!-- Header commun -->
-    <header class="header" th:replace="~{emails/fragments/header :: header}">
-    </header>
+<body style="margin: 0; padding: 0; font-family: Arial, sans-serif; line-height: 1.6; background-color: #f4f4f4; color: #333;">
+<!-- Container principal -->
+<table role="presentation" style="width: 100%; border-collapse: collapse; border-spacing: 0; background-color: #f4f4f4;">
+    <tr>
+        <td style="padding: 20px; text-align: center;">
+            <!-- Email container -->
+            <table role="presentation" style="width: 100%; max-width: 600px; border-collapse: collapse; border-spacing: 0; background-color: #ffffff; margin: 0 auto;">
+                <!-- Header -->
+                <tr>
+                    <td style="padding: 15px 20px; background-color: #ffffff; border-bottom: 1px solid #eee;">
+                        <table role="presentation" style="width: 100%; border-collapse: collapse; border-spacing: 0;">
+                            <tr>
+                                <td style="text-align: left;">
+                                    <div style="font-size: 28px; letter-spacing: 0.5px; font-weight: bold;">
+                                        <span style="margin-right: 4px;">Comptoir</span>
+                                        <span style="color: #00B67A;">Local</span>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
 
-    <!-- Contenu spécifique -->
-    <main class="content">
-        <div th:replace="~{${contentTemplate} :: content}">
-            <!-- Le contenu sera injecté ici -->
-        </div>
-    </main>
+                <!-- Content -->
+                <tr>
+                    <td style="padding: 40px 30px;">
+                        <div th:replace="~{${contentTemplate} :: content}">
+                            <!-- Content injection here -->
+                        </div>
+                    </td>
+                </tr>
 
-    <!-- Footer commun -->
-    <footer class="footer" th:replace="~{emails/fragments/footer :: footer}">
-    </footer>
-</div>
+                <!-- Footer -->
+                <tr>
+                    <td style="padding: 20px; text-align: center; border-top: 1px solid #eee;">
+                        <p style="margin: 0 0 10px 0; color: #666; font-size: 13px;">
+                            Vous recevez cet email car vous avez un compte chez nous.
+                        </p>
+                        <p style="margin: 0 0 10px 0; color: #666; font-size: 13px;">
+                            Toute information d'adresse, légale, conditions d'utilisation à ajouter ici
+                        </p>
+                        <p style="margin: 0; color: #666; font-size: 13px;">
+                            <a href="#" style="color: #666; text-decoration: none; margin: 0 10px;">Préférences Email</a> |
+                            <a href="#" style="color: #666; text-decoration: none; margin: 0 10px;">Se désabonner</a> |
+                            <a href="#" style="color: #666; text-decoration: none; margin: 0 10px;">Voir en ligne</a>
+                        </p>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+</table>
 </body>
 </html>

@@ -5,6 +5,7 @@ import com.marketplace.api.exception.EmailSendException;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import jakarta.mail.internet.MimeMultipart;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -14,6 +15,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.util.ReflectionTestUtils;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 
@@ -26,6 +29,8 @@ import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class EmailServiceImplTest {
+
+    private static final String FROM_EMAIL = "from@example.com";
 
     @Mock
     private JavaMailSender mailSender;
@@ -41,6 +46,11 @@ class EmailServiceImplTest {
 
     @Captor
     private ArgumentCaptor<Context> contextCaptor;
+
+    @BeforeEach
+    void setUp() {
+        ReflectionTestUtils.setField(emailService, "from", FROM_EMAIL);
+    }
 
     @Nested
     class SendEmailAsyncTest {

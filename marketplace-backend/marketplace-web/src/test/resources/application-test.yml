@@ -9,6 +9,27 @@ spring:
     hibernate:
       ddl-auto: create-drop
 
+  # Configuration RabbitMQ
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
+
+  # Configuration Mail
+  mail:
+    from: test@email.com
+    host: smtp.gmail.com  # ou localhost pour les tests
+    port: 587            # ou 25 pour les tests
+    username: test       # valeur fixe pour les tests
+    password: test       # valeur fixe pour les tests
+    properties:
+      mail:
+        smtp:
+          auth: false
+          starttls:
+            enable: false
+
 app:
   client:
     allowed-urls: "http://localhost:8080"

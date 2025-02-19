@@ -160,7 +160,7 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
                 new ExceptionResponse(
                         HttpStatus.INTERNAL_SERVER_ERROR.value(),
-                        ex.getMessage().isEmpty() ? "Internal Error" : ex.getMessage(),
+                        "INTERNAL SERVER ERROR",
                         ((ServletWebRequest) request).getRequest().getRequestURI()
                 )
         );
