@@ -9,14 +9,22 @@ services:
       DB_NAME: ${DB_NAME}
       DB_USER: ${DB_USER}
       DB_PASSWORD: ${DB_PASSWORD}
+      DB_HOST: db
+      DB_PORT: 5432
       JWT_SECRET: ${JWT_SECRET}
       GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID}
       GOOGLE_SECRET_CLIENT: ${GOOGLE_SECRET_CLIENT}
       FACEBOOK_CLIENT_ID: ${FACEBOOK_CLIENT_ID}
       FACEBOOK_SECRET_CLIENT: ${FACEBOOK_SECRET_CLIENT}
       UNSPLASH_API_KEY: ${UNSPLASH_API_KEY}
-      DB_HOST: db
-      DB_PORT: 5432
+      MAIL_FROM: ${MAIL_FROM}
+      MAIL_USERNAME: ${MAIL_USERNAME}
+      MAIL_PASSWORD: ${MAIL_PASSWORD}
+      MAIL_HOST: ${MAIL_HOST}
+      MAIL_PORT: ${MAIL_PORT}
+      RABBITMQ_HOST: ${RABBITMQ_HOST}
+      RABBITMQ_USERNAME: ${RABBITMQ_USERNAME}
+      RABBITMQ_PASSWORD: ${RABBITMQ_PASSWORD}
     volumes:
       - ./marketplace-backend:/app:rw,cached,rshared
       - type: bind
@@ -26,6 +34,7 @@ services:
       - ~/.m2:/root/.m2:cached
     depends_on:
       - db
+      - rabbitmq
     networks:
       - app-network
 
@@ -50,26 +59,6 @@ services:
       - type: volume
         target: /app/node_modules
 
-  backend-tests:
-    build:
-      context: ./marketplace-backend
-      dockerfile: Dockerfile.dev
-    container_name: marketplace-backend-tests
-    command: mvn clean verify
-    environment:
-      DB_NAME: ${DB_NAME}
-      DB_USER: ${DB_USER}
-      DB_PASSWORD: ${DB_PASSWORD}
-      DB_HOST: db
-      DB_PORT: 5432
-    depends_on:
-      - db
-    networks:
-      - app-network
-    volumes:
-      - ./marketplace-backend:/app:cached
-      - maven-repo:/root/.m2:cached
-
   rabbitmq:
     image: rabbitmq:3-management
     container_name: rabbitmq
@@ -77,8 +66,8 @@ services:
       - "5672:5672"    # Port AMQP
       - "15672:15672"  # Port interface de gestion
     environment:
-      - RABBITMQ_DEFAULT_USER=guest
-      - RABBITMQ_DEFAULT_PASS=guest
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_USERNAME}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASSWORD}
     volumes:
       - rabbitmq_data:/var/lib/rabbitmq
     networks:

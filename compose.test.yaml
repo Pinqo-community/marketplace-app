@@ -1,0 +1,35 @@
+services:
+  db-test:
+    image: postgres:15
+    ports:
+      - "15434:5432"  # Port différent
+    environment:
+      POSTGRES_DB: test_db
+      POSTGRES_USER: test_user
+      POSTGRES_PASSWORD: test_password
+
+  rabbitmq-test:
+    image: rabbitmq:3-management
+    ports:
+      - "5673:5672"     # Ports différents
+      - "15673:15672"
+    environment:
+      - RABBITMQ_DEFAULT_USER=test
+      - RABBITMQ_DEFAULT_PASS=test
+
+  backend-tests:
+    build:
+      context: ./marketplace-backend
+      dockerfile: Dockerfile.test  # Dockerfile spécifique aux tests
+    environment:
+      DB_HOST: db-test
+      DB_PORT: 5432
+      DB_NAME: test_db
+      DB_USER: test_user
+      DB_PASSWORD: test_password
+      RABBITMQ_HOST: rabbitmq-test
+      RABBITMQ_USERNAME: test
+      RABBITMQ_PASSWORD: test
+    depends_on:
+      - db-test
+      - rabbitmq-test
