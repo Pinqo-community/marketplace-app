@@ -29,8 +29,6 @@ COPY marketplace-web/src marketplace-web/src
 
 COPY .mvn .mvn
 COPY mvnw .
-RUN chmod +x mvnw
+RUN chmod -R 777 /app && chmod +x mvnw
 
-EXPOSE 8080
-
-CMD ["sh", "-c", "mvn clean install -DskipTests && mvn spring-boot:run -pl marketplace-web -Dspring-boot.run.profiles=dev -Dspring.devtools.restart.enabled=true"]
+CMD ["mvn", "clean", "test", "-Dspring.profiles.active=test"]
