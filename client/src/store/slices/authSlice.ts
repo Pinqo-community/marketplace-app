@@ -11,18 +11,26 @@ interface AuthState {
   accessToken: string | null;
   refreshToken: string | null;
   user: User | null;
+  isAuthPopupOpen: boolean;
 }
 
 const initialState: AuthState = {
   accessToken: null,
   refreshToken: null,
   user: JSON.parse(localStorage.getItem("user") || "null"),
+  isAuthPopupOpen: false,
 };
 
 const authSlice = createSlice({
   name: "auth",
   initialState,
   reducers: {
+    openAuthPopup: (state) => {
+      state.isAuthPopupOpen = true;
+    },
+    closeAuthPopup: (state) => {
+      state.isAuthPopupOpen = false;
+    },
     loginSuccess: (
       state,
       action: PayloadAction<{
@@ -51,5 +59,11 @@ const authSlice = createSlice({
   },
 });
 
-export const { loginSuccess, logout, refreshTokenSuccess } = authSlice.actions;
+export const {
+  openAuthPopup,
+  closeAuthPopup,
+  loginSuccess,
+  logout,
+  refreshTokenSuccess,
+} = authSlice.actions;
 export default authSlice.reducer;

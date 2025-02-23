@@ -5,12 +5,14 @@
 @use "sass:map";
 
 .container {
-  max-width: 480px;
-  margin: space(xxl) auto;
-  margin-top: 9rem;
-  padding: space(xl);
+  // max-width: 480px;
+  // margin: space(xxl) auto;
+  // margin-top: 9rem;
+  padding: 0 space(lg);
   border-radius: radius(lg);
-  box-shadow: 0 0 10px rgb(0 0 0 / 10%);
+
+  // box-shadow: 0 0 10px rgb(0 0 0 / 10%);
+  border: 1px solid red;
 
   @include media-under(sm) {
     margin: space(md) auto;

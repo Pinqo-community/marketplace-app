@@ -6,11 +6,12 @@ import {
   PrimaryButtonProps,
   SliderButtonProps,
 } from "@/types/Button";
+import classNames from "classnames/bind";
 import { motion } from "framer-motion";
 import { Locate, LocateOff, ShoppingCart, User } from "lucide-react";
+import { useDispatch } from "react-redux";
 import styles from "./Buttons.module.scss";
-import classNames from "classnames/bind";
-import { useNavigate } from "react-router-dom";
+import { openAuthPopup } from "@/store/slices/authSlice";
 
 const cx = classNames.bind(styles);
 
@@ -19,10 +20,13 @@ const cx = classNames.bind(styles);
 /* -------------------------------------------------------------------------- */
 
 export const UserButton: React.FC = () => {
-  const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   return (
-    <button className={styles.userButton} onClick={() => navigate("/login")}>
+    <button
+      className={styles.userButton}
+      onClick={() => dispatch(openAuthPopup())}
+    >
       <User size={25} />
     </button>
   );
