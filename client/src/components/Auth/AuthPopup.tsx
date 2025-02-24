@@ -15,12 +15,13 @@ const AuthPopup = ({ isOpen, onClose }: AuthPopupProps) => {
     <BasePopup
       isOpen={isOpen}
       onClose={onClose}
-      title={isLogin ? "Connexion" : "Inscription"}
+      title={isLogin ? "Se connecter" : "Inscription"}
+      titleTag="h2"
+      titleCentered
+      variant="auth"
     >
       {isLogin ? <LoginPage /> : <SignupPage />}
-      <button onClick={() => setIsLogin(!isLogin)}>
-        {/* {isLogin ? "Créer un compte" : "Déjà un compte ? Se connecter"} */}
-      </button>
+      <button onClick={() => setIsLogin(!isLogin)}></button>
     </BasePopup>
   );
 };

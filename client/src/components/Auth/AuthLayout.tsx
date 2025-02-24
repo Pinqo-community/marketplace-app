@@ -3,10 +3,9 @@ import { motion } from "framer-motion";
 
 interface AuthLayoutProps {
   children: React.ReactNode;
-  title: string;
 }
 
-export const AuthLayout: React.FC<AuthLayoutProps> = ({ children, title }) => (
+export const AuthLayout: React.FC<AuthLayoutProps> = ({ children }) => (
   <motion.div
     initial={{ opacity: 0, y: 20 }}
     animate={{ opacity: 1, y: 0 }}
@@ -15,7 +14,6 @@ export const AuthLayout: React.FC<AuthLayoutProps> = ({ children, title }) => (
     layout
     className={styles.container}
   >
-    <h1 className={styles.title}>{title}</h1>
     {children}
   </motion.div>
 );
