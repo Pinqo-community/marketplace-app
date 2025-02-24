@@ -1,18 +1,5 @@
+import { AuthState, User } from "@/types/Auth";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-
-interface User {
-  id: string;
-  email: string;
-  firstname: string;
-  lastname: string;
-}
-
-interface AuthState {
-  accessToken: string | null;
-  refreshToken: string | null;
-  user: User | null;
-  isAuthPopupOpen: boolean;
-}
 
 const initialState: AuthState = {
   accessToken: null,

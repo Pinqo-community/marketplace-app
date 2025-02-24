@@ -5,16 +5,13 @@ import { AuthLayout } from "@/components/Auth/AuthLayout";
 import { SocialButtons } from "@/components/Auth/SocialButtons";
 import { Checkbox } from "@/components/Checkbox/Checkbox";
 import { login } from "@/services/authService";
+import { AuthProps } from "@/types/Auth";
 import { AxiosError } from "axios";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
-interface LoginPageProps {
-  setIsLogin: (value: boolean) => void;
-}
-
-const LoginPage: React.FC<LoginPageProps> = ({ setIsLogin }) => {
+const LoginPage: React.FC<AuthProps> = ({ setIsLogin }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 

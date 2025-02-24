@@ -1,9 +1,6 @@
+import { AuthLayoutProps } from "@/types/Auth";
 import styles from "./Auth.module.scss";
 import { motion } from "framer-motion";
-
-interface AuthLayoutProps {
-  children: React.ReactNode;
-}
 
 export const AuthLayout: React.FC<AuthLayoutProps> = ({ children }) => (
   <motion.div
