@@ -29,7 +29,11 @@ interface FormErrors {
   terms?: string;
 }
 
-const SignupPage: React.FC = () => {
+interface SignupPageProps {
+  setIsLogin: (value: boolean) => void;
+}
+
+const SignupPage: React.FC<SignupPageProps> = ({ setIsLogin }) => {
   const [formData, setFormData] = useState<FormData>({
     email: "",
     password: "",
@@ -125,7 +129,7 @@ const SignupPage: React.FC = () => {
   };
 
   return (
-    <AuthLayout title="S'inscrire">
+    <AuthLayout>
       <form onSubmit={handleSubmit} className={styles.formGroup}>
         <div className={styles.nameWrapper}>
           <AuthInput
@@ -182,7 +186,7 @@ const SignupPage: React.FC = () => {
         <AuthButton loading={loading} text="S'inscrire" />
       </form>
       <p className={styles.switchAuthText}>
-        Déjà inscrit ? <a onClick={() => navigate("/login")}>Se connecter</a>
+        Déjà inscrit ? <a onClick={() => setIsLogin(true)}>Se connecter</a>
       </p>
       <SocialButtons type="signup" />
     </AuthLayout>
