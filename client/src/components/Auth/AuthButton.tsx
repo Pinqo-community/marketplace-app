@@ -1,11 +1,9 @@
 import styles from "@/components/Auth/Auth.module.scss";
 import Loader from "@/shared/Loader";
+import { AuthButtonProps } from "@/types/Auth";
 import { AnimatePresence, motion } from "framer-motion";
 
-const AuthButton: React.FC<{ loading: boolean; text: string }> = ({
-  loading,
-  text,
-}) => (
+const AuthButton: React.FC<AuthButtonProps> = ({ loading, text }) => (
   <motion.button
     type="submit"
     className={styles.authButton}

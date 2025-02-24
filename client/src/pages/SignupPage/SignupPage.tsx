@@ -5,35 +5,14 @@ import { AuthLayout } from "@/components/Auth/AuthLayout";
 import { SocialButtons } from "@/components/Auth/SocialButtons";
 import { Checkbox } from "@/components/Checkbox/Checkbox";
 import { register } from "@/services/authService";
+import { AuthProps, FormData, FormErrors } from "@/types/Auth";
 import { validateEmail, validatePassword } from "@/utils/validationUtils";
 import { AxiosError } from "axios";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
-interface FormData {
-  email: string;
-  password: string;
-  confirmPassword: string;
-  firstName: string;
-  lastName: string;
-  terms: boolean;
-}
-
-interface FormErrors {
-  email?: string;
-  password?: string;
-  confirmPassword?: string;
-  firstName?: string;
-  lastName?: string;
-  terms?: string;
-}
-
-interface SignupPageProps {
-  setIsLogin: (value: boolean) => void;
-}
-
-const SignupPage: React.FC<SignupPageProps> = ({ setIsLogin }) => {
+const SignupPage: React.FC<AuthProps> = ({ setIsLogin }) => {
   const [formData, setFormData] = useState<FormData>({
     email: "",
     password: "",

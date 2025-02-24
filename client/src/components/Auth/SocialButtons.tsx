@@ -1,10 +1,7 @@
 import { FcGoogle } from "react-icons/fc";
 import { FaFacebook } from "react-icons/fa";
 import styles from "./Auth.module.scss";
-
-interface SocialButtonsProps {
-  type: "login" | "signup";
-}
+import { SocialButtonsProps } from "@/types/Auth";
 
 export const SocialButtons: React.FC<SocialButtonsProps> = ({ type }) => {
   const googleAuthUrl =

@@ -3,8 +3,6 @@ import Header from "@/components/Header/Header";
 import { motion } from "framer-motion";
 
 const MainLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  console.log("Render MainLayout");
-
   return (
     <motion.div
       initial={{ opacity: 0 }}
