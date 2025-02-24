@@ -9,23 +9,17 @@
   // margin: space(xxl) auto;
   // margin-top: 9rem;
   padding: 0 space(lg);
-  border-radius: radius(lg);
+
+  // border-radius: radius(lg);
 
   // box-shadow: 0 0 10px rgb(0 0 0 / 10%);
-  border: 1px solid red;
+  // border: 1px solid red;
 
-  @include media-under(sm) {
-    margin: space(md) auto;
-    margin-top: 9rem;
-    padding: space(lg);
-  }
-}
-
-.title {
-  @include font-style($size: font-size(xxl), $weight: font-weight(bold), $color: color(secondary, base));
-
-  text-align: center;
-  margin-bottom: space(md);
+  // @include media-under(sm) {
+  //   margin: space(md) auto;
+  //   margin-top: 9rem;
+  //   padding: space(lg);
+  // }
 }
 
 .formGroup {
@@ -138,6 +132,10 @@
     color: color(primary, dark);
     text-decoration: underline;
   }
+
+  @include media-under(xs) {
+    font-size: font-size(xs);
+  }
 }
 /* -------------------------------------------------------------------------- */
 /*                                   Button                                   */
@@ -226,6 +224,10 @@
 
   &:hover {
     filter: brightness(0.98);
+  }
+
+  @include media-under(xs) {
+    font-size: font-size(sm);
   }
 }
 /* -------------------------------------------------------------------------- */
