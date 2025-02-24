@@ -13,45 +13,6 @@
   background-color: rgb(0 0 0 / 40%);
 }
 
-.authPopup {
-  @include media-under(xs) {
-    align-items: flex-end;
-    padding: 0;
-  }
-
-  .content {
-    max-width: 32rem;
-
-    @include media-under(xs) {
-      max-width: 100%;
-      border-radius: radius(sm) radius(sm) 0 0;
-    }
-  }
-
-  .header {
-    padding-bottom: space(md);
-
-    @include media-under(xs) {
-      padding: 0;
-    }
-  }
-
-  .title {
-    width: 100%;
-    text-align: center;
-
-    @include media-under(sm) {
-      font-size: font-size(xxl);
-    }
-
-    @include media-under(xs) {
-      padding: space(md);
-      font-size: font-size(xl);
-      text-align: left;
-    }
-  }
-}
-
 .content {
   position: relative;
   width: 100%;
@@ -90,5 +51,47 @@
 
   &:hover {
     color: color(neutral, text);
+  }
+}
+/* -------------------------------------------------------------------------- */
+/*                                 Auth Popup                                 */
+/* -------------------------------------------------------------------------- */
+
+.authPopup {
+  @include media-under(xs) {
+    align-items: flex-end;
+    padding: 0;
+  }
+
+  .content {
+    max-width: 32rem;
+
+    @include media-under(xs) {
+      max-width: 100%;
+      border-radius: radius(lg) radius(lg) 0 0;
+    }
+  }
+
+  .header {
+    padding-bottom: space(md);
+
+    @include media-under(xs) {
+      padding: space(xs);
+    }
+  }
+
+  .title {
+    width: 100%;
+    text-align: center;
+
+    @include media-under(sm) {
+      font-size: font-size(xxl);
+    }
+
+    @include media-under(xs) {
+      padding: space(md);
+      font-size: font-size(xl);
+      text-align: left;
+    }
   }
 }
