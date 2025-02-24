@@ -10,8 +10,11 @@ import {
   removeRecentLocation,
   setUserLocation,
 } from "@/store/slices/locationSlice";
-import { BasePopupProps } from "@/types/BasePopup";
-import { RecentLocation, Suggestion } from "@/types/Location";
+import {
+  LocationPopupProps,
+  RecentLocation,
+  Suggestion,
+} from "@/types/Location";
 import { isUserLocation } from "@/types/typeValidators";
 import { loadFromLocalStorage } from "@/utils/localStorageUtils";
 import { parseAddress } from "@/utils/locationUtils";
@@ -25,7 +28,7 @@ import styles from "./LocationPopup.module.scss";
 import SearchIcon from "./SearchIcon";
 import SuggestionList from "./SuggestionList";
 
-const LocationPopup = ({ isOpen, onClose }: BasePopupProps) => {
+const LocationPopup = ({ isOpen, onClose }: LocationPopupProps) => {
   const [address, setAddress] = useState("");
   const [isValidAddress, setIsValidAddress] = useState(false);
   const [showWarning, setShowWarning] = useState(false);
