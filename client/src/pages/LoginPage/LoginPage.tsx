@@ -10,7 +10,11 @@ import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
-const LoginPage: React.FC = () => {
+interface LoginPageProps {
+  setIsLogin: (value: boolean) => void;
+}
+
+const LoginPage: React.FC<LoginPageProps> = ({ setIsLogin }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -84,7 +88,7 @@ const LoginPage: React.FC = () => {
       </form>
       <p className={styles.switchAuthText}>
         Pas encore de compte ?{" "}
-        <a onClick={() => navigate("/signup")}>S'inscrire</a>
+        <a onClick={() => setIsLogin(false)}>S'inscrire</a>
       </p>
       <SocialButtons type="login" />
     </AuthLayout>
