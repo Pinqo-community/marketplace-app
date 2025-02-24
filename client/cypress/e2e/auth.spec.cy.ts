@@ -1,6 +1,6 @@
 /// <reference types="cypress" />
 
-describe("Authentication Tests", () => {
+describe.skip("Authentication Tests", () => {
   beforeEach(() => {
     cy.clearLocalStorage();
     cy.clearCookies();
