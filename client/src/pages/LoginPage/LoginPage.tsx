@@ -52,7 +52,7 @@ const LoginPage: React.FC = () => {
   const [rememberMe, setRememberMe] = useState(false);
 
   return (
-    <AuthLayout title="Se connecter">
+    <AuthLayout>
       <form onSubmit={handleLogin}>
         <div className={styles.formGroup}>
           <AuthInput
