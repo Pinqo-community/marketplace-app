@@ -5,12 +5,12 @@ import { AuthLayout } from "@/components/Auth/AuthLayout";
 import { SocialButtons } from "@/components/Auth/SocialButtons";
 import { Checkbox } from "@/components/Checkbox/Checkbox";
 import { register } from "@/services/authService";
+import { closeAuthPopup } from "@/store/slices/authSlice";
 import { AuthProps, FormData, FormErrors } from "@/types/Auth";
 import { validateEmail, validatePassword } from "@/utils/validationUtils";
 import { AxiosError } from "axios";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
 
 const SignupPage: React.FC<AuthProps> = ({ setIsLogin }) => {
   const [formData, setFormData] = useState<FormData>({
@@ -24,7 +24,6 @@ const SignupPage: React.FC<AuthProps> = ({ setIsLogin }) => {
 
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState<FormErrors>({});
-  const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -90,7 +89,7 @@ const SignupPage: React.FC<AuthProps> = ({ setIsLogin }) => {
           email: formData.email,
           password: formData.password,
         });
-        navigate("/");
+        dispatch(closeAuthPopup());
         console.log("Inscription réussie ✅");
       } catch (err) {
         const error = err as AxiosError<{ message?: string }>;
