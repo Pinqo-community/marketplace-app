@@ -5,14 +5,13 @@ import { AuthLayout } from "@/components/Auth/AuthLayout";
 import { SocialButtons } from "@/components/Auth/SocialButtons";
 import { Checkbox } from "@/components/Checkbox/Checkbox";
 import { login } from "@/services/authService";
+import { closeAuthPopup } from "@/store/slices/authSlice";
 import { AuthProps } from "@/types/Auth";
 import { AxiosError } from "axios";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
 
 const LoginPage: React.FC<AuthProps> = ({ setIsLogin }) => {
-  const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const [email, setEmail] = useState("");
@@ -36,8 +35,8 @@ const LoginPage: React.FC<AuthProps> = ({ setIsLogin }) => {
 
     try {
       await login(dispatch, { email: trimmedEmail, password: trimmedPassword });
+      dispatch(closeAuthPopup());
       console.log("Connexion réussie ✅");
-      navigate("/"); // Redirection
     } catch (err) {
       const error = err as AxiosError<{ message?: string }>;
       setError(
