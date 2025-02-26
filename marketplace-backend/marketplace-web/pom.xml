@@ -33,6 +33,10 @@
         </dependency>
         <dependency>
             <groupId>com.marketplace</groupId>
+            <artifactId>marketplace-storage</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.marketplace</groupId>
             <artifactId>marketplace-api</artifactId>
         </dependency>
         <dependency>

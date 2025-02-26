@@ -21,6 +21,7 @@
         <module>marketplace-core</module>
         <module>marketplace-api</module>
         <module>marketplace-auth</module>
+        <module>marketplace-storage</module>
         <module>marketplace-web</module>
     </modules>
 
@@ -58,6 +59,11 @@
             <dependency>
                 <groupId>com.marketplace</groupId>
                 <artifactId>marketplace-rabbitmq</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.marketplace</groupId>
+                <artifactId>marketplace-storage</artifactId>
                 <version>${project.version}</version>
             </dependency>
 
