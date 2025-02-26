@@ -32,8 +32,6 @@ class StorageServiceImplTest {
     private final String validDocumentContentType = "application/pdf";
     private final String invalidContentType = "text/plain";
     private final byte[] smallImageContent = new byte[1024 * 1024]; // 1MB
-    private final byte[] largeImageContent = new byte[3 * 1024 * 1024]; // 3MB
-    private final byte[] smallDocumentContent = new byte[3 * 1024 * 1024]; // 3MB
     private final byte[] largeDocumentContent = new byte[6 * 1024 * 1024]; // 6MB
 
     @BeforeEach
