@@ -7,10 +7,8 @@ interface SocialButtonsProps {
 }
 
 export const SocialButtons: React.FC<SocialButtonsProps> = ({ type }) => {
-  const googleAuthUrl =
-    "http://localhost:8080/api/v1/oauth2/authorization/google?redirect_uri=http://localhost:5173/oauth/redirect";
-  const facebookAuthUrl =
-    "http://localhost:8080/api/v1/oauth2/authorization/facebook?redirect_uri=http://localhost:5173/oauth/redirect";
+  const googleAuthUrl = `${import.meta.env.VITE_API_BASE_URL}/api/v1/oauth2/authorization/google?redirect_uri=${import.meta.env.VITE_FRONTEND_URL}/oauth/redirect`;
+  const facebookAuthUrl = `${import.meta.env.VITE_API_BASE_URL}/api/v1/oauth2/authorization/facebook?redirect_uri=${import.meta.env.VITE_FRONTEND_URL}/oauth/redirect`;
 
   return (
     <>
