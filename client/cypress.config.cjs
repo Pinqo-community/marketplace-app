@@ -18,6 +18,7 @@ module.exports = {
     experimentalMemoryManagement: false,
     experimentalRunAllSpecs: false,
     env: {
+      API_BASE_URL: process.env.VITE_API_BASE_URL || "http://localhost:8080",
       MOCK_GEOLOCATION: true,
       DEFAULT_LOCATION: {
         latitude: 45.475614,

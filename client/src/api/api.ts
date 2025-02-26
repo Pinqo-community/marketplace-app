@@ -3,7 +3,7 @@ import store from "@/store";
 import { logout, refreshTokenSuccess } from "@/store/slices/authSlice";
 
 const api = axios.create({
-  baseURL: "http://localhost:8080/api/v1",
+  baseURL: `${import.meta.env.VITE_API_BASE_URL}/api/v1`,
 });
 
 api.interceptors.request.use((config) => {
