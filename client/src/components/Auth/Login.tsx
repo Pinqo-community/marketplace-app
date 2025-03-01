@@ -11,7 +11,7 @@ import { AxiosError } from "axios";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 
-const LoginPage: React.FC<AuthProps> = ({ setIsLogin }) => {
+const Login: React.FC<AuthProps> = ({ setIsLogin }) => {
   const dispatch = useDispatch();
 
   const [email, setEmail] = useState("");
@@ -91,4 +91,4 @@ const LoginPage: React.FC<AuthProps> = ({ setIsLogin }) => {
   );
 };
 
-export default LoginPage;
+export default Login;

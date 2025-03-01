@@ -1,6 +1,6 @@
 import BasePopup from "@/layouts/BasePopup";
-import LoginPage from "@/pages/LoginPage/LoginPage";
-import SignupPage from "@/pages/SignupPage/SignupPage";
+import Login from "@/components/Auth/Login";
+import Signup from "@/components/Auth/Signup";
 import { AuthPopupProps } from "@/types/Auth";
 import { AnimatePresence, motion } from "framer-motion";
 import { useState } from "react";
@@ -29,9 +29,9 @@ const AuthPopup = ({ isOpen, onClose }: AuthPopupProps) => {
           style={{ overflow: "hidden" }}
         >
           {isLogin ? (
-            <LoginPage setIsLogin={setIsLogin} />
+            <Login setIsLogin={setIsLogin} />
           ) : (
-            <SignupPage setIsLogin={setIsLogin} />
+            <Signup setIsLogin={setIsLogin} />
           )}
         </motion.div>
       </AnimatePresence>

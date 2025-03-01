@@ -12,7 +12,7 @@ import { AxiosError } from "axios";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 
-const SignupPage: React.FC<AuthProps> = ({ setIsLogin }) => {
+const Signup: React.FC<AuthProps> = ({ setIsLogin }) => {
   const [formData, setFormData] = useState<FormData>({
     email: "",
     password: "",
@@ -175,4 +175,4 @@ const SignupPage: React.FC<AuthProps> = ({ setIsLogin }) => {
   );
 };
 
-export default SignupPage;
+export default Signup;
