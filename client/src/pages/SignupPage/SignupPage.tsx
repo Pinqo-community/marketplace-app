@@ -108,7 +108,11 @@ const SignupPage: React.FC<AuthProps> = ({ setIsLogin }) => {
 
   return (
     <AuthLayout>
-      <form onSubmit={handleSubmit} className={styles.formGroup}>
+      <form
+        data-testid="signup-form"
+        onSubmit={handleSubmit}
+        className={styles.formGroup}
+      >
         <div className={styles.nameWrapper}>
           <AuthInput
             type="text"

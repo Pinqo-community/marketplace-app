@@ -53,7 +53,7 @@ const LoginPage: React.FC<AuthProps> = ({ setIsLogin }) => {
 
   return (
     <AuthLayout>
-      <form onSubmit={handleLogin}>
+      <form data-testid="login-form" onSubmit={handleLogin}>
         <div className={styles.formGroup}>
           <AuthInput
             type="text"

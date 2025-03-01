@@ -1,6 +1,6 @@
 /// <reference types="cypress" />
 
-describe.skip("Authentication Tests", () => {
+describe("Authentication Tests", () => {
   beforeEach(() => {
     cy.clearLocalStorage();
     cy.clearCookies();
@@ -103,7 +103,8 @@ describe.skip("Authentication Tests", () => {
 
   describe("Login Page", () => {
     beforeEach(() => {
-      cy.visit("/login");
+      cy.get('[data-testid="user-button"]').first().click({ force: true });
+      cy.get("[data-testid=auth-layout]").should("be.visible");
     });
 
     it("should display login form with all elements", () => {
@@ -151,7 +152,9 @@ describe.skip("Authentication Tests", () => {
 
   describe("Signup Page", () => {
     beforeEach(() => {
-      cy.visit("/signup");
+      cy.get('[data-testid="user-button"]').first().click({ force: true });
+      cy.get("[data-testid=auth-layout]").should("be.visible");
+      cy.contains("S'inscrire").click();
     });
 
     it("should display signup form with all elements", () => {
@@ -222,17 +225,24 @@ describe.skip("Authentication Tests", () => {
     });
   });
 
-  describe("Navigation between auth pages", () => {
-    it("should navigate from login to signup", () => {
-      cy.visit("/login");
+  describe("Navigation between auth popups", () => {
+    it("should open login popup and switch to signup", () => {
+      cy.get('[data-testid="user-button"]').first().click({ force: true });
+      cy.get("[data-testid=auth-layout]").should("be.visible");
+
       cy.contains("S'inscrire").click();
-      cy.url().should("include", "/signup");
+      cy.get("[data-testid=signup-form]").should("be.visible");
     });
 
-    it("should navigate from signup to login", () => {
-      cy.visit("/signup");
+    it("should open signup popup and switch to login", () => {
+      cy.get('[data-testid="user-button"]').first().click({ force: true });
+      cy.get("[data-testid=auth-layout]").should("be.visible");
+
+      cy.contains("S'inscrire").click();
+      cy.get("[data-testid=signup-form]").should("be.visible");
+
       cy.contains("Se connecter").click();
-      cy.url().should("include", "/login");
+      cy.get("[data-testid=login-form]").should("be.visible");
     });
   });
 });

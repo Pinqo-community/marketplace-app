@@ -24,6 +24,7 @@ export const UserButton: React.FC = () => {
 
   return (
     <button
+      data-testid="user-button"
       className={styles.userButton}
       onClick={() => dispatch(openAuthPopup())}
     >

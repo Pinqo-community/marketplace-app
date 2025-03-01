@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 
 export const AuthLayout: React.FC<AuthLayoutProps> = ({ children }) => (
   <motion.div
+    data-testid="auth-layout"
     initial={{ opacity: 0, y: 20 }}
     animate={{ opacity: 1, y: 0 }}
     exit={{ opacity: 0, y: 20 }}
