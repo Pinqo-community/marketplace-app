@@ -35,7 +35,6 @@ const OAuthRedirect: React.FC = () => {
       console.log("Authentication reussie ✅", accessToken, refreshToken);
     } else {
       // Si tokens pas présents ou erreur
-      navigate("/login");
       console.error(
         "Tokens manquants ou erreur de connexion ❌",
         accessToken,
