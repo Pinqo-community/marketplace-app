@@ -41,6 +41,7 @@ const BasePopup: React.FC<BasePopupProps> = ({
     <AnimatePresence>
       {isOpen && (
         <motion.div
+          key="popup-overlay"
           className={`${styles.popup} ${variant === "auth" ? styles.authPopup : ""}`}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
