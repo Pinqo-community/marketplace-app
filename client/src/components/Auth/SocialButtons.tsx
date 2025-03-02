@@ -5,7 +5,7 @@ import { SocialButtonsProps } from "@/types/Auth";
 
 export const SocialButtons: React.FC<SocialButtonsProps> = ({ type }) => {
   const googleAuthUrl = `${import.meta.env.VITE_API_BASE_URL}/api/v1/oauth2/authorization/google?redirect_uri=${window.location.origin}/oauth/redirect`;
-  const facebookAuthUrl = `${import.meta.env.VITE_API_BASE_URL}/api/v1/oauth2/authorization/facebook?redirect_uri=${window.location.origin}}/oauth/redirect`;
+  const facebookAuthUrl = `${import.meta.env.VITE_API_BASE_URL}/api/v1/oauth2/authorization/facebook?redirect_uri=${window.location.origin}/oauth/redirect`;
 
   return (
     <>
