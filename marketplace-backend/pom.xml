@@ -16,6 +16,8 @@
     <packaging>pom</packaging>
 
     <modules>
+        <module>marketplace-rabbitmq</module>
+        <module>marketplace-mail</module>
         <module>marketplace-core</module>
         <module>marketplace-api</module>
         <module>marketplace-auth</module>
@@ -46,6 +48,16 @@
             <dependency>
                 <groupId>com.marketplace</groupId>
                 <artifactId>marketplace-auth</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.marketplace</groupId>
+                <artifactId>marketplace-mail</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.marketplace</groupId>
+                <artifactId>marketplace-rabbitmq</artifactId>
                 <version>${project.version}</version>
             </dependency>
 
