@@ -117,8 +117,8 @@ const Header: React.FC = () => {
           </div>
 
           <nav className={styles.mobileNav}>
-            <UserButton />
             <CartButton />
+            <UserButton />
           </nav>
         </div>
 
@@ -127,8 +127,8 @@ const Header: React.FC = () => {
         </div>
 
         <nav>
-          <UserButton />
           <CartButton />
+          <UserButton />
         </nav>
       </div>
       <AuthPopup
