@@ -2,8 +2,8 @@ import { AuthState, User } from "@/types/Auth";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 const initialState: AuthState = {
-  accessToken: null,
-  refreshToken: null,
+  accessToken: localStorage.getItem("accessToken") || null,
+  refreshToken: localStorage.getItem("refreshToken") || null,
   user: JSON.parse(localStorage.getItem("user") || "null"),
   isAuthPopupOpen: false,
 };
@@ -13,7 +13,7 @@ const authSlice = createSlice({
   initialState,
   reducers: {
     openAuthPopup: (state) => {
-      state.isAuthPopupOpen = true;
+      state.isAuthPopupOpen = !state.accessToken;
     },
     closeAuthPopup: (state) => {
       state.isAuthPopupOpen = false;
