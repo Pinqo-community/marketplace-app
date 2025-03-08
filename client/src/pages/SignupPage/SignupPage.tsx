@@ -100,7 +100,6 @@ const SignupPage: React.FC = () => {
     if (Object.keys(newErrors).length === 0) {
       try {
         setLoading(true);
-        console.log("Données envoyées:", formData);
         await register(dispatch, {
           firstname: formData.firstName,
           lastname: formData.lastName,
@@ -108,11 +107,8 @@ const SignupPage: React.FC = () => {
           password: formData.password,
         });
         navigate("/");
-        console.log("Inscription réussie ✅");
       } catch (err) {
         const error = err as AxiosError<{ message?: string }>;
-        console.error("Erreur lors de l'inscription", error);
-        console.log("Réponse de l'API:", error.response?.data);
         setErrors({
           email:
             error.response?.data?.message ||
