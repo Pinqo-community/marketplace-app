@@ -25,6 +25,11 @@ services:
       RABBITMQ_HOST: ${RABBITMQ_HOST}
       RABBITMQ_USERNAME: ${RABBITMQ_USERNAME}
       RABBITMQ_PASSWORD: ${RABBITMQ_PASSWORD}
+      STORAGE_REGION: ${STORAGE_REGION}
+      STORAGE_ENDPOINT: ${STORAGE_ENDPOINT}
+      STORAGE_ACCESS_KEY: ${STORAGE_ACCESS_KEY}
+      STORAGE_SECRET_KEY: ${STORAGE_SECRET_KEY}
+      STORAGE_BUCKET_NAME: ${STORAGE_BUCKET_NAME}
     volumes:
       - ./marketplace-backend:/app:rw,cached,rshared
       - type: bind
@@ -35,6 +40,7 @@ services:
     depends_on:
       - db
       - rabbitmq
+      - minio
     networks:
       - app-network
 
@@ -73,6 +79,20 @@ services:
     networks:
       - app-network
 
+  minio:
+    image: minio/minio
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    volumes:
+      - minio_storage:/data
+    networks:
+      - app-network
+    environment:
+      MINIO_ROOT_USER: ${STORAGE_ACCESS_KEY}
+      MINIO_ROOT_PASSWORD: ${STORAGE_SECRET_KEY}
+    command: server /data --console-address ":9001"
+
   db:
     image: postgres:15
     container_name: marketplace-database
@@ -93,6 +113,7 @@ volumes:
   maven-repo-tests:
   postgres_data:
   rabbitmq_data:
+  minio_storage:
 
 networks:
   app-network:
