@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "vite",
     "test": "jest",
-    "cypress:run": "cypress run",
+    "cypress:run": "cypress run --env tsConfig=tsconfig.cypress.json",
+    "cypress:open": "cypress open --env tsConfig=tsconfig.cypress.json",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",

@@ -25,5 +25,5 @@
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true
   },
-  "include": ["src", "cypress", "stylelint.config.cjs", "jest.config.cjs"]
+  "include": ["src", "stylelint.config.cjs", "jest.config.cjs"]
 }
