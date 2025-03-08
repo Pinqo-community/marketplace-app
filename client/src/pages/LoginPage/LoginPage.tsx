@@ -35,7 +35,6 @@ const LoginPage: React.FC = () => {
 
     try {
       await login(dispatch, { email: trimmedEmail, password: trimmedPassword });
-      console.log("Connexion réussie ✅");
       navigate("/"); // Redirection
     } catch (err) {
       const error = err as AxiosError<{ message?: string }>;
@@ -43,7 +42,6 @@ const LoginPage: React.FC = () => {
         error.response?.data?.message ||
           "Échec de la connexion. Vérifiez vos identifiants.",
       );
-      console.error("Erreur de connexion ❌", error);
     } finally {
       setLoading(false);
     }
