@@ -82,7 +82,6 @@ const Signup: React.FC<AuthProps> = ({ setIsLogin }) => {
     if (Object.keys(newErrors).length === 0) {
       try {
         setLoading(true);
-        console.log("Données envoyées:", formData);
         await register(dispatch, {
           firstname: formData.firstName,
           lastname: formData.lastName,

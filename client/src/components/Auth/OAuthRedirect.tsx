@@ -32,7 +32,7 @@ const OAuthRedirect: React.FC = () => {
         }),
       );
       navigate("/");
-      console.log("Authentication reussie ✅", accessToken, refreshToken);
+      console.log("Authentication reussie ✅");
     } else {
       // Si tokens pas présents ou erreur
       console.error(
