@@ -1,0 +1,260 @@
+@use "@/scss/global";
+@use "@/scss/variables" as *;
+@use "@/scss/mixins" as *;
+@use "@/scss/shared" as *;
+@use "sass:map";
+
+.container {
+  max-width: 480px;
+  margin: space(xxl) auto;
+  margin-top: 9rem;
+  padding: space(xl);
+  border-radius: radius(lg);
+  box-shadow: 0 0 10px rgb(0 0 0 / 10%);
+
+  @include media-under(sm) {
+    margin: space(md) auto;
+    margin-top: 9rem;
+    padding: space(lg);
+  }
+}
+
+.title {
+  @include font-style($size: font-size(xxl), $weight: font-weight(bold), $color: color(secondary, base));
+
+  text-align: center;
+  margin-bottom: space(md);
+}
+
+.formGroup {
+  display: flex;
+  flex-direction: column;
+  gap: space(md);
+  margin-bottom: space(lg);
+}
+/* -------------------------------------------------------------------------- */
+/*                                    Input                                   */
+/* -------------------------------------------------------------------------- */
+
+.inputWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: space(xs);
+}
+
+.nameWrapper {
+  display: flex;
+  gap: space(md);
+  width: 100%;
+
+  .inputWrapper {
+    flex: 1;
+    min-width: 0;
+  }
+}
+
+.input {
+  @include font-style($size: font-size(md));
+
+  width: 100%;
+  padding: space(sm) space(md);
+  border: 1px solid color(neutral, border);
+  border-radius: radius(md);
+  transition: border-color transition(fast);
+
+  &:focus {
+    border-color: color(primary, base);
+    outline: none;
+  }
+
+  &::placeholder {
+    color: color(neutral, placeholder-color);
+  }
+
+  &.inputError {
+    border-color: status(danger, base);
+  }
+}
+
+.inputContainer {
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+
+.inputIcon {
+  position: absolute;
+  left: space(sm);
+  color: color(neutral, placeholder-color);
+  pointer-events: none;
+}
+
+.withIcon {
+  padding-left: 40px;
+}
+
+.togglePassword {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  right: space(sm);
+  padding: space(xs);
+  border: none;
+  background: none;
+  color: color(neutral, placeholder-color);
+  transition: color transition(fast);
+  cursor: pointer;
+}
+
+.errorMessage {
+  @include font-style($size: font-size(sm), $color: status(danger, base));
+}
+
+.errorCenter {
+  text-align: center;
+}
+
+.checkboxContainer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.checkboxColumn {
+  display: flex;
+  align-items: baseline;
+  flex-direction: column;
+}
+
+.forgotPassword {
+  @include font-style($size: font-size(sm), $color: color(primary, base));
+
+  transition: color transition(fast);
+
+  &:hover {
+    color: color(primary, dark);
+    text-decoration: underline;
+  }
+}
+/* -------------------------------------------------------------------------- */
+/*                                   Button                                   */
+/* -------------------------------------------------------------------------- */
+
+.authButton {
+  @include font-style($weight: font-weight(semibold), $color: color(neutral, white));
+
+  width: 100%;
+  padding: space(sm);
+  background-color: color(primary, base);
+  border-radius: radius(md);
+  transition: background-color transition(fast);
+  gap: space(xs);
+
+  .loader {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: space(xs);
+  }
+
+  &:hover {
+    background-color: color(primary, dark);
+  }
+
+  &:disabled {
+    background-color: color(neutral, separator-color);
+    color: color(neutral, dark-gray);
+    cursor: not-allowed;
+  }
+}
+
+.switchAuthText {
+  @include font-style($size: font-size(sm));
+
+  text-align: center;
+  margin-top: space(lg);
+
+  a {
+    color: color(primary, base);
+    font-weight: font-weight(semibold);
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
+
+.separator {
+  display: flex;
+  align-items: center;
+  gap: space(md);
+  margin: space(md) 0;
+  color: color(neutral, separator-color);
+
+  &::before,
+  &::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background-color: currentcolor;
+  }
+}
+
+.socialLogin {
+  display: flex;
+  flex-direction: column;
+  gap: space(sm);
+}
+
+.googleBtn,
+.facebookBtn {
+  @include font-style($weight: font-weight(semibold));
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: space(sm);
+  border: 1px solid color(neutral, border);
+  transition: filter transition(fast);
+  gap: space(sm);
+  border-radius: radius(md);
+  background-color: color(neutral, white);
+
+  &:hover {
+    filter: brightness(0.98);
+  }
+}
+/* -------------------------------------------------------------------------- */
+/*                                 Page OAuth                                 */
+/* -------------------------------------------------------------------------- */
+
+.auth {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  padding: space(xl);
+  flex-direction: column;
+  gap: space(sm);
+  text-align: center;
+
+  @include media-under(sm) {
+    padding: space(md);
+  }
+
+  h1 {
+    @include font-style($size: font-size(xl), $weight: font-weight(semibold));
+  }
+
+  .loader {
+    animation: spin 1s linear infinite;
+
+    @keyframes spin {
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+  }
+}
