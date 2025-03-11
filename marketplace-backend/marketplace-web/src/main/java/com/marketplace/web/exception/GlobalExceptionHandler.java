@@ -2,10 +2,7 @@ package com.marketplace.web.exception;
 
 import com.marketplace.api.dto.exception.ErrorDetail;
 import com.marketplace.api.dto.exception.ExceptionResponse;
-import com.marketplace.api.exception.AlreadyExistsException;
-import com.marketplace.api.exception.InvalidTokenException;
-import com.marketplace.api.exception.NotFoundException;
-import com.marketplace.api.exception.WrongCredentialException;
+import com.marketplace.api.exception.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -16,6 +13,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.context.request.ServletWebRequest;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -149,6 +147,25 @@ public class GlobalExceptionHandler {
     }
 
     /**
+     * Handles bad request exceptions.
+     *
+     * @param ex the exception
+     * @param request the current request
+     * @return ResponseEntity with BAD_REQUEST status
+     */
+    @ExceptionHandler({InvalidFileException.class, MaxUploadSizeExceededException.class})
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ResponseEntity<ExceptionResponse> handleBadRequest(Exception ex, WebRequest request) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                new ExceptionResponse(
+                        HttpStatus.BAD_REQUEST.value(),
+                        ex.getMessage(),
+                        ((ServletWebRequest) request).getRequest().getRequestURI()
+                )
+        );
+    }
+
+    /**
      * Handles all unhandled exceptions.
      *
      * @param ex the exception
@@ -160,7 +177,7 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
                 new ExceptionResponse(
                         HttpStatus.INTERNAL_SERVER_ERROR.value(),
-                        "INTERNAL SERVER ERROR",
+                        "Une erreur interne est survenue.",
                         ((ServletWebRequest) request).getRequest().getRequestURI()
                 )
         );

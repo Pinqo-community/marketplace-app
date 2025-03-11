@@ -15,6 +15,11 @@ spring:
     username: ${RABBITMQ_USERNAME}
     password: ${RABBITMQ_PASSWORD}
 
+  servlet:
+    multipart:
+      max-file-size: 15MB
+      max-request-size: 15MB
+
   security:
     oauth2:
       client:
@@ -36,6 +41,17 @@ spring:
     hibernate:
       ddl-auto: update
     show-sql: true
+
+  cloud:
+    aws:
+      region:
+        static: ${STORAGE_REGION}
+      s3:
+        endpoint: ${STORAGE_ENDPOINT}
+        path-style-access-enabled: true
+      credentials:
+        access-key: ${STORAGE_ACCESS_KEY}
+        secret-key: ${STORAGE_SECRET_KEY}
 
   devtools:
     restart:
@@ -65,3 +81,6 @@ app:
       secret-key: ${JWT_SECRET}
       access-token-expiration: 900000 #15mins
       refresh-token-expiration: 86400000 #1day
+
+  storage:
+    bucket-name: ${STORAGE_BUCKET_NAME}
