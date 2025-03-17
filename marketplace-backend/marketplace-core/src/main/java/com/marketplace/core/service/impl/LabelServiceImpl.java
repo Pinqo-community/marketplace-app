@@ -91,7 +91,7 @@ public class LabelServiceImpl implements LabelService {
      * @throws NotFoundException if label not found
      */
     @Override
-    public LabelDto getLabelById(long id) {
+    public LabelDto getLabelById(Long id) {
         log.atInfo().log("Retrieving label with id: {}", id);
 
         Label label = labelRepository.findById(id)

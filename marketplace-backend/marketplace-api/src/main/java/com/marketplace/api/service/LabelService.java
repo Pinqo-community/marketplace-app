@@ -31,7 +31,7 @@ public interface LabelService {
      * @param id unique identifier of the label
      * @return LabelDto of the found label
      */
-    LabelDto getLabelById(long id);
+    LabelDto getLabelById(Long id);
 
     /**
      * Creates a new label.
