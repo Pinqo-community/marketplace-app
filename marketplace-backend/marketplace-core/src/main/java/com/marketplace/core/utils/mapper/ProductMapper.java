@@ -27,8 +27,6 @@ public interface ProductMapper {
      * @param productDto The ProductDto to be converted.
      * @return The converted Product entity.
      */
-
-
     Product toEntity(ProductDto productDto);
 
     /**

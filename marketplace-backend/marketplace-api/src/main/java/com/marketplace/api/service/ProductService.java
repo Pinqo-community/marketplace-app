@@ -44,7 +44,7 @@ public interface ProductService {
      * @param active  product's status
      * @return A list of all products function  their status
      */
-    List<ProductDto> getProductsByStatus(Boolean active);
+    Page<ProductDto> getProductsByStatus(Boolean active, Pageable pageable);
 
     /**
      * Updates an existing product with the details provided in the DTO.

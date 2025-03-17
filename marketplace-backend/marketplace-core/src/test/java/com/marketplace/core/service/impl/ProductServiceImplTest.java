@@ -15,15 +15,17 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.IntStream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -106,6 +108,46 @@ class ProductServiceImplTest {
     }
 
     @Nested
+    class GetProductsByStatus {
+
+        @Test
+        void whenStatusProvided_thenReturnFilteredPaginatedDtos() {
+            // Mock des produits retournés par le repository
+            List<Product> mockProducts = IntStream.range(0, 10)
+                    .mapToObj(i -> Product.builder()
+                            .id((long) i)
+                            .name("Product " + i)
+                            .active(true)
+                            .build())
+                    .toList();
+
+            Page<Product> mockPage = new PageImpl<>(mockProducts, PageRequest.of(0, 10), 20);
+
+            when(productRepository.findByActive(eq(true), any(Pageable.class))).thenReturn(mockPage);
+            when(productMapper.toDto(any(Product.class))).thenAnswer(invocation -> {
+                Product product = invocation.getArgument(0);
+                return ProductDto.builder()
+                        .id(product.getId())
+                        .name(product.getName())
+                        .active(product.getActive())
+                        .build();
+            });
+
+            // Appel au service
+            Pageable pageable = PageRequest.of(0, 10);
+            Page<ProductDto> result = productService.getProductsByStatus(true, pageable);
+
+            // Vérifications
+            assertNotNull(result);
+            assertEquals(10, result.getNumberOfElements());
+            assertEquals(20, result.getTotalElements());
+            assertEquals("Product 0", result.getContent().get(0).getName());
+
+            verify(productRepository).findByActive(eq(true), eq(pageable));
+        }
+    }
+
+    @Nested
     class GetProductById {
         @Test
         void whenValidId_thenReturnDto() {
@@ -131,25 +173,6 @@ class ProductServiceImplTest {
             assertThatThrownBy(() -> productService.getProductById(id))
                     .isInstanceOf(NotFoundException.class)
                     .hasMessage("Le produit avec l'ID " + id + " est inactif ou n'existe pas.");
-        }
-    }
-
-    @Nested
-    class GetProductsByStatus {
-        @Test
-        void whenStatusProvided_thenReturnFilteredDtos() {
-            Boolean active = true;
-            List<Product> products = List.of(new Product());
-            List<ProductDto> dtos = List.of(new ProductDto());
-
-            when(productRepository.findByActive(active)).thenReturn(products);
-            when(productMapper.toDtoList(products)).thenReturn(dtos);
-
-            List<ProductDto> result = productService.getProductsByStatus(active);
-
-            assertThat(result).isEqualTo(dtos);
-            verify(productRepository).findByActive(active);
-            verify(productMapper).toDtoList(products);
         }
     }
 

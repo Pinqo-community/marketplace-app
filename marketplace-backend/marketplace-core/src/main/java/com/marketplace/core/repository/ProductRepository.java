@@ -18,6 +18,8 @@ public interface ProductRepository extends JpaRepository <Product, Long>{
     List<Product> findByActiveAndStockQuantityGreaterThan(boolean active, int stockQuantity);
 
     Page<Product> findByActiveAndStockQuantityGreaterThan(boolean active, int stockQuantity, Pageable pageable);
+    Page<Product> findByActive(Boolean active, Pageable pageable);
+
 
 
     @Query("SELECT p FROM Product p WHERE p.id = :id AND p.active = true")

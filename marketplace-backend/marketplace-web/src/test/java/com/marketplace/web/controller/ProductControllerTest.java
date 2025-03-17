@@ -24,6 +24,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.math.BigDecimal;
 
 import java.util.List;
+import java.util.stream.IntStream;
 
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -146,12 +147,13 @@ class ProductControllerTest extends WebMvcBaseTest {
     class GetProductsByStatus {
         @Test
         void whenValidStatus_thenReturnProducts() throws Exception {
-            when(productService.getProductsByStatus(true)).thenReturn(List.of(baseProductDto));
+            when(productService.getProductsByStatus(eq(true), any(Pageable.class)))
+                    .thenReturn(new PageImpl<>(List.of(baseProductDto)));
 
             mockMvc.perform(get("/products/status")
                             .param("active", "true"))
                     .andExpect(status().isOk())
-                    .andExpect(jsonPath("$[0].id").value(1L));
+                    .andExpect(jsonPath("$.content[0].id").value(1L));
         }
 
         @Test
@@ -173,6 +175,37 @@ class ProductControllerTest extends WebMvcBaseTest {
                             .param("active", "invalid"))
                     .andExpect(status().isBadRequest());
         }
+
+        @Test
+        void shouldReturnPaginatedProductsByStatusViaController() throws Exception {
+            // Préparation de la réponse mockée du service
+            List<ProductDto> mockProducts = IntStream.range(0, 10)
+                    .mapToObj(i -> ProductDto.builder()
+                            .id((long) i)
+                            .name("Product " + i)
+                            .active(true)
+                            .build())
+                    .toList();
+            Page<ProductDto> mockPage = new PageImpl<>(mockProducts, PageRequest.of(0, 10), 20);
+
+            when(productService.getProductsByStatus(eq(true), any(Pageable.class))).thenReturn(mockPage);
+
+            // Exécution de la requête
+            mockMvc.perform(get("/products/status")
+                            .param("active", "true")
+                            .param("page", "0")
+                            .param("size", "10")
+                            .contentType(MediaType.APPLICATION_JSON))
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.content").isArray())
+                    .andExpect(jsonPath("$.content.length()").value(10))
+                    .andExpect(jsonPath("$.totalElements").value(20))
+                    .andExpect(jsonPath("$.content[0].name").value("Product 0"));
+
+            // Vérifications sur le service
+            verify(productService).getProductsByStatus(eq(true), any(Pageable.class));
+        }
+
     }
 
     @Nested

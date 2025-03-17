@@ -53,10 +53,13 @@ public class ProductServiceImpl implements ProductService {
         return response;
     }
 
+
     /**
-     * Retrieves all products with stock > 0 for customers.
+     * Retrieves a paginated list of available products. An available product is defined
+     * as a product that is active and has a stock quantity greater than zero.
      *
-     * @return A list of available products.
+     * @param pageable the pagination information, including page number, size, and sorting details
+     * @return a paginated list of available products mapped to ProductDto objects
      */
     @Override
     public Page<ProductDto> getAvailableProducts(Pageable pageable) {
@@ -64,12 +67,37 @@ public class ProductServiceImpl implements ProductService {
 
         Page<Product> pagedProducts = productRepository.findByActiveAndStockQuantityGreaterThan(true, 0, pageable);
 
-        log.debug("Fetched {} products for pagination (page: {} size: {})",
+        log.atDebug().log("Fetched {} products for pagination (page: {} size: {})",
                 pagedProducts.getTotalElements(),
                 pageable.getPageNumber(),
                 pageable.getPageSize());
 
         return pagedProducts.map(productMapper::toDto);
+    }
+
+
+    /**
+     * Retrieves a page of products filtered by their active status.
+     *
+     * @param active the active status of the products to filter by; true for active products, false for inactive products
+     * @param pageable the pageable object containing pagination and sorting information
+     * @return a page of ProductDto objects representing the filtered products
+     */
+    @Override
+    public Page<ProductDto> getProductsByStatus(Boolean active, Pageable pageable) {
+
+        log.info("Fetching products by status: {}, Page request: {}", active, pageable);
+
+        Page<Product> productPage = productRepository.findByActive(active, pageable);
+
+        log.atDebug().log("Fetched {} products with status '{}' for pagination (page: {}, size: {})",
+                productPage.getTotalElements(),
+                active,
+                pageable.getPageNumber(),
+                pageable.getPageSize());
+
+
+        return productPage.map(productMapper::toDto);
     }
 
 
@@ -92,22 +120,7 @@ public class ProductServiceImpl implements ProductService {
         return response;
     }
 
-    /**
-     * Retrieves product entities from the database by status.
-     *
-     * @return A list of product .
-     */
-    @Override
-    public List<ProductDto> getProductsByStatus(Boolean active) {
-        log.atDebug().log("Enter getProductsByStatus(:active: {})", active);
 
-        List<Product> products = productRepository.findByActive(active);
-        List<ProductDto> response = productMapper.toDtoList(products);
-
-        log.atDebug().log("Leave getProductsByStatus() - return {}", response);
-
-        return response;
-    }
 
     /**
      * Updates an existing product entity with details from the provided DTO.
