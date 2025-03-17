@@ -55,7 +55,7 @@ services:
       context: ./marketplace-backend
       dockerfile: Dockerfile.dev
     container_name: marketplace-backend-tests
-    command: mvn clean test
+    command: mvn clean verify
     environment:
       DB_NAME: ${DB_NAME}
       DB_USER: ${DB_USER}

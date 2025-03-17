@@ -14,11 +14,14 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import org.springframework.data.domain.Pageable;
 
 
 /**
@@ -53,40 +56,25 @@ public class ProductController {
         }
     }
 
-    /**
-     * Retrieve a list of 8 available products
-     *
-     * @return ResponseEntity with list of  8 available products
-     */
-    @GetMapping("/homePage")
-    @Operation(summary = " Get available products for home page", description ="Retrieve and display 8 products with stock > 0 and active = true for customers " )
-    @ApiResponse(responseCode = "200", description = "8 available products displayed")
-    public ResponseEntity<List<ProductDto>> getHomePageProducts() {
-        try {
-            log.atInfo().log("GET /products/homePage - START");
-            List<ProductDto> products = productService.getAvailableProductsForHomePage();
-            return ResponseEntity.ok(products);
-        } finally {
-            log.atInfo().log("GET /products/homePage - END");
-        }
-    }
 
-
-    /**
-     * Retrieves all available products.
-     *
-     * @return ResponseEntity with list of available products
-     */
     @GetMapping("/available")
-    @Operation(summary = "Get available products", description = "Retrieve products with stock > 0 and active = true for customers.")
-    @ApiResponse(responseCode = "200", description = "Available products retrieved successfully.")
-    public ResponseEntity<List<ProductDto>> getAvailableProducts() {
-        try {
-            log.atInfo().log("GET /products/available - START");
-            return ResponseEntity.ok(productService.getAvailableProducts());
-        } finally {
-            log.atInfo().log("GET /products/available - END");
-        }
+    @Operation(summary = "Get available products",
+            description = "Retrieve paginated products with stock > 0 and active = true for customers.")
+    @ApiResponse(responseCode = "200", description = "Paginated available products retrieved successfully.")
+    public ResponseEntity<Page<ProductDto>> getAvailableProducts(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "8") int size) {
+
+        Pageable pageable = PageRequest.of(page, size);
+
+
+        log.info("Request received to fetch paginated available products: page {}, size {}", pageable.getPageNumber(), pageable.getPageSize());
+
+        Page<ProductDto> availableProducts = productService.getAvailableProducts(pageable);
+
+        log.info("Returning {} available products for page {} with size {}", availableProducts.getContent().size(), pageable.getPageNumber(), pageable.getPageSize());
+
+        return ResponseEntity.ok(availableProducts);
     }
 
     /**

@@ -16,11 +16,13 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -75,46 +77,31 @@ class ProductServiceImplTest {
     @Nested
     class GetAvailableProducts {
         @Test
-        void whenProductsExist_thenReturnDtos() {
-            List<Product> products = List.of(new Product());
-            List<ProductDto> dtos = List.of(new ProductDto());
+        void shouldReturnPaginatedAvailableProducts() {
+            // Arrange
+            Pageable pageable = PageRequest.of(0, 10); // first page, 10 elements
+            List<Product> expectedProducts = List.of(
+                    new Product(1L, "Miel de lavande", "Pot de 300g", "img_url",
+                            new BigDecimal("10.00"), "High", "", 30, 50, 1, 2, true),
+                    new Product(2L, "Ratatouille", "Pot de 500g", "img2_url",
+                            new BigDecimal("8.00"), "High", "", 20, 10, 1, 2, true)
+            );
 
-            when(productRepository.findByActiveAndStockQuantityGreaterThan(true, 0)).thenReturn(products);
-            when(productMapper.toDtoList(products)).thenReturn(dtos);
+            Page<Product> pagedProducts = new PageImpl<>(expectedProducts, pageable, expectedProducts.size());
 
-            List<ProductDto> result = productService.getAvailableProducts();
+            when(productRepository.findByActiveAndStockQuantityGreaterThan(true, 0, pageable)).thenReturn(pagedProducts);
 
-            assertThat(result).isEqualTo(dtos);
-            verify(productRepository).findByActiveAndStockQuantityGreaterThan(true, 0);
-            verify(productMapper).toDtoList(products);
-        }
-    }
+            // Act
+            Page<ProductDto> result = productService.getAvailableProducts(pageable);
 
-    @Nested
-    class GetAvailableProductsForHomePageTest {
+            // Assert
+            // Assert
+            assertEquals(2, result.getContent().size(), "The number of products in the content should match.");
+            assertEquals(2, result.getTotalElements(), "The number of total elements should match.");
+            assertEquals(1, result.getTotalPages(), "The number of total pages should match.");
+            assertEquals(10, result.getSize(), "The size of the page should match.");
 
-        @Test
-        void whenProductsExist_thenReturnDtosForHomePage() {
-            // Préparation des données de test
-            List<Product> products = List.of(new Product(), new Product()); // vous pouvez simuler 2 produits par exemple
-            List<ProductDto> dtos = List.of(new ProductDto(), new ProductDto());
-
-            // Création d'une instance de Page<Product> avec PageImpl
-            Pageable pageable = PageRequest.of(0, 8);
-            Page<Product> productsPage = new PageImpl<>(products, pageable, products.size());
-
-            // Configuration des comportements du repository et du mapper
-            when(productRepository.findByActiveAndStockQuantityGreaterThan(true, 0, pageable))
-                    .thenReturn(productsPage);
-            when(productMapper.toDtoList(products)).thenReturn(dtos);
-
-            // Exécution de la méthode à tester
-            List<ProductDto> result = productService.getAvailableProductsForHomePage();
-
-            // Vérification du résultat
-            assertThat(result).isEqualTo(dtos);
             verify(productRepository).findByActiveAndStockQuantityGreaterThan(true, 0, pageable);
-            verify(productMapper).toDtoList(products);
         }
     }
 

@@ -10,7 +10,6 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -60,38 +59,19 @@ public class ProductServiceImpl implements ProductService {
      * @return A list of available products.
      */
     @Override
-    public List<ProductDto> getAvailableProducts() {
-        log.atDebug().log("Enter getAvailableProducts()");
+    public Page<ProductDto> getAvailableProducts(Pageable pageable) {
+        log.info("Fetching available products with pagination: {}", pageable);
 
-        List<Product> products = productRepository.findByActiveAndStockQuantityGreaterThan(true, 0);
+        Page<Product> pagedProducts = productRepository.findByActiveAndStockQuantityGreaterThan(true, 0, pageable);
 
-        List<ProductDto> response = productMapper.toDtoList(products);
+        log.debug("Fetched {} products for pagination (page: {} size: {})",
+                pagedProducts.getTotalElements(),
+                pageable.getPageNumber(),
+                pageable.getPageSize());
 
-        log.atDebug().log("Leave getAvailableProducts() - return {}", response);
-
-        return response;
+        return pagedProducts.map(productMapper::toDto);
     }
 
-    /**
-     * Retrieves 8 products with stock > 0 for customers for the homepage
-     * @return a list of available products
-     */
-    @Override
-    public List<ProductDto> getAvailableProductsForHomePage() {
-        log.atDebug().log("Enter getAvailableProductsForHomePage()");
-
-        Pageable pageable = PageRequest.of(0, 8);
-
-        Page<Product> productsPage = productRepository.findByActiveAndStockQuantityGreaterThan(true, 0, pageable);
-
-        List<Product> products = productsPage.getContent();
-
-        List<ProductDto> response = productMapper.toDtoList(products);
-
-        log.atDebug().log("Leave getAvailableProductsForHomePage() - return {}", response);
-
-        return response;
-    }
 
     /**
      * Retrieves a product entity by its ID.

@@ -29,4 +29,4 @@ RUN chmod +x mvnw
 
 EXPOSE 8080
 
-CMD ["sh", "-c", "mvn clean install -DskipTests && mvn spring-boot:run -pl marketplace-web -Dspring-boot.run.profiles=dev -Dspring.devtools.restart.enabled=true"]
+CMD ["sh", "-c", "mvn clean install verify && mvn spring-boot:run -pl marketplace-web -Dspring-boot.run.profiles=dev -Dspring.devtools.restart.enabled=true"]

@@ -12,13 +12,17 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.context.annotation.Import;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
+
 import java.util.List;
 
 import static org.mockito.Mockito.*;
@@ -29,7 +33,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(ProductController.class)
 @ContextConfiguration(classes = ProductController.class)
 @Import(GlobalExceptionHandler.class)
-class ProductControllerTest  extends WebMvcBaseTest {
+class ProductControllerTest extends WebMvcBaseTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -77,46 +81,27 @@ class ProductControllerTest  extends WebMvcBaseTest {
     @Nested
     class GetAvailableProducts {
         @Test
-        void whenGetAvailable_thenReturnProducts() throws Exception {
-            List<ProductDto> products = List.of(baseProductDto);
-            when(productService.getAvailableProducts()).thenReturn(products);
+        void shouldReturnPaginatedAvailableProductsViaController() throws Exception {
+            // Arrange
+            Pageable pageable = PageRequest.of(0, 10);
+            List<ProductDto> productDtos = List.of(new ProductDto(/* ... */), new ProductDto(/* ... */));
+            Page<ProductDto> pagedProductDtos = new PageImpl<>(productDtos, pageable, productDtos.size());
 
-            mockMvc.perform(get("/products/available"))
+            when(productService.getAvailableProducts(any(Pageable.class))).thenReturn(pagedProductDtos);
+
+            // Act & Assert
+            mockMvc.perform(get("/products/available")
+                            .param("page", "0")
+                            .param("size", "10"))
                     .andExpect(status().isOk())
-                    .andExpect(jsonPath("$[0].id").value(1L))
-                    .andExpect(jsonPath("$[0].name").value("Miel de lavande"));
+                    .andExpect(jsonPath("$.content.length()").value(2))
+                    .andExpect(jsonPath("$.totalElements").value(2)) // Vérifie le nombre total d'éléments
+                    .andExpect(jsonPath("$.size").value(10)); // Vérifie la taille de la page
+
+            verify(productService).getAvailableProducts(any(Pageable.class));
         }
     }
 
-    @Nested
-    class getHomePageProducts {
-        @Test
-        void whenGetHomePage_thenReturn8Products() throws Exception {
-            List<ProductDto> products = new ArrayList<>();
-            for (int i = 1; i <= 8; i++) {
-                products.add(new ProductDto(
-                        (long) i,
-                        "Product " + i,
-                        "Description " + i,
-                        "img_url_" + i,
-                        BigDecimal.valueOf(10.00 + i),
-                        "High",
-                        "Category",
-                        30,
-                        50,
-                        1,
-                        2,
-                        true
-                ));
-            }
-            when(productService.getAvailableProductsForHomePage()).thenReturn(products);
-
-            mockMvc.perform(get("/products/homePage"))
-                    .andExpect(status().isOk())
-                    .andExpect(jsonPath("$.length()").value(8))
-                    .andExpect(jsonPath("$[0].id").value(1L));
-        }
-    }
 
     @Nested
     class GetProductById {

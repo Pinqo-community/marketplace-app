@@ -2,6 +2,8 @@ package com.marketplace.api.service;
 
 
 import com.marketplace.api.dto.product.ProductDto;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
@@ -20,18 +22,14 @@ public interface ProductService {
 
 
     /**
-     * Retrieves all products with stock > 0 for customers.
+     * Retrieves paginated products with stock > 0 for customers.
      *
-     * @return A list of available products.
+     * @param pageable Pagination details.
+     * @return A paginated list of available products.
      */
-    List<ProductDto> getAvailableProducts();
+    Page<ProductDto> getAvailableProducts(Pageable pageable);
 
-    /**
-     *Retrieves 8 products with stock > 0 for customers.
-     *
-     * @return A list of 8 available products.
-     */
-    List<ProductDto> getAvailableProductsForHomePage();
+
 
     /**
      * Retrieves a product by its unique ID.
