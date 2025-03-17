@@ -53,6 +53,11 @@ class ProductControllerTest extends WebMvcBaseTest {
                 new BigDecimal("10.00"), "High", "", 30, 50, 1, 2, true);
     }
 
+    /**
+     * Nested test class for creating a product in the ProductControllerTest.
+     * Contains test cases to validate the creation of a valid product
+     * as well as to handle cases when an invalid product is provided.
+     */
     @Nested
     class CreateProduct {
         @Test
@@ -79,6 +84,15 @@ class ProductControllerTest extends WebMvcBaseTest {
         }
     }
 
+    /**
+     * This nested class is responsible for testing the controller endpoint
+     * that retrieves available products in a paginated format.
+     *
+     * The test ensures:
+     * - The controller correctly interacts with the mocked productService to retrieve available products.
+     * - The response from the controller matches the expected structure and data.
+     * - Pagination and response attributes such as content length, page size, and total elements are validated.
+     */
     @Nested
     class GetAvailableProducts {
         @Test
@@ -104,6 +118,25 @@ class ProductControllerTest extends WebMvcBaseTest {
     }
 
 
+    /**
+     * Test class for verifying the functionality of the ProductController's endpoint
+     * for retrieving a product by its unique identifier.
+     *
+     * This class contains nested test cases that validate:
+     * - Successful retrieval of a product when a valid ID is provided.
+     * - Proper error handling and response when an invalid or non-existent ID is supplied.
+     *
+     * Each test ensures that the correct HTTP status codes and JSON responses are returned.
+     *
+     * Dependencies such as the ProductService are mocked to isolate the controller's
+     * behavior, and the MockMvc framework is utilized for performing HTTP request simulations.
+     *
+     * Nested Tests:
+     * - whenValidId_thenReturnProduct: Ensures that providing a valid product ID retrieves
+     *   the corresponding product with an HTTP 200 status code.
+     * - whenInvalidId_thenNotFound: Ensures that providing an invalid product ID returns
+     *   an HTTP 404 status code with an appropriate error message.
+     */
     @Nested
     class GetProductById {
         @Test
@@ -127,6 +160,10 @@ class ProductControllerTest extends WebMvcBaseTest {
         }
     }
 
+    /**
+     * Test class for updating a product within the ProductController.
+     * This test verifies the behavior of the update endpoint when a valid product update request is sent.
+     */
     @Nested
     class UpdateProduct {
         @Test
@@ -143,6 +180,10 @@ class ProductControllerTest extends WebMvcBaseTest {
         }
     }
 
+    /**
+     * Integration tests for validating the `/products/status` endpoint in the ProductController.
+     * These tests primarily focus on retrieving paginated products based on their active status.
+     */
     @Nested
     class GetProductsByStatus {
         @Test
@@ -208,6 +249,11 @@ class ProductControllerTest extends WebMvcBaseTest {
 
     }
 
+    /**
+     * Test class for testing the delete functionality in the Product Controller.
+     * This class contains tests for different scenarios when deleting a product
+     * based on its ID.
+     */
     @Nested
     class DeleteProduct {
         @Test

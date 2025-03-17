@@ -13,8 +13,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-
 
 /**
  * Implementation of the ProductService interface, providing CRUD operations
@@ -119,8 +117,6 @@ public class ProductServiceImpl implements ProductService {
 
         return response;
     }
-
-
 
     /**
      * Updates an existing product entity with details from the provided DTO.

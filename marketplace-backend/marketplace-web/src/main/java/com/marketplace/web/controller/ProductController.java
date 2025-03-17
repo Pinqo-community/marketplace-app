@@ -3,11 +3,8 @@ package com.marketplace.web.controller;
 
 import com.marketplace.api.dto.product.ProductDto;
 import com.marketplace.api.service.ProductService;
-import com.marketplace.core.entity.Product;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -19,8 +16,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 import org.springframework.data.domain.Pageable;
 
 
@@ -38,11 +33,12 @@ public class ProductController {
 
     private final ProductService productService;
 
+
     /**
-     * Creates a new product.
+     * Creates a new product in the marketplace.
      *
-     * @param productDto product details
-     * @return ResponseEntity with created product
+     * @param productDto the product data provided in the request body to create a new product
+     * @return the created product details wrapped in a ResponseEntity with HTTP status 201 (Created)
      */
     @PostMapping
     @Operation(summary = "Create a product", description = "Add a new product in the marketplace")
@@ -100,8 +96,8 @@ public class ProductController {
     @Operation(summary = "Retrieve products by status", description = "Retrieve products filtered by their active/inactive status for producers.",
     parameters = {
         @Parameter(name = "active", description = "Product status (true for active, false for inactive)", required = true),
-        @Parameter(name = "page", description = "Page number (0-based index)", required = false),
-        @Parameter(name = "size", description = "Number of elements per page", required = false)
+        @Parameter(name = "page", description = "Page number (0-based index)"),
+        @Parameter(name = "size", description = "Number of elements per page")
     })
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Paginated products retrieved successfully."),
