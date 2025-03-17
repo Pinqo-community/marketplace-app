@@ -15,17 +15,15 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.IntStream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -40,11 +38,6 @@ class ProductServiceImplTest {
     @InjectMocks
     private ProductServiceImpl productService;
 
-    /**
-     * This nested test class verifies the functionality of the createProduct method
-     * in the ProductService implementation. It contains unit tests for both valid and
-     * invalid scenarios when creating products.
-     */
     @Nested
     class CreateProduct {
         @Test
@@ -81,33 +74,6 @@ class ProductServiceImplTest {
         }
     }
 
-    /**
-     * Nested class that handles the testing of the `getAvailableProducts` method
-     * in the `ProductService` class. This method ensures that only active products
-     * with stock quantity greater than zero are returned correctly in a paginated format.
-     *
-     * The unit test covers the following scenarios:
-     * - Verifying that the `getAvailableProducts` method returns the correct
-     *   number of products as per the requested page size and page number.
-     * - Ensuring the accuracy of total elements and total pages in the
-     *   returned paginated result.
-     * - Confirming that interactions with the `productRepository` are behaving
-     *   as expected during the test execution.
-     *
-     * Dependencies used in the test include:
-     * - `productRepository`: Mocked to simulate database operations for searching
-     *   active products with stock greater than zero.
-     * - `productService`: The service under test which contains the business logic
-     *   to retrieve available products.
-     *
-     * Testing Approach:
-     * - Uses the `PageImpl` class from Spring Data to emulate the paginated
-     *   results from the repository.
-     * - Verifies results returned from the `getAvailableProducts` method using
-     *   assertions to validate content size, total elements, total pages, and
-     *   page size.
-     * - Verifies repository interaction with the `when` and `verify` methods.
-     */
     @Nested
     class GetAvailableProducts {
         @Test
@@ -139,56 +105,6 @@ class ProductServiceImplTest {
         }
     }
 
-    /**
-     * Test class for verifying the functionality of the `getProductsByStatus` method
-     * of the ProductServiceImpl. This class validates the retrieval of paginated
-     * ProductDto objects filtered by their active status.
-     */
-    @Nested
-    class GetProductsByStatus {
-
-        @Test
-        void whenStatusProvided_thenReturnFilteredPaginatedDtos() {
-            // Mock des produits retournés par le repository
-            List<Product> mockProducts = IntStream.range(0, 10)
-                    .mapToObj(i -> Product.builder()
-                            .id((long) i)
-                            .name("Product " + i)
-                            .active(true)
-                            .build())
-                    .toList();
-
-            Page<Product> mockPage = new PageImpl<>(mockProducts, PageRequest.of(0, 10), 20);
-
-            when(productRepository.findByActive(eq(true), any(Pageable.class))).thenReturn(mockPage);
-            when(productMapper.toDto(any(Product.class))).thenAnswer(invocation -> {
-                Product product = invocation.getArgument(0);
-                return ProductDto.builder()
-                        .id(product.getId())
-                        .name(product.getName())
-                        .active(product.getActive())
-                        .build();
-            });
-
-            // Appel au service
-            Pageable pageable = PageRequest.of(0, 10);
-            Page<ProductDto> result = productService.getProductsByStatus(true, pageable);
-
-            // Vérifications
-            assertNotNull(result);
-            assertEquals(10, result.getNumberOfElements());
-            assertEquals(20, result.getTotalElements());
-            assertEquals("Product 0", result.getContent().get(0).getName());
-
-            verify(productRepository).findByActive(eq(true), eq(pageable));
-        }
-    }
-
-    /**
-     * Test class for validating the behavior of the getProductById method in ProductService.
-     * This class contains nested test cases to verify the expected functionality of fetching
-     * a product by its ID from the database and mapping it to a ProductDto.
-     */
     @Nested
     class GetProductById {
         @Test
@@ -218,16 +134,25 @@ class ProductServiceImplTest {
         }
     }
 
-    /**
-     * Test class for validating the behavior of the updateProduct method
-     * in the ProductService component. This class covers the following scenarios:
-     *
-     * 1. Successfully updating an existing product with valid details.
-     * 2. Throwing a NotFoundException if the provided product ID does not exist.
-     *
-     * These tests ensure that the update operation works correctly and handles
-     * exceptions properly when updating a product.
-     */
+    @Nested
+    class GetProductsByStatus {
+        @Test
+        void whenStatusProvided_thenReturnFilteredDtos() {
+            Boolean active = true;
+            List<Product> products = List.of(new Product());
+            List<ProductDto> dtos = List.of(new ProductDto());
+
+            when(productRepository.findByActive(active)).thenReturn(products);
+            when(productMapper.toDtoList(products)).thenReturn(dtos);
+
+            List<ProductDto> result = productService.getProductsByStatus(active);
+
+            assertThat(result).isEqualTo(dtos);
+            verify(productRepository).findByActive(active);
+            verify(productMapper).toDtoList(products);
+        }
+    }
+
     @Nested
     class UpdateProduct {
         @Test
@@ -266,11 +191,6 @@ class ProductServiceImplTest {
         }
     }
 
-    /**
-     * Unit tests for the delete functionality of the product service.
-     *
-     * This class contains tests to validate the behavior of the deleteProduct method in the product service layer.
-     */
     @Nested
     class DeleteProduct {
         @Test
