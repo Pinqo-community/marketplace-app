@@ -6,9 +6,11 @@ import com.marketplace.api.exception.NotFoundException;
 import com.marketplace.api.service.ProductService;
 import com.marketplace.web.configuration.WebMvcBaseTest;
 import com.marketplace.web.exception.GlobalExceptionHandler;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.context.annotation.Import;
@@ -22,7 +24,6 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.math.BigDecimal;
-
 import java.util.List;
 import java.util.stream.IntStream;
 
@@ -87,7 +88,6 @@ class ProductControllerTest extends WebMvcBaseTest {
     /**
      * This nested class is responsible for testing the controller endpoint
      * that retrieves available products in a paginated format.
-     *
      * The test ensures:
      * - The controller correctly interacts with the mocked productService to retrieve available products.
      * - The response from the controller matches the expected structure and data.
@@ -119,23 +119,11 @@ class ProductControllerTest extends WebMvcBaseTest {
 
 
     /**
-     * Test class for verifying the functionality of the ProductController's endpoint
-     * for retrieving a product by its unique identifier.
-     *
-     * This class contains nested test cases that validate:
-     * - Successful retrieval of a product when a valid ID is provided.
-     * - Proper error handling and response when an invalid or non-existent ID is supplied.
-     *
-     * Each test ensures that the correct HTTP status codes and JSON responses are returned.
-     *
-     * Dependencies such as the ProductService are mocked to isolate the controller's
-     * behavior, and the MockMvc framework is utilized for performing HTTP request simulations.
-     *
-     * Nested Tests:
-     * - whenValidId_thenReturnProduct: Ensures that providing a valid product ID retrieves
-     *   the corresponding product with an HTTP 200 status code.
-     * - whenInvalidId_thenNotFound: Ensures that providing an invalid product ID returns
-     *   an HTTP 404 status code with an appropriate error message.
+     * Unit tests for the ProductController's endpoint to retrieve a product by ID.
+     * Validates:
+     * - Successful retrieval with a valid ID (HTTP 200).
+     * - Error handling with an invalid/non-existent ID (HTTP 404).
+     * Uses mocked ProductService and MockMvc for HTTP request simulations.
      */
     @Nested
     class GetProductById {

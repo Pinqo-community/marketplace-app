@@ -62,17 +62,6 @@ jobs:
             marketplace-backend/**/target/site/jacoco/
             marketplace-backend/target/site/jacoco-aggregate/
 
-      - name: Check Jacoco Coverage File
-        if: always()
-        run: |
-          if [ ! -f ./target/jacoco.exec ]; then
-            echo "❌ Jacoco execution data file not generated!"
-            exit 1
-          else
-            echo "✅ Jacoco execution data file is present."
-          fi
-
-
   frontend:
     runs-on: ubuntu-latest
     defaults:

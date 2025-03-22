@@ -3,29 +3,30 @@ package com.marketplace.web.controller;
 
 import com.marketplace.api.dto.product.ProductDto;
 import com.marketplace.api.service.ProductService;
-import com.marketplace.core.entity.Product;
+
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+
 import jakarta.validation.Valid;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 import org.springframework.data.domain.Pageable;
 
 
 /**
- * REST controller for product management operations.
+ * ProductController is responsible for handling API requests related to product management
+ * within the marketplace. It exposes endpoints for creating, retrieving, updating, and
+ * deleting products as well as querying products based on specific criteria.
  */
 @Tag(name = "Products", description = "Product management in the marketplace")
 @RestController
@@ -36,11 +37,12 @@ public class ProductController {
 
     private final ProductService productService;
 
+
     /**
-     * Creates a new product.
+     * Creates a new product in the marketplace.
      *
-     * @param productDto product details
-     * @return ResponseEntity with created product
+     * @param productDto the product data provided in the request body to create a new product
+     * @return the created product details wrapped in a ResponseEntity with HTTP status 201 (Created)
      */
     @PostMapping
     @Operation(summary = "Create a product", description = "Add a new product in the marketplace")
@@ -57,6 +59,14 @@ public class ProductController {
     }
 
 
+    /**
+     * Retrieves a paginated list of available products that have stock greater than zero
+     * and are marked as active.
+     *
+     * @param page the page number to retrieve, defaults to 0 if not provided.
+     * @param size the number of products per page, defaults to 8 if not provided.
+     * @return a ResponseEntity containing a paginated list of ProductDto objects representing the available products.
+     */
     @GetMapping("/available")
     @Operation(summary = "Get available products",
             description = "Retrieve paginated products with stock > 0 and active = true for customers.")
@@ -76,6 +86,40 @@ public class ProductController {
 
         return ResponseEntity.ok(availableProducts);
     }
+
+
+    /**
+     * Retrieves a paginated list of products filtered by their active/inactive status.
+     *
+     * @param active the status of the products to filter by; true for active products, false for inactive products (required).
+     * @param page the page number to retrieve, with a 0-based index (optional, defaults to 0).
+     * @param size the number of elements per page to retrieve (optional, defaults to 8).
+     * @return a ResponseEntity containing a paginated list of ProductDto objects matching the specified status.
+     */
+    @GetMapping("/status")
+    @Operation(summary = "Retrieve products by status", description = "Retrieve products filtered by their active/inactive status for producers.",
+    parameters = {
+        @Parameter(name = "active", description = "Product status (true for active, false for inactive)", required = true),
+        @Parameter(name = "page", description = "Page number (0-based index)"),
+        @Parameter(name = "size", description = "Number of elements per page")
+    })
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Paginated products retrieved successfully."),
+            @ApiResponse(responseCode = "400", description = "Invalid request parameter."),
+    })
+
+    public ResponseEntity<Page<ProductDto>> getProductsByStatus(
+            @RequestParam(name = "active") Boolean active,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "8") int size) {
+
+            log.info("Request received to fetch products by status: {}, with pagination: page {}, size {}", active, page, size);
+            Pageable pageable = PageRequest.of(page, size);
+            Page<ProductDto> productsByStatus = productService.getProductsByStatus(active, pageable);
+            log.info("Returning {} products for status: {}, page: {}, size: {}", productsByStatus.getNumberOfElements(), active, page, size);
+            return ResponseEntity.ok(productsByStatus);
+    }
+
 
     /**
      * Retrieves product by ID.
@@ -101,29 +145,6 @@ public class ProductController {
         }
     }
 
-    /**
-     * Retrieves products by active status.
-     *
-     * @param active status filter
-     * @return ResponseEntity with filtered products
-     */
-    @GetMapping("/status")
-    @Operation(summary = "Retrieve products by status", description = "Retrieve products filtered by their active/inactive status for producers.")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Products retrieved successfully",
-                    content = {@Content(mediaType = "application/json",
-                            schema = @Schema(implementation = Product.class))}),
-            @ApiResponse(responseCode = "400", description = "Invalid input parameter")
-    })
-    public ResponseEntity<List<ProductDto>> getProductsByStatus(@RequestParam(name = "active", required = true) Boolean active) {
-        try {
-            log.atInfo().log("GET /products/status?active={} - START", active);
-            List<ProductDto> products = productService.getProductsByStatus(active);
-            return ResponseEntity.ok(products);
-        } finally {
-            log.atInfo().log("GET /products/status?active={} - END", active);
-        }
-    }
 
     /**
      * Updates product by ID.
