@@ -13,7 +13,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 
 
 /**
@@ -54,42 +53,57 @@ public class ProductServiceImpl implements ProductService {
     }
 
     /**
-     * Retrieves all products with stock > 0 for customers.
+     * Retrieves a paginated list of available products (active products with stock > 0).
      *
-     * @return A list of available products.
+     * @param pageable The pagination information
+     * @return A page of available ProductDto objects
      */
     @Override
     public Page<ProductDto> getAvailableProducts(Pageable pageable) {
-        log.info("Fetching available products with pagination: {}", pageable);
+        if (pageable == null) {
+            log.atError().log("Pageable parameter cannot be null");
+            throw new IllegalArgumentException("La page est requise");
+        }
 
-        Page<Product> pagedProducts = productRepository.findByActiveAndStockQuantityGreaterThan(true, 0, pageable);
+        log.atDebug().log("Retrieving available products with page={}, size={}",
+                pageable.getPageNumber(), pageable.getPageSize());
 
-        log.debug("Fetched {} products for pagination (page: {} size: {})",
-                pagedProducts.getTotalElements(),
-                pageable.getPageNumber(),
-                pageable.getPageSize());
+        Page<Product> productPage = productRepository.findByActiveAndStockQuantityGreaterThan(true, 0, pageable);
 
-        return pagedProducts.map(productMapper::toDto);
+        log.atDebug().log("Found {} available products", productPage.getTotalElements());
+
+        return productPage.map(productMapper::toDto);
     }
 
     /**
      * Retrieves a paginated list of products filtered by their active status.
      *
-     * @param active    The active status to filter products by
-     * @param pageable  The pagination information
+     * @param active   The active status to filter products by
+     * @param pageable The pagination information
      * @return A page of ProductDto objects matching the specified active status
      */
     @Override
     public Page<ProductDto> getProductsByStatus(Boolean active, Pageable pageable) {
+        if (pageable == null) {
+            log.atError().log("Pageable parameter cannot be null");
+            throw new IllegalArgumentException("La page est requise");
+        }
+
+        if (active == null) {
+            log.atError().log("Active status parameter cannot be null"
+            );
+            throw new IllegalArgumentException("Le statut doit être spécifié");
+        }
+
         log.atDebug().log("Retrieving products with active status={}, page={}, size={}",
                 active, pageable.getPageNumber(), pageable.getPageSize());
 
-        Page<Product> productsPage = productRepository.findByActive(active, pageable);
+        Page<Product> productPage = productRepository.findByActive(active, pageable);
 
         log.atDebug().log("Found {} products with active status={}",
-                productsPage.getTotalElements(), active);
+                productPage.getTotalElements(), active);
 
-        return productsPage.map(productMapper::toDto);
+        return productPage.map(productMapper::toDto);
     }
 
     /**
