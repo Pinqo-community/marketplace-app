@@ -72,6 +72,25 @@ public class ProductServiceImpl implements ProductService {
         return pagedProducts.map(productMapper::toDto);
     }
 
+    /**
+     * Retrieves a paginated list of products filtered by their active status.
+     *
+     * @param active    The active status to filter products by
+     * @param pageable  The pagination information
+     * @return A page of ProductDto objects matching the specified active status
+     */
+    @Override
+    public Page<ProductDto> getProductsByStatus(Boolean active, Pageable pageable) {
+        log.atDebug().log("Retrieving products with active status={}, page={}, size={}",
+                active, pageable.getPageNumber(), pageable.getPageSize());
+
+        Page<Product> productsPage = productRepository.findByActive(active, pageable);
+
+        log.atDebug().log("Found {} products with active status={}",
+                productsPage.getTotalElements(), active);
+
+        return productsPage.map(productMapper::toDto);
+    }
 
     /**
      * Retrieves a product entity by its ID.
@@ -92,22 +111,6 @@ public class ProductServiceImpl implements ProductService {
         return response;
     }
 
-    /**
-     * Retrieves product entities from the database by status.
-     *
-     * @return A list of product .
-     */
-    @Override
-    public List<ProductDto> getProductsByStatus(Boolean active) {
-        log.atDebug().log("Enter getProductsByStatus(:active: {})", active);
-
-        List<Product> products = productRepository.findByActive(active);
-        List<ProductDto> response = productMapper.toDtoList(products);
-
-        log.atDebug().log("Leave getProductsByStatus() - return {}", response);
-
-        return response;
-    }
 
     /**
      * Updates an existing product entity with details from the provided DTO.
