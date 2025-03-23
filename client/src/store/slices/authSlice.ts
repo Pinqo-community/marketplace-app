@@ -1,28 +1,23 @@
+import { AuthState, User } from "@/types/Auth";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-interface User {
-  id: string;
-  email: string;
-  firstname: string;
-  lastname: string;
-}
-
-interface AuthState {
-  accessToken: string | null;
-  refreshToken: string | null;
-  user: User | null;
-}
-
 const initialState: AuthState = {
-  accessToken: null,
-  refreshToken: null,
+  accessToken: localStorage.getItem("accessToken") || null,
+  refreshToken: localStorage.getItem("refreshToken") || null,
   user: JSON.parse(localStorage.getItem("user") || "null"),
+  isAuthPopupOpen: false,
 };
 
 const authSlice = createSlice({
   name: "auth",
   initialState,
   reducers: {
+    openAuthPopup: (state) => {
+      state.isAuthPopupOpen = !state.accessToken;
+    },
+    closeAuthPopup: (state) => {
+      state.isAuthPopupOpen = false;
+    },
     loginSuccess: (
       state,
       action: PayloadAction<{
@@ -51,5 +46,11 @@ const authSlice = createSlice({
   },
 });
 
-export const { loginSuccess, logout, refreshTokenSuccess } = authSlice.actions;
+export const {
+  openAuthPopup,
+  closeAuthPopup,
+  loginSuccess,
+  logout,
+  refreshTokenSuccess,
+} = authSlice.actions;
 export default authSlice.reducer;

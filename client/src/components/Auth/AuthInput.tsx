@@ -2,15 +2,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { Eye, EyeOff, Lock, Mail, User } from "lucide-react";
 import React, { useState } from "react";
 import styles from "./Auth.module.scss";
-
-interface AuthInputProps {
-  type: string;
-  name: string;
-  placeholder: string;
-  value: string;
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  error?: string;
-}
+import { AuthInputProps } from "@/types/Auth";
 
 export const AuthInput: React.FC<AuthInputProps> = ({
   type: initialType,

@@ -5,13 +5,13 @@ import { AuthLayout } from "@/components/Auth/AuthLayout";
 import { SocialButtons } from "@/components/Auth/SocialButtons";
 import { Checkbox } from "@/components/Checkbox/Checkbox";
 import { login } from "@/services/authService";
+import { closeAuthPopup } from "@/store/slices/authSlice";
+import { AuthProps } from "@/types/Auth";
 import { AxiosError } from "axios";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
 
-const LoginPage: React.FC = () => {
-  const navigate = useNavigate();
+const Login: React.FC<AuthProps> = ({ setIsLogin }) => {
   const dispatch = useDispatch();
 
   const [email, setEmail] = useState("");
@@ -35,7 +35,8 @@ const LoginPage: React.FC = () => {
 
     try {
       await login(dispatch, { email: trimmedEmail, password: trimmedPassword });
-      navigate("/"); // Redirection
+      dispatch(closeAuthPopup());
+      console.log("Connexion réussie ✅");
     } catch (err) {
       const error = err as AxiosError<{ message?: string }>;
       setError(
@@ -50,8 +51,8 @@ const LoginPage: React.FC = () => {
   const [rememberMe, setRememberMe] = useState(false);
 
   return (
-    <AuthLayout title="Se connecter">
-      <form onSubmit={handleLogin}>
+    <AuthLayout>
+      <form data-testid="login-form" onSubmit={handleLogin}>
         <div className={styles.formGroup}>
           <AuthInput
             type="text"
@@ -82,11 +83,11 @@ const LoginPage: React.FC = () => {
       </form>
       <p className={styles.switchAuthText}>
         Pas encore de compte ?{" "}
-        <a onClick={() => navigate("/signup")}>S'inscrire</a>
+        <a onClick={() => setIsLogin(false)}>S'inscrire</a>
       </p>
       <SocialButtons type="login" />
     </AuthLayout>
   );
 };
 
-export default LoginPage;
+export default Login;

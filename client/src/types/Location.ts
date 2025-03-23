@@ -68,3 +68,8 @@ export interface LocationStoreState {
   coordinates: Coordinates | null;
   recentLocations: RecentLocation[];
 }
+
+export interface LocationPopupProps {
+  isOpen: boolean;
+  onClose: () => void;
+}

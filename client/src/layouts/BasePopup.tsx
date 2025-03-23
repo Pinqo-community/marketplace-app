@@ -10,6 +10,8 @@ const BasePopup: React.FC<BasePopupProps> = ({
   isOpen,
   onClose,
   title,
+  titleTag: TitleTag = "h3",
+  variant = "default",
   children,
 }) => {
   const userLocation = useSelector((state: RootState) => state.location);
@@ -39,7 +41,8 @@ const BasePopup: React.FC<BasePopupProps> = ({
     <AnimatePresence>
       {isOpen && (
         <motion.div
-          className={styles.popup}
+          key="popup-overlay"
+          className={`${styles.popup} ${variant === "auth" ? styles.authPopup : ""}`}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
@@ -58,7 +61,9 @@ const BasePopup: React.FC<BasePopupProps> = ({
             data-testid="location-popup"
           >
             <div className={styles.header}>
-              {title && <h3 className={styles.title}>{title}</h3>}
+              {title && (
+                <TitleTag className={`${styles.title}`}>{title}</TitleTag>
+              )}
               <motion.button
                 whileHover={{ scale: 1.1, rotate: 90 }}
                 className={styles.close}

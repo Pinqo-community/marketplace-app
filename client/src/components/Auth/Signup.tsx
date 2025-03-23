@@ -5,31 +5,14 @@ import { AuthLayout } from "@/components/Auth/AuthLayout";
 import { SocialButtons } from "@/components/Auth/SocialButtons";
 import { Checkbox } from "@/components/Checkbox/Checkbox";
 import { register } from "@/services/authService";
+import { closeAuthPopup } from "@/store/slices/authSlice";
+import { AuthProps, FormData, FormErrors } from "@/types/Auth";
 import { validateEmail, validatePassword } from "@/utils/validationUtils";
 import { AxiosError } from "axios";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
 
-interface FormData {
-  email: string;
-  password: string;
-  confirmPassword: string;
-  firstName: string;
-  lastName: string;
-  terms: boolean;
-}
-
-interface FormErrors {
-  email?: string;
-  password?: string;
-  confirmPassword?: string;
-  firstName?: string;
-  lastName?: string;
-  terms?: string;
-}
-
-const SignupPage: React.FC = () => {
+const Signup: React.FC<AuthProps> = ({ setIsLogin }) => {
   const [formData, setFormData] = useState<FormData>({
     email: "",
     password: "",
@@ -41,7 +24,6 @@ const SignupPage: React.FC = () => {
 
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState<FormErrors>({});
-  const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -106,7 +88,8 @@ const SignupPage: React.FC = () => {
           email: formData.email,
           password: formData.password,
         });
-        navigate("/");
+        dispatch(closeAuthPopup());
+        console.log("Inscription réussie ✅");
       } catch (err) {
         const error = err as AxiosError<{ message?: string }>;
         setErrors({
@@ -121,8 +104,12 @@ const SignupPage: React.FC = () => {
   };
 
   return (
-    <AuthLayout title="S'inscrire">
-      <form onSubmit={handleSubmit} className={styles.formGroup}>
+    <AuthLayout>
+      <form
+        data-testid="signup-form"
+        onSubmit={handleSubmit}
+        className={styles.formGroup}
+      >
         <div className={styles.nameWrapper}>
           <AuthInput
             type="text"
@@ -178,11 +165,11 @@ const SignupPage: React.FC = () => {
         <AuthButton loading={loading} text="S'inscrire" />
       </form>
       <p className={styles.switchAuthText}>
-        Déjà inscrit ? <a onClick={() => navigate("/login")}>Se connecter</a>
+        Déjà inscrit ? <a onClick={() => setIsLogin(true)}>Se connecter</a>
       </p>
       <SocialButtons type="signup" />
     </AuthLayout>
   );
 };
 
-export default SignupPage;
+export default Signup;

@@ -1,16 +1,18 @@
 import { buttonVariants } from "@/animations/animations";
 import arrowSlider from "@/assets/icons/arrow-slider.svg";
+import { RootState } from "@/store";
+import { logout, openAuthPopup } from "@/store/slices/authSlice";
 import {
   LocationButtonProps,
   MenuButtonProps,
   PrimaryButtonProps,
   SliderButtonProps,
 } from "@/types/Button";
-import { motion } from "framer-motion";
-import { Locate, LocateOff, ShoppingCart, User } from "lucide-react";
-import styles from "./Buttons.module.scss";
 import classNames from "classnames/bind";
-import { useNavigate } from "react-router-dom";
+import { motion } from "framer-motion";
+import { Locate, LocateOff, LogOut, ShoppingCart, User } from "lucide-react";
+import { useDispatch, useSelector } from "react-redux";
+import styles from "./Buttons.module.scss";
 
 const cx = classNames.bind(styles);
 
@@ -19,11 +21,24 @@ const cx = classNames.bind(styles);
 /* -------------------------------------------------------------------------- */
 
 export const UserButton: React.FC = () => {
-  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const accessToken = useSelector((state: RootState) => state.auth.accessToken);
 
+  const handleUserButtonClick = () => {
+    if (!accessToken) {
+      dispatch(openAuthPopup());
+    } else {
+      dispatch(logout());
+      console.log("Deconnexion reussie ✅");
+    }
+  };
   return (
-    <button className={styles.userButton} onClick={() => navigate("/login")}>
-      <User size={25} />
+    <button
+      data-testid="user-button"
+      className={styles.userButton}
+      onClick={handleUserButtonClick}
+    >
+      {accessToken ? <LogOut size={25} /> : <User size={25} />}
     </button>
   );
 };

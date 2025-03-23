@@ -60,6 +60,10 @@
   gap: space(xs);
   cursor: pointer;
 
+  @include media-under(xs) {
+    font-size: font-size(xs);
+  }
+
   input[type="checkbox"] {
     width: space(sm);
     height: space(sm);

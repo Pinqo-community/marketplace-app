@@ -1,16 +1,7 @@
 import api from "@/api/api";
 import { AppDispatch } from "@/store";
 import { loginSuccess, logout } from "@/store/slices/authSlice";
-
-interface AuthCredentials {
-  email: string;
-  password: string;
-}
-
-interface RegisterData extends AuthCredentials {
-  firstname: string;
-  lastname: string;
-}
+import { AuthCredentials, RegisterData } from "@/types/Auth";
 
 export const register = async (
   dispatch: AppDispatch,

@@ -15,6 +15,8 @@ import {
   closeLocationPopup,
   openLocationPopup,
 } from "@/store/slices/locationSlice";
+import AuthPopup from "../Auth/AuthPopup";
+import { closeAuthPopup } from "@/store/slices/authSlice";
 
 const Header: React.FC = () => {
   /* -------------------------------------------------------------------------- */
@@ -30,6 +32,9 @@ const Header: React.FC = () => {
   const dispatch = useDispatch();
   const isLocationPopupOpen = useSelector(
     (state: RootState) => state.location.isLocationPopupOpen,
+  );
+  const isAuthPopupOpen = useSelector(
+    (state: RootState) => state.auth.isAuthPopupOpen,
   );
 
   /* -------------------------------------------------------------------------- */
@@ -112,8 +117,8 @@ const Header: React.FC = () => {
           </div>
 
           <nav className={styles.mobileNav}>
-            <UserButton />
             <CartButton />
+            <UserButton />
           </nav>
         </div>
 
@@ -122,10 +127,14 @@ const Header: React.FC = () => {
         </div>
 
         <nav>
-          <UserButton />
           <CartButton />
+          <UserButton />
         </nav>
       </div>
+      <AuthPopup
+        isOpen={isAuthPopupOpen}
+        onClose={() => dispatch(closeAuthPopup())}
+      />
       <LocationPopup
         isOpen={isLocationPopupOpen}
         onClose={() => {
