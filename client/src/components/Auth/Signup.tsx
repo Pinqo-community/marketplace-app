@@ -92,8 +92,6 @@ const Signup: React.FC<AuthProps> = ({ setIsLogin }) => {
         console.log("Inscription réussie ✅");
       } catch (err) {
         const error = err as AxiosError<{ message?: string }>;
-        console.error("Erreur lors de l'inscription", error);
-        console.log("Réponse de l'API:", error.response?.data);
         setErrors({
           email:
             error.response?.data?.message ||

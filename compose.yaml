@@ -9,14 +9,27 @@ services:
       DB_NAME: ${DB_NAME}
       DB_USER: ${DB_USER}
       DB_PASSWORD: ${DB_PASSWORD}
+      DB_HOST: db
+      DB_PORT: 5432
       JWT_SECRET: ${JWT_SECRET}
       GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID}
       GOOGLE_SECRET_CLIENT: ${GOOGLE_SECRET_CLIENT}
       FACEBOOK_CLIENT_ID: ${FACEBOOK_CLIENT_ID}
       FACEBOOK_SECRET_CLIENT: ${FACEBOOK_SECRET_CLIENT}
       UNSPLASH_API_KEY: ${UNSPLASH_API_KEY}
-      DB_HOST: db
-      DB_PORT: 5432
+      MAIL_FROM: ${MAIL_FROM}
+      MAIL_USERNAME: ${MAIL_USERNAME}
+      MAIL_PASSWORD: ${MAIL_PASSWORD}
+      MAIL_HOST: ${MAIL_HOST}
+      MAIL_PORT: ${MAIL_PORT}
+      RABBITMQ_HOST: ${RABBITMQ_HOST}
+      RABBITMQ_USERNAME: ${RABBITMQ_USERNAME}
+      RABBITMQ_PASSWORD: ${RABBITMQ_PASSWORD}
+      STORAGE_REGION: ${STORAGE_REGION}
+      STORAGE_ENDPOINT: ${STORAGE_ENDPOINT}
+      STORAGE_ACCESS_KEY: ${STORAGE_ACCESS_KEY}
+      STORAGE_SECRET_KEY: ${STORAGE_SECRET_KEY}
+      STORAGE_BUCKET_NAME: ${STORAGE_BUCKET_NAME}
     volumes:
       - ./marketplace-backend:/app:rw,cached,rshared
       - type: bind
@@ -26,6 +39,8 @@ services:
       - ~/.m2:/root/.m2:cached
     depends_on:
       - db
+      - rabbitmq
+      - minio
     networks:
       - app-network
 
@@ -50,25 +65,33 @@ services:
       - type: volume
         target: /app/node_modules
 
-  backend-tests:
-    build:
-      context: ./marketplace-backend
-      dockerfile: Dockerfile.dev
-    container_name: marketplace-backend-tests
-    command: mvn clean test
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    ports:
+      - "5672:5672"    # Port AMQP
+      - "15672:15672"  # Port interface de gestion
     environment:
-      DB_NAME: ${DB_NAME}
-      DB_USER: ${DB_USER}
-      DB_PASSWORD: ${DB_PASSWORD}
-      DB_HOST: db
-      DB_PORT: 5432
-    depends_on:
-      - db
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_USERNAME}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASSWORD}
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
     networks:
       - app-network
+
+  minio:
+    image: minio/minio
+    ports:
+      - "9000:9000"
+      - "9001:9001"
     volumes:
-      - ./marketplace-backend:/app:cached
-      - maven-repo:/root/.m2:cached
+      - minio_storage:/data
+    networks:
+      - app-network
+    environment:
+      MINIO_ROOT_USER: ${STORAGE_ACCESS_KEY}
+      MINIO_ROOT_PASSWORD: ${STORAGE_SECRET_KEY}
+    command: server /data --console-address ":9001"
 
   db:
     image: postgres:15
@@ -89,6 +112,8 @@ volumes:
   maven-repo:
   maven-repo-tests:
   postgres_data:
+  rabbitmq_data:
+  minio_storage:
 
 networks:
   app-network:

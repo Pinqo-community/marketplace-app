@@ -43,7 +43,6 @@ const Login: React.FC<AuthProps> = ({ setIsLogin }) => {
         error.response?.data?.message ||
           "Échec de la connexion. Vérifiez vos identifiants.",
       );
-      console.error("Erreur de connexion ❌", error);
     } finally {
       setLoading(false);
     }

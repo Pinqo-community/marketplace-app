@@ -9,6 +9,40 @@ spring:
     hibernate:
       ddl-auto: create-drop
 
+  # Configuration RabbitMQ
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
+
+  # Configuration Mail
+  mail:
+    from: test@email.com
+    host: smtp.gmail.com  # ou localhost pour les tests
+    port: 587            # ou 25 pour les tests
+    username: test       # valeur fixe pour les tests
+    password: test       # valeur fixe pour les tests
+    properties:
+      mail:
+        smtp:
+          auth: false
+          starttls:
+            enable: false
+
+  cloud:
+    aws:
+      s3:
+        endpoint: http://localhost:9000
+        path-style-access-enabled: true
+      credentials:
+        access-key: minioadmin
+        secret-key: minioadmin
+      region:
+        static: us-east-1
+      stack:
+        auto: false
+
 app:
   client:
     allowed-urls: "http://localhost:8080"
@@ -19,3 +53,6 @@ app:
     refresh-token:
       secret-key: 797979797979797979797979TESTINGKEY797979797979797979797979
       expiration: 604800000
+
+  storage:
+    bucket-name: test-bucket

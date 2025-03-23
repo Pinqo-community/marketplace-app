@@ -10,6 +10,9 @@ COPY pom.xml .
 
 # Copy all module pom.xml files while maintaining directory structure
 COPY marketplace-auth/pom.xml marketplace-auth/
+COPY marketplace-rabbitmq/pom.xml marketplace-rabbitmq/
+COPY marketplace-storage/pom.xml marketplace-storage/
+COPY marketplace-mail/pom.xml marketplace-mail/
 COPY marketplace-core/pom.xml marketplace-core/
 COPY marketplace-api/pom.xml marketplace-api/
 COPY marketplace-web/pom.xml marketplace-web/
@@ -19,6 +22,9 @@ RUN mvn dependency:go-offline -B
 
 # Copy source code
 COPY marketplace-auth/src marketplace-auth/src
+COPY marketplace-rabbitmq/src marketplace-rabbitmq/src
+COPY marketplace-storage/src marketplace-storage/src
+COPY marketplace-mail/src marketplace-mail/src
 COPY marketplace-core/src marketplace-core/src
 COPY marketplace-api/src marketplace-api/src
 COPY marketplace-web/src marketplace-web/src
